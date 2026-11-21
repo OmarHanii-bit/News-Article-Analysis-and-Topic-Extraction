@@ -5,7 +5,7 @@
 #   1. Statically compiling all pipeline source and test modules.
 #   2. Regenerating the full pipeline artifacts (Hadoop ecosystem, PySpark
 #      lakehouse, MongoDB collections, visualizations, offline dashboards).
-#   3. Running the authoritative 53-test suite and failing the build on error.
+#   3. Running the authoritative full test suite (106+ tests) and failing the build on error.
 #
 # Note: the integration tests read generated lakehouse artifacts (raw CSV,
 # Snappy Parquet, offline MongoDB collections) which are intentionally
@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   pipeline-verification:
-    name: Pipeline Build & 53-Test Verification
+    name: Pipeline Build & Full Test Verification
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -66,9 +66,14 @@ jobs:
         run: python -m compileall -q src tests run_all.py
 
       - name: Generate pipeline artifacts (Hadoop, PySpark, MongoDB, viz)
-        run: python run_all.py --non-interactive
+        # --force guarantees the synthetic CSV, PySpark summary AND the
+        # git-ignored Parquet lakehouse are (re)built in the runner, so the
+        # integration tests never run against a missing lakehouse.
+        run: python run_all.py --non-interactive --force
 
-      - name: Run automated test suite (53+ tests)
+      - name: Run automated test suite (106+ tests)
+        # PYTHONIOENCODING=utf-8 is set job-wide so Unicode output (e.g. chart
+        # labels) never raises UnicodeEncodeError on a C-locale runner.
         run: python tests/run_tests.py
 
       - name: Upload generated evidence artifacts

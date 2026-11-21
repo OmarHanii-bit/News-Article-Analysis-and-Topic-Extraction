@@ -133,9 +133,16 @@ def main():
     # Step 3: PySpark Distributed Pipeline
     print_step(3, "PySpark In-Memory Distributed Processing & LDA Topic Modeling")
     summary_json = "data/pipeline_analytics_summary.json"
-    if not os.path.exists(summary_json) or force:
+    parquet_dir = "data/processed_parquet"
+    # Skip only when BOTH the summary AND the Parquet lakehouse are present. The
+    # summary JSON is committed but the Parquet lakehouse is git-ignored, so a
+    # fresh checkout can have the summary yet no Parquet -- skipping on the
+    # summary alone would leave the lakehouse missing and break the data tests.
+    if not os.path.exists(summary_json) or not os.path.exists(parquet_dir) or force:
         if force and os.path.exists(summary_json):
             print("[*] --force: regenerating the PySpark summary despite an existing file.")
+        elif os.path.exists(summary_json) and not os.path.exists(parquet_dir):
+            print("[*] Summary present but Parquet lakehouse missing; rebuilding the lakehouse.")
         success = run_command([sys.executable, "src/spark_pipeline.py"], "PySpark Pipeline")
         if not success: return
     else:
