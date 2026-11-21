@@ -1,0 +1,883 @@
+{
+  "generated_at": "2026-11-21T13:01:47Z",
+  "experiment": "Held-out monthly topic-volume forecasting (train 2024, test 2025)",
+  "design": {
+    "split": "chronological calendar-year split; no random split, no leakage",
+    "train_year": 2024,
+    "test_year": 2025,
+    "models": [
+      "naive_persistence",
+      "linear_trend"
+    ],
+    "metrics": [
+      "mae",
+      "rmse",
+      "mape"
+    ],
+    "min_train_months": 6,
+    "min_test_months": 3
+  },
+  "train_range": {
+    "start": "2024-01",
+    "end": "2024-12",
+    "months": 12
+  },
+  "test_range": {
+    "start": "2025-01",
+    "end": "2025-12",
+    "months": 12
+  },
+  "caveats": [
+    "Only 24 monthly observations exist (2024-01..2025-12): 12 train and 12 test months, so all error estimates are high-variance.",
+    "Reuters article dates are synthetic/derived rather than verified publication timestamps; no real-world temporal inference is supported.",
+    "Topic labels come from unsupervised LDA with 6 components and 5 dominant labels; labels are descriptive clusters, not curated ground truth.",
+    "This is an exploratory baseline forecasting experiment, NOT a trading signal or investment advice.",
+    "Results are in-sample-small: one corpus-specific 24-month window, 5-6 topics and a single train/test split; treat numbers as illustrative only.",
+    "MAPE ignores months whose actual count is zero (division-by-zero guard), so it is not directly comparable across topics with sparse months."
+  ],
+  "corpora": {
+    "synthetic_6000": {
+      "label": "Synthetic corpus (6,000 articles)",
+      "source_json": "data/pipeline_analytics_summary.json",
+      "status": "ok",
+      "metadata": {
+        "execution_timestamp": "2026-11-21 10:23:23",
+        "input_dataset": "data/raw_news_articles.csv",
+        "label_mode": "curated",
+        "total_articles_processed": 6000,
+        "vocabulary_size": 438,
+        "num_topics": 6,
+        "elapsed_seconds": 49.99
+      },
+      "train_range": {
+        "start": "2024-01",
+        "end": "2024-12",
+        "months": 12
+      },
+      "test_range": {
+        "start": "2025-01",
+        "end": "2025-12",
+        "months": 12
+      },
+      "per_topic_metrics": {
+        "AI Infrastructure & Compute": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 452.0,
+          "test_total_articles": 499.0,
+          "total_articles": 951.0,
+          "actual_counts": [
+            29,
+            39,
+            46,
+            42,
+            46,
+            40,
+            32,
+            50,
+            40,
+            38,
+            47,
+            50
+          ],
+          "naive_persistence_forecast": [
+            35.0,
+            35.0,
+            35.0,
+            35.0,
+            35.0,
+            35.0,
+            35.0,
+            35.0,
+            35.0,
+            35.0,
+            35.0,
+            35.0
+          ],
+          "linear_trend_forecast": [
+            34.08,
+            33.52,
+            32.97,
+            32.42,
+            31.87,
+            31.31,
+            30.76,
+            30.21,
+            29.66,
+            29.1,
+            28.55,
+            28.0
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 8.0833,
+              "rmse": 9.1515,
+              "mape": 18.6034
+            },
+            "linear_trend": {
+              "mae": 11.392,
+              "rmse": 12.8981,
+              "mape": 25.9254
+            }
+          },
+          "improvement_pct": {
+            "mae": -40.9325,
+            "rmse": -40.9397,
+            "mape": -39.3584
+          }
+        },
+        "Antitrust & Regulatory Policy": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 234.0,
+          "test_total_articles": 236.0,
+          "total_articles": 470.0,
+          "actual_counts": [
+            25,
+            25,
+            20,
+            22,
+            12,
+            17,
+            22,
+            21,
+            19,
+            15,
+            14,
+            24
+          ],
+          "naive_persistence_forecast": [
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0
+          ],
+          "linear_trend_forecast": [
+            21.27,
+            21.55,
+            21.82,
+            22.09,
+            22.36,
+            22.64,
+            22.91,
+            23.18,
+            23.45,
+            23.73,
+            24.0,
+            24.27
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 3.6667,
+              "rmse": 4.223,
+              "mape": 20.2591
+            },
+            "linear_trend": {
+              "mae": 4.303,
+              "rmse": 5.5527,
+              "mape": 27.2053
+            }
+          },
+          "improvement_pct": {
+            "mae": -17.3535,
+            "rmse": -31.4871,
+            "mape": -34.2868
+          }
+        },
+        "Clinical Medicine & Genomics": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 1165.0,
+          "test_total_articles": 1221.0,
+          "total_articles": 2386.0,
+          "actual_counts": [
+            112,
+            87,
+            121,
+            99,
+            112,
+            105,
+            88,
+            105,
+            102,
+            95,
+            93,
+            102
+          ],
+          "naive_persistence_forecast": [
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0
+          ],
+          "linear_trend_forecast": [
+            92.2,
+            91.45,
+            90.69,
+            89.94,
+            89.19,
+            88.44,
+            87.69,
+            86.93,
+            86.18,
+            85.43,
+            84.68,
+            83.93
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 13.9167,
+              "rmse": 16.8498,
+              "mape": 12.9139
+            },
+            "linear_trend": {
+              "mae": 14.4285,
+              "rmse": 16.5103,
+              "mape": 13.5776
+            }
+          },
+          "improvement_pct": {
+            "mae": -3.6776,
+            "rmse": 2.0149,
+            "mape": -5.1394
+          }
+        },
+        "Monetary Policy & Markets": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 346.0,
+          "test_total_articles": 377.0,
+          "total_articles": 723.0,
+          "actual_counts": [
+            24,
+            21,
+            40,
+            27,
+            27,
+            38,
+            32,
+            34,
+            28,
+            37,
+            35,
+            34
+          ],
+          "naive_persistence_forecast": [
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0
+          ],
+          "linear_trend_forecast": [
+            25.74,
+            25.27,
+            24.79,
+            24.32,
+            23.84,
+            23.36,
+            22.89,
+            22.41,
+            21.94,
+            21.46,
+            20.99,
+            20.51
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 5.4167,
+              "rmse": 6.1847,
+              "mape": 17.1709
+            },
+            "linear_trend": {
+              "mae": 9.2912,
+              "rmse": 10.6365,
+              "mape": 27.638
+            }
+          },
+          "improvement_pct": {
+            "mae": -71.5288,
+            "rmse": -71.9809,
+            "mape": -60.9584
+          }
+        },
+        "Quantum Physics & Advanced Materials": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 694.0,
+          "test_total_articles": 776.0,
+          "total_articles": 1470.0,
+          "actual_counts": [
+            65,
+            48,
+            66,
+            78,
+            79,
+            60,
+            64,
+            58,
+            67,
+            69,
+            65,
+            57
+          ],
+          "naive_persistence_forecast": [
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0
+          ],
+          "linear_trend_forecast": [
+            66.61,
+            67.96,
+            69.31,
+            70.66,
+            72.0,
+            73.35,
+            74.7,
+            76.05,
+            77.4,
+            78.75,
+            80.1,
+            81.45
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 6.8333,
+              "rmse": 8.6506,
+              "mape": 10.5187
+            },
+            "linear_trend": {
+              "mae": 11.7525,
+              "rmse": 13.4251,
+              "mape": 19.4358
+            }
+          },
+          "improvement_pct": {
+            "mae": -71.9886,
+            "rmse": -55.1927,
+            "mape": -84.7738
+          }
+        }
+      },
+      "aggregate": {
+        "naive_persistence": {
+          "mean_mae": 7.5833,
+          "mean_rmse": 9.0119,
+          "mean_mape": 15.8932
+        },
+        "linear_trend": {
+          "mean_mae": 10.2334,
+          "mean_rmse": 11.8045,
+          "mean_mape": 22.7564
+        },
+        "mean_improvement_pct": {
+          "mae": -41.0962,
+          "rmse": -39.5171,
+          "mape": -44.9034
+        },
+        "topics_scored": 5
+      }
+    },
+    "reuters_10712": {
+      "label": "Reuters corpus (10,712 articles; derived dates)",
+      "source_json": "data/real_news/pipeline_analytics_summary.json",
+      "status": "ok",
+      "metadata": {
+        "execution_timestamp": "2026-11-21 11:25:58",
+        "input_dataset": "data/real_news/raw_news_articles_real.csv",
+        "label_mode": "auto",
+        "total_articles_processed": 10712,
+        "vocabulary_size": 5000,
+        "num_topics": 6,
+        "elapsed_seconds": 71.66
+      },
+      "train_range": {
+        "start": "2024-01",
+        "end": "2024-12",
+        "months": 12
+      },
+      "test_range": {
+        "start": "2025-01",
+        "end": "2025-12",
+        "months": 12
+      },
+      "per_topic_metrics": {
+        "Company / Shares / Stock": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 1393.0,
+          "test_total_articles": 1416.0,
+          "total_articles": 2809.0,
+          "actual_counts": [
+            133,
+            110,
+            125,
+            139,
+            121,
+            121,
+            116,
+            104,
+            108,
+            137,
+            95,
+            107
+          ],
+          "naive_persistence_forecast": [
+            106.0,
+            106.0,
+            106.0,
+            106.0,
+            106.0,
+            106.0,
+            106.0,
+            106.0,
+            106.0,
+            106.0,
+            106.0,
+            106.0
+          ],
+          "linear_trend_forecast": [
+            104.42,
+            102.63,
+            100.84,
+            99.04,
+            97.25,
+            95.46,
+            93.66,
+            91.87,
+            90.07,
+            88.28,
+            86.49,
+            84.69
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 14.1667,
+              "rmse": 17.8792,
+              "mape": 11.2674
+            },
+            "linear_trend": {
+              "mae": 23.4411,
+              "rmse": 26.1071,
+              "mape": 19.1575
+            }
+          },
+          "improvement_pct": {
+            "mae": -65.4662,
+            "rmse": -46.0194,
+            "mape": -70.0259
+          }
+        },
+        "Mln / Dlrs / Net": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 1613.0,
+          "test_total_articles": 1680.0,
+          "total_articles": 3293.0,
+          "actual_counts": [
+            144,
+            118,
+            136,
+            151,
+            139,
+            161,
+            140,
+            129,
+            143,
+            169,
+            108,
+            142
+          ],
+          "naive_persistence_forecast": [
+            166.0,
+            166.0,
+            166.0,
+            166.0,
+            166.0,
+            166.0,
+            166.0,
+            166.0,
+            166.0,
+            166.0,
+            166.0,
+            166.0
+          ],
+          "linear_trend_forecast": [
+            141.53,
+            142.62,
+            143.72,
+            144.81,
+            145.91,
+            147.0,
+            148.1,
+            149.19,
+            150.29,
+            151.38,
+            152.47,
+            153.57
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 26.5,
+              "rmse": 30.5369,
+              "mape": 20.5163
+            },
+            "linear_trend": {
+              "mae": 14.2618,
+              "rmse": 18.0337,
+              "mape": 11.0253
+            }
+          },
+          "improvement_pct": {
+            "mae": 46.1819,
+            "rmse": 40.9446,
+            "mape": 46.2608
+          }
+        },
+        "Mln / Tonnes / Pct": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 623.0,
+          "test_total_articles": 619.0,
+          "total_articles": 1242.0,
+          "actual_counts": [
+            55,
+            45,
+            43,
+            58,
+            59,
+            42,
+            48,
+            45,
+            65,
+            57,
+            54,
+            48
+          ],
+          "naive_persistence_forecast": [
+            49.0,
+            49.0,
+            49.0,
+            49.0,
+            49.0,
+            49.0,
+            49.0,
+            49.0,
+            49.0,
+            49.0,
+            49.0,
+            49.0
+          ],
+          "linear_trend_forecast": [
+            47.58,
+            46.91,
+            46.24,
+            45.57,
+            44.9,
+            44.24,
+            43.57,
+            42.9,
+            42.23,
+            41.57,
+            40.9,
+            40.23
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 6.4167,
+              "rmse": 7.5333,
+              "mape": 11.9875
+            },
+            "linear_trend": {
+              "mae": 8.9114,
+              "rmse": 10.9547,
+              "mape": 16.0308
+            }
+          },
+          "improvement_pct": {
+            "mae": -38.8782,
+            "rmse": -45.417,
+            "mape": -33.7293
+          }
+        },
+        "Nil / Prev / Usda": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 55.0,
+          "test_total_articles": 75.0,
+          "total_articles": 130.0,
+          "actual_counts": [
+            7,
+            7,
+            9,
+            11,
+            2,
+            4,
+            3,
+            4,
+            6,
+            4,
+            12,
+            6
+          ],
+          "naive_persistence_forecast": [
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0
+          ],
+          "linear_trend_forecast": [
+            6.56,
+            6.86,
+            7.17,
+            7.47,
+            7.78,
+            8.08,
+            8.39,
+            8.69,
+            8.99,
+            9.3,
+            9.6,
+            9.91
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 2.4167,
+              "rmse": 3.0139,
+              "mape": 50.6133
+            },
+            "linear_trend": {
+              "mae": 3.372,
+              "rmse": 3.8198,
+              "mape": 84.6461
+            }
+          },
+          "improvement_pct": {
+            "mae": -39.5291,
+            "rmse": -26.7394,
+            "mape": -67.2408
+          }
+        },
+        "Pct / Bank / Rate": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 961.0,
+          "test_total_articles": 888.0,
+          "total_articles": 1849.0,
+          "actual_counts": [
+            76,
+            59,
+            75,
+            71,
+            73,
+            63,
+            78,
+            78,
+            69,
+            85,
+            87,
+            74
+          ],
+          "naive_persistence_forecast": [
+            92.0,
+            92.0,
+            92.0,
+            92.0,
+            92.0,
+            92.0,
+            92.0,
+            92.0,
+            92.0,
+            92.0,
+            92.0,
+            92.0
+          ],
+          "linear_trend_forecast": [
+            81.7,
+            81.95,
+            82.19,
+            82.44,
+            82.69,
+            82.94,
+            83.19,
+            83.43,
+            83.68,
+            83.93,
+            84.18,
+            84.43
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 18.0,
+              "rmse": 19.5704,
+              "mape": 25.7355
+            },
+            "linear_trend": {
+              "mae": 9.7106,
+              "rmse": 11.6293,
+              "mape": 14.2085
+            }
+          },
+          "improvement_pct": {
+            "mae": 46.0522,
+            "rmse": 40.5771,
+            "mape": 44.7903
+          }
+        },
+        "Trade / Japan / Market": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 658.0,
+          "test_total_articles": 731.0,
+          "total_articles": 1389.0,
+          "actual_counts": [
+            72,
+            56,
+            64,
+            61,
+            78,
+            68,
+            46,
+            57,
+            55,
+            58,
+            62,
+            54
+          ],
+          "naive_persistence_forecast": [
+            64.0,
+            64.0,
+            64.0,
+            64.0,
+            64.0,
+            64.0,
+            64.0,
+            64.0,
+            64.0,
+            64.0,
+            64.0,
+            64.0
+          ],
+          "linear_trend_forecast": [
+            58.2,
+            58.71,
+            59.23,
+            59.75,
+            60.27,
+            60.78,
+            61.3,
+            61.82,
+            62.34,
+            62.85,
+            63.37,
+            63.89
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 7.4167,
+              "rmse": 8.8647,
+              "mape": 12.8342
+            },
+            "linear_trend": {
+              "mae": 7.5882,
+              "rmse": 9.2338,
+              "mape": 12.5683
+            }
+          },
+          "improvement_pct": {
+            "mae": -2.3123,
+            "rmse": -4.1637,
+            "mape": 2.0718
+          }
+        }
+      },
+      "aggregate": {
+        "naive_persistence": {
+          "mean_mae": 12.4861,
+          "mean_rmse": 14.5664,
+          "mean_mape": 22.159
+        },
+        "linear_trend": {
+          "mean_mae": 11.2142,
+          "mean_rmse": 13.2964,
+          "mean_mape": 26.2727
+        },
+        "mean_improvement_pct": {
+          "mae": -8.9919,
+          "rmse": -6.803,
+          "mape": -12.9788
+        },
+        "topics_scored": 6
+      }
+    }
+  },
+  "aggregate_by_model": {
+    "naive_persistence": {
+      "mean_mae": 10.0347,
+      "mean_rmse": 11.7891,
+      "mean_mape": 19.0261
+    },
+    "linear_trend": {
+      "mean_mae": 10.7238,
+      "mean_rmse": 12.5505,
+      "mean_mape": 24.5145
+    },
+    "mean_improvement_pct": {
+      "mae": -25.0441,
+      "rmse": -23.16,
+      "mape": -28.9411
+    }
+  },
+  "corpora_combined": 2
+}

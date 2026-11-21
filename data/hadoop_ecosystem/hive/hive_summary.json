@@ -1,0 +1,38 @@
+{
+  "database": "newsdw",
+  "input_available": true,
+  "status": "ok",
+  "warnings": [],
+  "partition": {
+    "year": 2025,
+    "month": 12
+  },
+  "tables_created": [
+    "news_articles",
+    "term_counts",
+    "topics"
+  ],
+  "queries_executed": 6,
+  "result_files": [
+    "data/hadoop_ecosystem/hive/results/topic_volume_ranking.csv",
+    "data/hadoop_ecosystem/hive/results/publisher_topic_crosstab.csv",
+    "data/hadoop_ecosystem/hive/results/mom_volume_change.csv",
+    "data/hadoop_ecosystem/hive/results/sentiment_ranking.csv",
+    "data/hadoop_ecosystem/hive/results/topic_term_join.csv",
+    "data/hadoop_ecosystem/hive/results/partition_pruned_month.csv"
+  ],
+  "total_rows_scanned": 26594,
+  "table_sizes": {
+    "news_articles": 6000,
+    "term_counts": 2255,
+    "topics": 72
+  },
+  "top_topic_by_volume": "Clinical Medicine & Genomics",
+  "hive_ddl": "data/hadoop_ecosystem/hive/news_analytics.hql",
+  "topic_term_ddl": "data/hadoop_ecosystem/hive/topic_term_hive.hql",
+  "real_cluster_commands": "data/hadoop_ecosystem/hive/real_cluster_commands.md",
+  "hdfs_commands": [
+    "hdfs dfs -put mapreduce_term_counts.tsv hdfs:///user/news/raw/mapreduce_term_counts.tsv"
+  ],
+  "out_dir": "data/hadoop_ecosystem/hive"
+}

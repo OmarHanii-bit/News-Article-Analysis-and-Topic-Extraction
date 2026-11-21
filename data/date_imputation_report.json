@@ -1,0 +1,5 @@
+{
+  "imputed_rows": 0,
+  "total_rows": 3,
+  "note": "Rows with missing/unparseable dates were imputed to 2024-06-15 solely to populate year/month partition keys. These rows MUST be excluded from temporal conclusions; the canonical 12-column CSV deliberately carries no imputation flag."
+}

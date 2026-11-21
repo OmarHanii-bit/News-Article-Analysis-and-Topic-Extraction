@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+    <property>
+        <name>dfs.replication</name>
+        <value>3</value>
+        <description>3x block replication — tolerates two simultaneous DataNode failures.</description>
+    </property>
+    <property>
+        <name>dfs.blocksize</name>
+        <value>134217728</value>
+        <description>128 MB DFS block size: large sequential blocks amortise NameNode metadata.</description>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///data/hadoop/hdfs/namenode</value>
+        <description>On-disk location of the NameNode fsimage and edit log.</description>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///data/hadoop/hdfs/datanode</value>
+        <description>Comma-separated DataNode volume list (one entry per physical disk).</description>
+    </property>
+    <property>
+        <name>dfs.namenode.handler.count</name>
+        <value>200</value>
+        <description>Concurrent RPC handler threads on the NameNode (large clusters).</description>
+    </property>
+    <property>
+        <name>dfs.webhdfs.enabled</name>
+        <value>true</value>
+        <description>Enable WebHDFS REST API for programmatic file access.</description>
+    </property>
+</configuration>

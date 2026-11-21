@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>news-namenode-01</value>
+        <description>ResourceManager host — the single authority for cluster containers.</description>
+    </property>
+    <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>26214</value>
+        <description>Memory each NodeManager may offer as containers (~80% of 32 GB).</description>
+    </property>
+    <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>8</value>
+        <description>vCores each NodeManager advertises for container scheduling.</description>
+    </property>
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>1024</value>
+        <description>Smallest container the scheduler will grant (1 GB).</description>
+    </property>
+    <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>16384</value>
+        <description>Largest container (16 GB) — bounds runaway Spark driver requests.</description>
+    </property>
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+        <description>Disable strict virtual-memory checks; required for Spark/JVM workloads.</description>
+    </property>
+    <property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>true</value>
+        <description>Aggregate container logs into HDFS so they outlive the container.</description>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.scheduler.class</name>
+        <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
+        <description>CapacityScheduler enforces per-queue guarantees (see capacity-scheduler.xml).</description>
+    </property>
+</configuration>
