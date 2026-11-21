@@ -1,7 +1,7 @@
 {
   "component": "Hadoop Ecosystem \u2014 full stack execution",
-  "executed_at": "2026-11-21T15:01:42",
-  "elapsed_seconds": 3.88,
+  "executed_at": "2026-11-21T19:29:41",
+  "elapsed_seconds": 5.29,
   "services_executed": [
     "hdfs",
     "cluster",
@@ -32,122 +32,122 @@
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=1/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=1/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17545,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=10/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=10/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17403,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=11/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=11/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17705,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=12/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=12/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17414,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=2/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=2/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 16869,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=3/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=3/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 18130,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=4/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=4/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17811,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=5/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=5/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17480,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=6/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=6/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17286,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=7/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=7/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17570,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=8/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=8/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17413,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=9/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=9/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17394,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=1/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=1/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17557,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=10/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=10/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17809,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=11/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=11/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17517,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=12/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=12/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17954,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=2/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=2/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17253,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=3/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=3/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 18561,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=4/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=4/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 18198,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=5/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=5/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 18179,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=6/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=6/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17872,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=7/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=7/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17347,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=8/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=8/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 18116,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=9/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=9/9f4c41583b284f628c555547c8970d7b-0.parquet",
           "bytes": 17915,
           "blocks": 1
         },
@@ -243,7 +243,7 @@
         }
       },
       "capacity_plan": {
-        "measured_at": "2026-11-21T15:01:39",
+        "measured_at": "2026-11-21T19:29:36",
         "raw_csv_bytes": 5673429,
         "mapreduce_tsv_bytes": 51552,
         "parquet_bytes": 424298,
@@ -321,7 +321,7 @@
         "/user/news/stream/20261121/FlumeData.20261121.00003.json",
         "/user/news/stream/20261121/FlumeData.20261121.00004.json"
       ],
-      "events_per_second": 4073.0,
+      "events_per_second": 3430.23,
       "channel_capacity": 1000,
       "out_dir": "data/hadoop_ecosystem/flume"
     },
@@ -402,7 +402,7 @@
             "cf_raw"
           ],
           "num_families": 3,
-          "created": "2026-11-21T15:01:39",
+          "created": "2026-11-21T19:29:37",
           "row_count": 2000,
           "families": [
             {

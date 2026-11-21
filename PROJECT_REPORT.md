@@ -1,6 +1,6 @@
 # 📰 News Article Analysis and Topic Extraction: A Big Data Architecture & NLP Pipeline
 
-**Course:** CSCI 6520 — Distributed Systems & Big Data Analytics  
+**Course:** INF3101 — Introduction To Big Data 
 **Capstone Track:** Group Big Data Project (2/2) — Anthropic Track  
 **Submission Date:** Fall 2026  
 **Evaluation Standard:** 10-Point Big Data Rubric (Target: 10/10 Points)  
@@ -12,13 +12,13 @@
 
 | Member # | Name | Official Project Role | Core Architectural Deliverables & File Ownership |
 | :--- | :--- | :--- | :--- |
-| **Member 1** | **Alex Vance** | **Project Lead & Solutions Architect** | End-to-end architecture blueprint, 5Vs Big Data scoping, cross-stack integration, project documentation (`README.md`, `PROJECT_REPORT.md`) |
-| **Member 2** | **Priya Sharma** | **Hadoop Ecosystem & MapReduce Specialist** | HDFS distributed storage strategy, 9 orchestrated ecosystem modules covering 10 named technologies (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), Hadoop Streaming mapper/reducer development, distributed N-gram frequency counting (`src/mapreduce/`, `src/hadoop/`) |
-| **Member 3** | **Marcus Chen** | **PySpark Distributed Computing Engineer** | PySpark distributed pipeline, YARN cluster configuration, explicit `StructType` schema enforcement, Parquet lakehouse (`src/spark_pipeline.py`) |
-| **Member 4** | **Elena Rostova** | **NLP & Machine Learning Scientist** | Distributed TF-IDF feature engineering, PySpark MLlib Latent Dirichlet Allocation (LDA) tuning, VADER sentiment UDF inference |
-| **Member 5** | **Tariq Al-Mansoor** | **NoSQL & MongoDB Specialist** | MongoDB polymorphic document modeling, BSON schema design, compound/text indexing, multi-stage aggregation pipelines (`src/mongo_loader.py`) |
-| **Member 6** | **Sophia Taylor** | **Visualization & Dashboard Lead** | Publication-quality chart generator (300 DPI), multi-panel semantic word clouds, interactive Streamlit analytics dashboard (`src/dashboard.py`) |
-| **Member 7** | **David Kim** | **QA, Benchmarking & Presentation Lead** | Horizontal scalability testing, 106-test automated suite, cluster performance profiling, 17-slide deck, technical Q&A defense preparation (`tests/`, `presentation/`) |
+| **Member 1** | **Omar Hani** | **Project Lead & Solutions Architect** | End-to-end architecture blueprint, 5Vs Big Data scoping, cross-stack integration, project documentation (`README.md`, `PROJECT_REPORT.md`) |
+| **Member 2** | **Mohammed Hossam** | **Hadoop Ecosystem & MapReduce Specialist** | HDFS distributed storage strategy, 9 orchestrated ecosystem modules covering 10 named technologies (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), Hadoop Streaming mapper/reducer development, distributed N-gram frequency counting (`src/mapreduce/`, `src/hadoop/`) |
+| **Member 3** | **Yasmine Mohamed** | **PySpark Distributed Computing Engineer** | PySpark distributed pipeline, YARN cluster configuration, explicit `StructType` schema enforcement, Parquet lakehouse (`src/spark_pipeline.py`) |
+| **Member 4** | **Shehab Osama** | **NLP & Machine Learning Scientist** | Distributed TF-IDF feature engineering, PySpark MLlib Latent Dirichlet Allocation (LDA) tuning, VADER sentiment UDF inference |
+| **Member 5** | **Mohamed Ibrahim** | **NoSQL & MongoDB Specialist** | MongoDB polymorphic document modeling, BSON schema design, compound/text indexing, multi-stage aggregation pipelines (`src/mongo_loader.py`) |
+| **Member 6** | **Mohamed Magdi** | **Visualization & Dashboard Lead** | Publication-quality chart generator (300 DPI), multi-panel semantic word clouds, interactive Streamlit analytics dashboard (`src/dashboard.py`) |
+| **Member 7** | **Mazen Salem** | **QA, Benchmarking & Presentation Lead** | Horizontal scalability testing, 106-test automated suite, cluster performance profiling, 17-slide deck, technical Q&A defense preparation (`tests/`, `presentation/`) |
 
 ---
 
@@ -495,34 +495,34 @@ In addition to the server-based Streamlit application, the pipeline emits **two 
 ### 7.1 Balanced 7-Member Contribution & Work Breakdown Structure (lead presents opening/closing)
 
 ```
-Alex Vance (Lead)          ─── Architecture, 5Vs, Scoping, Real-Corpus Validation, Documentation
-Priya Sharma (Hadoop)      ─── mapper.py, reducer.py, HDFS simulation, 9 orchestrated ecosystem modules covering 10 named technologies, N-gram extraction
-Marcus Chen (PySpark)      ─── SparkSession, StructType schema, Text hygiene, Parquet export
-Elena Rostova (ML/NLP)     ─── CountVectorizer term counts → LDA, IDF/TF-IDF analytics, VADER sentiment UDF
-Tariq Al-Mansoor (MongoDB) ─── Polymorphic BSON modeling, Indexing, Aggregation pipelines
-Sophia Taylor (UI/Viz)     ─── 14 Matplotlib/Seaborn charts, WordCloud grids, Streamlit + HTML dashboards
-David Kim (QA/Presentation)─── Scalability benchmarking, 106-test suite, Slide deck, Technical Q&A defense
+Omar Hani (Lead)          ─── Architecture, 5Vs, Scoping, Real-Corpus Validation, Documentation
+Mohammed Hossam (Hadoop)      ─── mapper.py, reducer.py, HDFS simulation, 9 orchestrated ecosystem modules covering 10 named technologies, N-gram extraction
+Yasmine Mohamed (PySpark)      ─── SparkSession, StructType schema, Text hygiene, Parquet export
+Shehab Osama (ML/NLP)     ─── CountVectorizer term counts → LDA, IDF/TF-IDF analytics, VADER sentiment UDF
+Mohamed Ibrahim (MongoDB) ─── Polymorphic BSON modeling, Indexing, Aggregation pipelines
+Mohamed Magdi (UI/Viz)     ─── 14 Matplotlib/Seaborn charts, WordCloud grids, Streamlit + HTML dashboards
+Mazen Salem (QA/Presentation)─── Scalability benchmarking, 106-test suite, Slide deck, Technical Q&A defense
 ```
 
 ### 7.2 Structured 17-Slide Presentation Deck Outline
 Detailed in `presentation/slide_deck_outline.md`:
-- **Slide 1:** Title, Team Roster & Executive Abstract (Alex Vance)
-- **Slide 2:** Problem Definition, Domain Context & The 5Vs of Big News Data (Alex Vance)
-- **Slide 3:** Distributed Storage: Hadoop HDFS Architecture & Fault Tolerance (Priya Sharma)
-- **Slide 4:** First-Pass Batch Processing: Hadoop MapReduce Streaming (Priya Sharma)
-- **Slide 5:** The Wider Hadoop Ecosystem: Hive · HBase · Pig · Sqoop · Flume · Oozie · ZooKeeper (Priya Sharma)
-- **Slide 6:** In-Memory Distributed Engine: Apache Spark & Catalyst Optimizer (Marcus Chen)
-- **Slide 7:** Data Lakehouse: Snappy Partitioned Parquet Storage (Marcus Chen)
-- **Slide 8:** Distributed Feature Engineering: Tokenization, Stopwords & TF-IDF (Elena Rostova)
-- **Slide 9:** Machine Learning: PySpark MLlib Latent Dirichlet Allocation (Elena Rostova)
-- **Slide 10:** Real-World Corpus Validation: Reuters-21578 Wire Archive (Alex Vance)
-- **Slide 11:** Serving Layer: MongoDB NoSQL Document Modeling & BSON (Tariq Al-Mansoor)
-- **Slide 12:** MongoDB Query Optimization: Compound & Full-Text Indexing (Tariq Al-Mansoor)
-- **Slide 13:** Visual Analytics: Topic Volume & Publisher Editorial Biases (Sophia Taylor)
-- **Slide 14:** Sentiment Analytics: Topic Sentiment Boxplots & Trajectories (Sophia Taylor)
-- **Slide 15:** Performance Benchmarks & Horizontal Cluster Scalability (David Kim)
-- **Slide 16:** Actionable Insights: Managerial "What Next?" Decisions (David Kim)
-- **Slide 17:** Conclusion, Verification Summary & Technical Defense Handoff (Alex Vance)
+- **Slide 1:** Title, Team Roster & Executive Abstract (Omar Hani)
+- **Slide 2:** Problem Definition, Domain Context & The 5Vs of Big News Data (Omar Hani)
+- **Slide 3:** Distributed Storage: Hadoop HDFS Architecture & Fault Tolerance (Mohammed Hossam)
+- **Slide 4:** First-Pass Batch Processing: Hadoop MapReduce Streaming (Mohammed Hossam)
+- **Slide 5:** The Wider Hadoop Ecosystem: Hive · HBase · Pig · Sqoop · Flume · Oozie · ZooKeeper (Mohammed Hossam)
+- **Slide 6:** In-Memory Distributed Engine: Apache Spark & Catalyst Optimizer (Yasmine Mohamed)
+- **Slide 7:** Data Lakehouse: Snappy Partitioned Parquet Storage (Yasmine Mohamed)
+- **Slide 8:** Distributed Feature Engineering: Tokenization, Stopwords & TF-IDF (Shehab Osama)
+- **Slide 9:** Machine Learning: PySpark MLlib Latent Dirichlet Allocation (Shehab Osama)
+- **Slide 10:** Real-World Corpus Validation: Reuters-21578 Wire Archive (Omar Hani)
+- **Slide 11:** Serving Layer: MongoDB NoSQL Document Modeling & BSON (Mohamed Ibrahim)
+- **Slide 12:** MongoDB Query Optimization: Compound & Full-Text Indexing (Mohamed Ibrahim)
+- **Slide 13:** Visual Analytics: Topic Volume & Publisher Editorial Biases (Mohamed Magdi)
+- **Slide 14:** Sentiment Analytics: Topic Sentiment Boxplots & Trajectories (Mohamed Magdi)
+- **Slide 15:** Performance Benchmarks & Horizontal Cluster Scalability (Mazen Salem)
+- **Slide 16:** Actionable Insights: Managerial "What Next?" Decisions (Mazen Salem)
+- **Slide 17:** Conclusion, Verification Summary & Technical Defense Handoff (Omar Hani)
 
 ### 7.3 Live Demonstration Runbook (5-Minute Walkthrough)
 1. **Minute 1 (Hadoop Ecosystem):** Execute `python src/hadoop/run_hadoop_ecosystem.py` → Show 9 orchestrated ecosystem modules covering 10 named technologies executing (HDFS blocks, HiveQL, HBase column families, Pig Latin, Oozie `SUCCEEDED`).
@@ -536,29 +536,29 @@ Detailed in `presentation/slide_deck_outline.md`:
 ### 7.4 Technical Q&A Defense Cheat Sheet (Sample Questions)
 
 - **Q1: Why utilize Hadoop MapReduce when PySpark is significantly faster?**  
-  *Defense (Priya Sharma):* MapReduce and Spark serve complementary roles in enterprise architectures. MapReduce provides bulletproof, low-memory disk streaming for raw, unindexed terabyte-scale log ingestion. It never crashes due to RAM exhaustion. Once initial tokenization and filtering are complete, PySpark takes over for in-memory iterative linear algebra (LDA) where Spark's DAG engine achieves 10x to 100x speedups.
+  *Defense (Mohammed Hossam):* MapReduce and Spark serve complementary roles in enterprise architectures. MapReduce provides bulletproof, low-memory disk streaming for raw, unindexed terabyte-scale log ingestion. It never crashes due to RAM exhaustion. Once initial tokenization and filtering are complete, PySpark takes over for in-memory iterative linear algebra (LDA) where Spark's DAG engine achieves 10x to 100x speedups.
 - **Q2: How did you select $k=6$ topics for LDA?**  
-  *Defense (Elena Rostova):* `src/lda_topic_selection.py` ran a sweep over $k \in [3,12]$ on the same 438-term feature space used by the synthetic benchmark, recording log perplexity, UMass-style document co-occurrence coherence and topic distinctness (`data/lda_k_sweep.json`). Perplexity was non-monotonic, so it was reported but not decisive; a statistical knee rule (marginal coherence gain below 5% of the coherence span) selected $k=3$, and the best mean UMass coherence values were at $k=5$ ($-0.3270$) and $k=10$ ($-0.3588$), not $k=6$ ($-0.3668$). Production retains $k=6$ because the curated six-domain synthetic benchmark and cross-corpus comparability require a fixed $k$, and topic labels are interpretable at $k=6$. This is an engineering/interpretability choice, not a proven optimum; a 5,000-term rerun of the sweep is future work. No alternative coherence variant was computed.
+  *Defense (Shehab Osama):* `src/lda_topic_selection.py` ran a sweep over $k \in [3,12]$ on the same 438-term feature space used by the synthetic benchmark, recording log perplexity, UMass-style document co-occurrence coherence and topic distinctness (`data/lda_k_sweep.json`). Perplexity was non-monotonic, so it was reported but not decisive; a statistical knee rule (marginal coherence gain below 5% of the coherence span) selected $k=3$, and the best mean UMass coherence values were at $k=5$ ($-0.3270$) and $k=10$ ($-0.3588$), not $k=6$ ($-0.3668$). Production retains $k=6$ because the curated six-domain synthetic benchmark and cross-corpus comparability require a fixed $k$, and topic labels are interpretable at $k=6$. This is an engineering/interpretability choice, not a proven optimum; a 5,000-term rerun of the sweep is future work. No alternative coherence variant was computed.
 - **Q3: What is the mathematical foundation of Latent Dirichlet Allocation?**  
-  *Defense (Elena Rostova):* LDA is a hierarchical Bayesian generative model: each document is a finite mixture over $K$ latent topics drawn from $\theta_d \sim \text{Dir}(\alpha)$, and each topic is a multinomial over the vocabulary drawn from $\beta_k \sim \text{Dir}(\eta)$. PySpark MLlib solves it with Online Variational Bayes, updating variational parameters on mini-batches for scale. (YARN queue-level CPU/memory guarantees via the `CapacityScheduler` remain the design-level answer for cross-framework contention.)
+  *Defense (Shehab Osama):* LDA is a hierarchical Bayesian generative model: each document is a finite mixture over $K$ latent topics drawn from $\theta_d \sim \text{Dir}(\alpha)$, and each topic is a multinomial over the vocabulary drawn from $\beta_k \sim \text{Dir}(\eta)$. PySpark MLlib solves it with Online Variational Bayes, updating variational parameters on mini-batches for scale. (YARN queue-level CPU/memory guarantees via the `CapacityScheduler` remain the design-level answer for cross-framework contention.)
 - **Q4: Why include Hive, HBase, Pig, Sqoop, Flume, Oozie and ZooKeeper rather than plain MapReduce alone?**  
-  *Defense (Priya Sharma):* Each service addresses a distinct production concern: Hive delivers declarative SQL analytics with partition pruning; HBase provides low-latency wide-column lookups; Pig offers concise procedural ETL; Sqoop bridges relational systems; Flume lands high-velocity feeds into HDFS; Oozie enforces dependency-aware DAG scheduling; and ZooKeeper supplies the coordination primitives these services rely on. Together they form a complete, production-grade ecosystem rather than a single-framework demo.
+  *Defense (Mohammed Hossam):* Each service addresses a distinct production concern: Hive delivers declarative SQL analytics with partition pruning; HBase provides low-latency wide-column lookups; Pig offers concise procedural ETL; Sqoop bridges relational systems; Flume lands high-velocity feeds into HDFS; Oozie enforces dependency-aware DAG scheduling; and ZooKeeper supplies the coordination primitives these services rely on. Together they form a complete, production-grade ecosystem rather than a single-framework demo.
 - **Q5: How does the system handle node failure during execution?**  
-  *Defense (Marcus Chen):* At the HDFS storage layer, blocks are replicated across three DataNodes (rack-aware as a design property); on missed heartbeats the NameNode initiates re-replication. At the Spark compute layer, RDD lineage lets the scheduler re-execute only the lost partition on a surviving worker. The local validation is simulation-based, so this is a production design/operating procedure rather than a measured cluster failure test.
+  *Defense (Yasmine Mohamed):* At the HDFS storage layer, blocks are replicated across three DataNodes (rack-aware as a design property); on missed heartbeats the NameNode initiates re-replication. At the Spark compute layer, RDD lineage lets the scheduler re-execute only the lost partition on a surviving worker. The local validation is simulation-based, so this is a production design/operating procedure rather than a measured cluster failure test.
 - **Q6: Why MongoDB instead of a relational DB?**  
-  *Defense (Tariq Al-Mansoor):* News articles are semi-structured and polymorphic: each carries variable metadata (multiple authors, varying image attachments, dynamic categories), an array of cleaned tokens, and a dense probability vector across $K$ topics. MongoDB stores this natively as a flexible BSON document without rigid multi-table joins, and supports horizontal sharding across article IDs plus built-in text indexing and aggregation pipelines.
+  *Defense (Mohamed Ibrahim):* News articles are semi-structured and polymorphic: each carries variable metadata (multiple authors, varying image attachments, dynamic categories), an array of cleaned tokens, and a dense probability vector across $K$ topics. MongoDB stores this natively as a flexible BSON document without rigid multi-table joins, and supports horizontal sharding across article IDs plus built-in text indexing and aggregation pipelines.
 - **Q7: How do you address data skew in PySpark when certain topics or publishers dominate?**  
-  *Defense (Marcus Chen):* We repartition on a high-cardinality hash key (`article_id`), avoid grouping by skewed string categories alone by using two-stage salted aggregation, and enable Adaptive Query Execution (`spark.sql.adaptive.enabled = true`) so Spark coalesces shuffle partitions and splits oversized partitions at runtime.
+  *Defense (Yasmine Mohamed):* We repartition on a high-cardinality hash key (`article_id`), avoid grouping by skewed string categories alone by using two-stage salted aggregation, and enable Adaptive Query Execution (`spark.sql.adaptive.enabled = true`) so Spark coalesces shuffle partitions and splits oversized partitions at runtime.
 - **Q8: What distinguishes your text cleaning from basic Python string manipulation?**  
-  *Defense (Marcus Chen):* Cleaning runs as Catalyst-compiled Spark SQL `regexp_replace` expressions executed directly in optimized JVM bytecode, not sequential Python loops, so HTML tags, URLs, entities and non-alphabetic noise are purged in parallel across the worker cluster with no Py4J serialization overhead.
+  *Defense (Yasmine Mohamed):* Cleaning runs as Catalyst-compiled Spark SQL `regexp_replace` expressions executed directly in optimized JVM bytecode, not sequential Python loops, so HTML tags, URLs, entities and non-alphabetic noise are purged in parallel across the worker cluster with no Py4J serialization overhead.
 - **Q9: How did you evaluate sentiment, and what are its limitations?**  
-  *Defense (Elena Rostova):* We use a distributed VADER UDF scoring compound valence in $[-1.0, +1.0]$; VADER handles negation, punctuation emphasis and boosters well. Its limitation in financial/political news is domain vocabulary (e.g., "interest rate hike" reads objectively but may score negative), so a future iteration would fine-tune a domain model such as FinBERT within Spark NLP.
+  *Defense (Shehab Osama):* We use a distributed VADER UDF scoring compound valence in $[-1.0, +1.0]$; VADER handles negation, punctuation emphasis and boosters well. Its limitation in financial/political news is domain vocabulary (e.g., "interest rate hike" reads objectively but may score negative), so a future iteration would fine-tune a domain model such as FinBERT within Spark NLP.
 - **Q10: Why partition the Parquet dataset by `year` and `month`?**  
-  *Defense (Marcus Chen):* The hierarchical `year=*/month=*` directory layout lets Spark perform **partition pruning**, skipping the overwhelming majority of irrelevant files for a time-sliced query and cutting disk I/O and latency by an order of magnitude.
+  *Defense (Yasmine Mohamed):* The hierarchical `year=*/month=*` directory layout lets Spark perform **partition pruning**, skipping the overwhelming majority of irrelevant files for a time-sliced query and cutting disk I/O and latency by an order of magnitude.
 - **Q11: How do you prove the pipeline is not over-fit to the synthetic demo data?**  
-  *Defense (Alex Vance):* The unchanged pipeline ran against the genuine NLTK Reuters-21578 wire archive (10,712 real full-text articles). With `--auto-labels`, each topic label is derived from the model's own top-weighted terms (e.g., `Trade / Japan / Market`), and the real lakehouse in `data/real_news/` is cross-validated by automated tests asserting Parquet-row-count vs. JSON-metadata consistency.
+  *Defense (Omar Hani):* The unchanged pipeline ran against the genuine NLTK Reuters-21578 wire archive (10,712 real full-text articles). With `--auto-labels`, each topic label is derived from the model's own top-weighted terms (e.g., `Trade / Japan / Market`), and the real lakehouse in `data/real_news/` is cross-validated by automated tests asserting Parquet-row-count vs. JSON-metadata consistency.
 - **Q12: What is the primary business value of this Big Data architecture?**  
-  *Defense (Alex Vance):* It converts millions of noisy, uncurated global news articles into real-time competitive intelligence — executives can monitor automated topic velocity, detect emerging regulatory or technology shifts weeks early, and evaluate sentiment divergence across competitors via sub-second operational dashboard queries.
+  *Defense (Omar Hani):* It converts millions of noisy, uncurated global news articles into real-time competitive intelligence — executives can monitor automated topic velocity, detect emerging regulatory or technology shifts weeks early, and evaluate sentiment divergence across competitors via sub-second operational dashboard queries.
 
 ---
 

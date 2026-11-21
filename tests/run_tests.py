@@ -2,7 +2,7 @@
 Unified Test Runner for News Article Big Data Pipeline
 ======================================================
 Component: Quality Assurance & Engineering Verification
-Author: David Kim (QA, Benchmarking & Presentation Lead)
+Author: Mazen Salem (QA, Benchmarking & Presentation Lead)
 """
 
 import unittest

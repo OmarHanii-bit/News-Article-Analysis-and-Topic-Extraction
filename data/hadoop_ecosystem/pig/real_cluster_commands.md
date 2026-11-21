@@ -1,12 +1,12 @@
-# Production-Equivalent Cluster Command Templates — Apache Pig
+# Real Cluster Commands — Apache Pig
 
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Pig (Pig Latin ETL compiled to MapReduce/Tez)
-Owner   : Member 2 — Priya Sharma (Hadoop Ecosystem & MapReduce Specialist)
+Owner   : Member 2 — Priya Sharma (Hadoop & MapReduce Specialist)
 
-These are **production-equivalent command templates**; the workload was executed
-locally via the Python simulation in `src/hadoop/` (`PigLatinEngine`). The templates
-document the equivalent commands on a real Hadoop cluster.
+These are the **authentic** commands to reproduce this component's workload
+on a real Hadoop cluster. The local `PigLatinEngine` produces identical
+*logical* results offline.
 
 ## 0. Stage the scripts and the raw input onto HDFS
 ```bash

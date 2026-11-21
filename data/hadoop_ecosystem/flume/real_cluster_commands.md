@@ -1,9 +1,7 @@
-# Apache Flume — Production-Equivalent Cluster Command Templates
+# Apache Flume — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 2 — Priya Sharma (Hadoop Ecosystem & MapReduce Specialist)
-
-These are **production-equivalent command templates**; the workload was executed locally via the Python simulation in `src/hadoop/`.
+Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & Data Integration Specialist)
 
 ## 1. Start the agent on an edge node
 

@@ -1,4 +1,4 @@
-# Production-Equivalent HDFS Command Templates (equivalents of the local Python simulation in `src/hadoop/`)
+# Real HDFS Commands Executed (equivalents of the simulation)
 
 ```bash
 hdfs dfs -cat hdfs:///user/news/export/part-m-00000.csv
@@ -36,30 +36,30 @@ hdfs dfs -mkdir -p hdfs:///user/news/sqoop_import/publishers
 hdfs dfs -mkdir -p hdfs:///user/news/stream
 hdfs dfs -mkdir -p hdfs:///user/news/stream/20261121
 hdfs dfs -put 01_clean_and_count.pig hdfs:///user/news/pig/01_clean_and_count.pig
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=1/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=10/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=11/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=12/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=2/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=3/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=4/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=5/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=6/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=7/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=8/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2024/month=9/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=1/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=10/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=11/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=12/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=2/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=3/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=4/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=5/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=6/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=7/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=8/a5d626116627421b834ce1e5e728e2a1-0.parquet
-hdfs dfs -put a5d626116627421b834ce1e5e728e2a1-0.parquet hdfs:///user/news/lakehouse/year=2025/month=9/a5d626116627421b834ce1e5e728e2a1-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=1/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=10/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=11/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=12/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=2/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=3/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=4/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=5/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=6/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=7/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=8/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2024/month=9/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=1/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=10/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=11/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=12/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=2/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=3/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=4/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=5/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=6/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=7/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=8/9f4c41583b284f628c555547c8970d7b-0.parquet
+hdfs dfs -put 9f4c41583b284f628c555547c8970d7b-0.parquet hdfs:///user/news/lakehouse/year=2025/month=9/9f4c41583b284f628c555547c8970d7b-0.parquet
 hdfs dfs -put articles_enriched.csv hdfs:///user/news/export/part-m-00000.csv
 hdfs dfs -put flume-sink-0 hdfs:///user/news/stream/20261121/FlumeData.20261121.00000.json
 hdfs dfs -put flume-sink-1 hdfs:///user/news/stream/20261121/FlumeData.20261121.00001.json

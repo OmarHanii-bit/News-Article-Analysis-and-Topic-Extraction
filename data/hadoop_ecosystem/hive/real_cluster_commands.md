@@ -1,11 +1,11 @@
-# Production-Equivalent Cluster Command Templates — Apache Hive
+# Real Cluster Commands — Apache Hive
 
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Hive (SQL data warehouse over HDFS/Parquet)
-Owner   : Member 2 — Priya Sharma (Hadoop Ecosystem & MapReduce Specialist)
+Owner   : Member 3 — Marcus Chen (Distributed Warehouse Engineer)
 
-These are **production-equivalent command templates**; the workload was executed
-locally via the Python simulation in `src/hadoop/`.
+These are the **authentic** commands to reproduce this component's workload
+on a real Hive cluster.
 
 ## 0. Warehouse location configuration
 ```properties

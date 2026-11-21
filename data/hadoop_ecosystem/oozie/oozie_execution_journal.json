@@ -1,40 +1,40 @@
 {
   "workflow": "news_pipeline_workflow",
-  "generated": "2026-11-21T15:01:42",
+  "generated": "2026-11-21T19:29:41",
   "journal": [
     {
       "action": "sqoop_import",
       "type": "sqoop",
       "status": "OK",
-      "duration_ms": 1.832,
+      "duration_ms": 3.811,
       "detail": "RDBMS articles_staging verified (6000 rows)"
     },
     {
       "action": "pig_transform",
       "type": "pig",
       "status": "OK",
-      "duration_ms": 0.206,
+      "duration_ms": 0.298,
       "detail": "MapReduce transform verified (top term: BI_accelerators_data\t1205)"
     },
     {
       "action": "hive_analytics",
       "type": "hive",
       "status": "OK",
-      "duration_ms": 0.745,
+      "duration_ms": 0.969,
       "detail": "Hive rollup from analytics summary (5 topic rollups)"
     },
     {
       "action": "spark_topics",
       "type": "spark",
       "status": "OK",
-      "duration_ms": 2.856,
+      "duration_ms": 2.539,
       "detail": "Spark LDA lake verified (24 parquet partitions)"
     },
     {
       "action": "shell_verify",
       "type": "shell",
       "status": "OK",
-      "duration_ms": 0.043,
+      "duration_ms": 0.058,
       "detail": "artifact verified: coordinator.xml exists"
     }
   ]

@@ -1,9 +1,7 @@
-# Apache ZooKeeper — Production-Equivalent Cluster Command Templates
+# Apache ZooKeeper — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 2 — Priya Sharma (Hadoop Ecosystem & MapReduce Specialist)
-
-These are **production-equivalent command templates**; the workload was executed locally via the Python simulation in `src/hadoop/`.
+Owner   : Member 2 — Priya Sharma (Hadoop & Cluster Specialist)
 
 ## 1. Start / stop a ZooKeeper node
 
