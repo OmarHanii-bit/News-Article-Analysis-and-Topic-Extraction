@@ -701,7 +701,7 @@ elif view_mode == "Architecture & 7-Member Team":
         {"Member": "Member 4", "Name": "Elena Rostova", "Role": "NLP & Machine Learning Scientist", "Primary Responsibility": "Distributed TF-IDF, PySpark MLlib Latent Dirichlet Allocation (LDA) tuning, sentiment scoring."},
         {"Member": "Member 5", "Name": "Tariq Al-Mansoor", "Role": "NoSQL & MongoDB Database Specialist", "Primary Responsibility": "MongoDB polymorphic document modeling, BSON ingestion, compound indexing, aggregation pipelines."},
         {"Member": "Member 6", "Name": "Sophia Taylor", "Role": "Visualization & UI Lead", "Primary Responsibility": "Matplotlib/Seaborn visualization suite, self-contained Plotly HTML dashboard, interactive Streamlit analytics app, word clouds."},
-        {"Member": "Member 7", "Name": "David Kim", "Role": "QA, Benchmarking & Presentation Lead", "Primary Responsibility": "Cluster benchmarking, 53-test automated suite, slide deck formulation, technical Q&A defense preparation."}
+        {"Member": "Member 7", "Name": "David Kim", "Role": "QA, Benchmarking & Presentation Lead", "Primary Responsibility": "Cluster benchmarking, 106-test automated suite, slide deck formulation, technical Q&A defense preparation."}
     ]
     st.table(pd.DataFrame(team_data))
 

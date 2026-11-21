@@ -216,7 +216,7 @@ Regenerate all evidence: `python src/lda_topic_selection.py`, `python src/tempor
   ```
   For byte-for-byte reproducibility, install the pinned lock file instead: `pip install -r requirements.lock.txt`. Optional environment overrides (Mongo URI, Spark master/memory, Kaggle credentials) are documented in `.env.example`; every variable has a safe default.
 
-> **Fresh clone note:** the canonical raw datasets (`data/raw_news_articles.csv`, `data/real_news/raw_news_articles_real.csv`), the Word report and both offline HTML dashboards are **committed**, so the project is inspectable immediately. Large *regenerable* intermediates — the Parquet lakehouses, MongoDB offline collections and simulated HDFS block files — are intentionally git-ignored; materialize them with `python run_all.py` (or the individual stages below) before running the full test suite. Tests that depend on absent artifacts report as **skipped**, and the runner fails if fewer than the 53-test baseline actually *execute*.
+> **Fresh clone note:** the canonical raw datasets (`data/raw_news_articles.csv`, `data/real_news/raw_news_articles_real.csv`), the Word report and both offline HTML dashboards are **committed**, so the project is inspectable immediately. Large *regenerable* intermediates — the Parquet lakehouses, MongoDB offline collections and simulated HDFS block files — are intentionally git-ignored; materialize them with `python run_all.py` (or the individual stages below) before running the full test suite. Tests that depend on absent artifacts report as **skipped**, and the runner fails if fewer than the 53-test historical floor actually *execute* (the suite currently contains 106 tests).
 
 ---
 
