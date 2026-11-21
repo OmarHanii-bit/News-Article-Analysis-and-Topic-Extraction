@@ -1,0 +1,42 @@
+# Line-ending normalization for cross-platform clones (Windows / Linux / macOS).
+# Text files are stored with LF in the repository; binary assets are never touched.
+
+* text=auto
+
+# Source, docs and structured data: always LF in the repository and in the work tree
+*.py     text eol=lf
+*.ipynb  text eol=lf
+*.md     text eol=lf
+*.txt    text eol=lf
+*.json    text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.csv    text eol=lf
+*.tsv    text eol=lf
+*.xml    text eol=lf
+*.sql    text eol=lf
+*.sh     text eol=lf
+*.cfg    text eol=lf
+Dockerfile text eol=lf
+
+# Windows launchers must keep CRLF to stay double-click runnable
+*.bat  text eol=crlf
+
+# Binary assets: never converted, never diffed as text
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pptx binary
+*.docx binary
+*.xlsx binary
+*.pdf  binary
+*.parquet binary
+*.snappy  binary
+*.sqlite  binary
+*.db     binary
+*.zip  binary
+*.gz   binary
+*.pickle binary
+*.pkl    binary
