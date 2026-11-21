@@ -1,0 +1,13 @@
+ZooKeeper znode tree snapshot
+============================
+
+/ [PERSISTENT]
+    /news-pipeline [PERSISTENT]
+        /news-pipeline/config [PERSISTENT] = '{"lda_k": 8, "min_word_count": 5, "batch_size": 256, "spark_partitions": 16}'
+        /news-pipeline/election [PERSISTENT]
+            /news-pipeline/election/worker-0000000002 [EPHEMERAL] = 'session=1002'
+            /news-pipeline/election/worker-0000000003 [EPHEMERAL] = 'session=1003'
+        /news-pipeline/locks [PERSISTENT]
+            /news-pipeline/locks/topic-model [PERSISTENT]
+                /news-pipeline/locks/topic-model/lock-0000000002 [EPHEMERAL] = 'owner=worker-2'
+                /news-pipeline/locks/topic-model/lock-0000000003 [EPHEMERAL] = 'owner=worker-3'

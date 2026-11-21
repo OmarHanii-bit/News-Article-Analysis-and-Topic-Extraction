@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+        <description>Run MapReduce on top of YARN rather than the legacy local runner.</description>
+    </property>
+    <property>
+        <name>mapreduce.map.memory.mb</name>
+        <value>2048</value>
+        <description>Container memory requested for each map task.</description>
+    </property>
+    <property>
+        <name>mapreduce.reduce.memory.mb</name>
+        <value>4096</value>
+        <description>Container memory requested for each reduce task (shuffle-heavy).</description>
+    </property>
+    <property>
+        <name>mapreduce.map.java.opts</name>
+        <value>-Xmx1638m</value>
+        <description>Map JVM heap kept ~80% of the container to avoid swap.</description>
+    </property>
+    <property>
+        <name>mapreduce.reduce.java.opts</name>
+        <value>-Xmx3276m</value>
+        <description>Reduce JVM heap kept ~80% of the container.</description>
+    </property>
+    <property>
+        <name>mapreduce.job.reduces</name>
+        <value>8</value>
+        <description>Default reducer count for the news token-frequency job.</description>
+    </property>
+    <property>
+        <name>mapreduce.task.io.sort.mb</name>
+        <value>512</value>
+        <description>512 MB in-memory sort buffer per map before spilling to disk.</description>
+    </property>
+</configuration>

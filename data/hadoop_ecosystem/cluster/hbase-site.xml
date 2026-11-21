@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+    <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://news-namenode-01:8020/hbase</value>
+        <description>HBase stores its HFiles inside HDFS rather than on local disk.</description>
+    </property>
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+        <description>Run HBase in distributed mode (one Master + RegionServers).</description>
+    </property>
+    <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>news-zk-01,news-zk-02,news-zk-03</value>
+        <description>ZooKeeper quorum HBase uses to track the active HMaster and region map.</description>
+    </property>
+    <property>
+        <name>zookeeper.znode.parent</name>
+        <value>/hbase</value>
+        <description>Root znode under which HBase stores its coordination state.</description>
+    </property>
+    <property>
+        <name>hbase.hregion.max.filesize</name>
+        <value>10737418240</value>
+        <description>10 GB max region size before an automatic region split.</description>
+    </property>
+    <property>
+        <name>hbase.regionserver.handler.count</name>
+        <value>60</value>
+        <description>Concurrent RPC handlers per RegionServer.</description>
+    </property>
+</configuration>

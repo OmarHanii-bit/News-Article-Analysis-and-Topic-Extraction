@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="news_pipeline_workflow">
+    <global>
+        <resource-manager>${resourceManager}</resource-manager>
+        <name-node>${nameNode}</name-node>
+    </global>
+    <start to="sqoop_import" />
+    <action name="sqoop_import">
+        <sqoop xmlns="uri:oozie:sqoop-action:0.2">
+            <command>import --connect jdbc:mysql://rdbms-host:3306/news --username etl --table publishers --target-dir /user/news/sqoop_import/publishers --m 4 --as-parquetfile</command>
+        </sqoop>
+        <ok to="pig_transform" />
+        <error to="kill" />
+    </action>
+    <action name="pig_transform">
+        <pig xmlns="uri:oozie:pig-action:0.2">
+            <script>news_transform.pig</script>
+            <param>input=/user/news/stream output=/user/news/cleaned</param>
+        </pig>
+        <ok to="hive_analytics" />
+        <error to="kill" />
+    </action>
+    <action name="hive_analytics">
+        <hive xmlns="uri:oozie:hive-action:0.6">
+            <script>news_analytics.hql</script>
+            <param>db=news_db</param>
+        </hive>
+        <ok to="spark_topics" />
+        <error to="kill" />
+    </action>
+    <action name="spark_topics">
+        <spark xmlns="uri:oozie:spark-action:0.1">
+            <master>yarn</master>
+            <mode>cluster</mode>
+            <name>news-lda-topics</name>
+            <jar>news_pipeline.jar</jar>
+            <class>com.news.pipeline.SparkTopicModel</class>
+        </spark>
+        <ok to="shell_verify" />
+        <error to="kill" />
+    </action>
+    <action name="shell_verify">
+        <shell xmlns="uri:oozie:shell-action:0.3">
+            <exec>verify_artifacts.sh</exec>
+            <file>verify_artifacts.sh#verify_artifacts.sh</file>
+        </shell>
+        <ok to="end" />
+        <error to="kill" />
+    </action>
+    <end name="end" />
+    <kill name="kill">
+        <message>News pipeline action failed: ${wf:lastErrorNode()}</message>
+    </kill>
+</workflow-app>

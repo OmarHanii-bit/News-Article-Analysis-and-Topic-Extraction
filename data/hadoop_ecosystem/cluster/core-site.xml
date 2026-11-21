@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://news-namenode-01:8020</value>
+        <description>Default filesystem URI. All hdfs:/// paths resolve to this NameNode.</description>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/data/hadoop/tmp</value>
+        <description>Base directory for temporary Hadoop files (local disk on each node).</description>
+    </property>
+    <property>
+        <name>io.file.buffer.size</name>
+        <value>131072</value>
+        <description>128 KB stream buffer — tuned for high-throughput sequential text reads.</description>
+    </property>
+    <property>
+        <name>fs.trash.interval</name>
+        <value>1440</value>
+        <description>Enable a 24-hour HDFS Trash to protect against accidental `hdfs dfs -rm`.</description>
+    </property>
+    <property>
+        <name>ha.zookeeper.quorum</name>
+        <value>news-zk-01:2181,news-zk-02:2181,news-zk-03:2181</value>
+        <description>ZooKeeper quorum used for NameNode automatic failover (HA).</description>
+    </property>
+</configuration>

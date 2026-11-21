@@ -1,0 +1,1406 @@
+{
+  "metadata": {
+    "execution_timestamp": "2026-11-21 10:23:23",
+    "input_dataset": "data/raw_news_articles.csv",
+    "label_mode": "curated",
+    "total_articles_processed": 6000,
+    "vocabulary_size": 438,
+    "num_topics": 6,
+    "elapsed_seconds": 49.99
+  },
+  "topics": {
+    "Topic_0": {
+      "topic_id": 0,
+      "terms": [
+        "breakthrough",
+        "across",
+        "healthcare",
+        "clinical",
+        "iii",
+        "trial",
+        "phase",
+        "sequencing",
+        "genomic",
+        "immunotherapy",
+        "oncology",
+        "regulators"
+      ],
+      "weights": [
+        0.0253,
+        0.021,
+        0.0204,
+        0.0156,
+        0.0155,
+        0.0155,
+        0.0155,
+        0.0154,
+        0.0154,
+        0.0151,
+        0.0147,
+        0.0127
+      ],
+      "label_summary": "breakthrough, across, healthcare, clinical, iii"
+    },
+    "Topic_1": {
+      "topic_id": 1,
+      "terms": [
+        "trade",
+        "offs",
+        "climate",
+        "battery",
+        "grid",
+        "capacity",
+        "renewable",
+        "capture",
+        "industrial",
+        "supported",
+        "integrated",
+        "modern"
+      ],
+      "weights": [
+        0.0185,
+        0.0184,
+        0.0177,
+        0.0145,
+        0.0145,
+        0.0143,
+        0.014,
+        0.0135,
+        0.0119,
+        0.0119,
+        0.0119,
+        0.0119
+      ],
+      "label_summary": "trade, offs, climate, battery, grid"
+    },
+    "Topic_2": {
+      "topic_id": 2,
+      "terms": [
+        "quantum",
+        "coherence",
+        "qubit",
+        "high",
+        "spectroscopic",
+        "models",
+        "record",
+        "circuit",
+        "superconducting",
+        "representing",
+        "milestone",
+        "multi"
+      ],
+      "weights": [
+        0.0149,
+        0.0149,
+        0.0148,
+        0.0141,
+        0.0133,
+        0.0121,
+        0.0118,
+        0.0118,
+        0.0118,
+        0.0118,
+        0.0118,
+        0.0118
+      ],
+      "label_summary": "quantum, coherence, qubit, high, spectroscopic"
+    },
+    "Topic_3": {
+      "topic_id": 3,
+      "terms": [
+        "capital",
+        "across",
+        "trade",
+        "benchmark",
+        "empirical",
+        "market",
+        "inflation",
+        "yields",
+        "balance",
+        "markets",
+        "policy",
+        "throughput"
+      ],
+      "weights": [
+        0.0227,
+        0.0152,
+        0.015,
+        0.0145,
+        0.0132,
+        0.0125,
+        0.0088,
+        0.0086,
+        0.0085,
+        0.0084,
+        0.0078,
+        0.0077
+      ],
+      "label_summary": "capital, across, trade, benchmark, empirical"
+    },
+    "Topic_4": {
+      "topic_id": 4,
+      "terms": [
+        "throughput",
+        "benchmark",
+        "indicate",
+        "fiscal",
+        "data",
+        "past",
+        "metrics",
+        "surged",
+        "recent",
+        "quarters",
+        "adoption",
+        "compliance"
+      ],
+      "weights": [
+        0.0105,
+        0.0101,
+        0.01,
+        0.0096,
+        0.0093,
+        0.0093,
+        0.0092,
+        0.0092,
+        0.0089,
+        0.0089,
+        0.0089,
+        0.0087
+      ],
+      "label_summary": "throughput, benchmark, indicate, fiscal, data"
+    },
+    "Topic_5": {
+      "topic_id": 5,
+      "terms": [
+        "data",
+        "throughput",
+        "cluster",
+        "latency",
+        "inference",
+        "report",
+        "algorithmic",
+        "north",
+        "provenance",
+        "regulatory",
+        "guidelines",
+        "scrutinizing"
+      ],
+      "weights": [
+        0.0231,
+        0.0157,
+        0.0118,
+        0.0116,
+        0.0116,
+        0.0108,
+        0.0099,
+        0.0099,
+        0.0099,
+        0.0099,
+        0.0099,
+        0.0099
+      ],
+      "label_summary": "data, throughput, cluster, latency, inference"
+    }
+  },
+  "topic_summary": [
+    {
+      "topic_label": "Clinical Medicine & Genomics",
+      "total_articles": 2386,
+      "mean_sentiment": 0.33698684015379216,
+      "mean_confidence": 0.9912021974006423,
+      "mean_length": 80.48868398994132
+    },
+    {
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "total_articles": 1470,
+      "mean_sentiment": 0.568185427343967,
+      "mean_confidence": 0.9928501877654977,
+      "mean_length": 105.26054421768707
+    },
+    {
+      "topic_label": "AI Infrastructure & Compute",
+      "total_articles": 951,
+      "mean_sentiment": 0.558095898475306,
+      "mean_confidence": 0.9907033733012924,
+      "mean_length": 77.10199789695058
+    },
+    {
+      "topic_label": "Monetary Policy & Markets",
+      "total_articles": 723,
+      "mean_sentiment": 0.7867670791277747,
+      "mean_confidence": 0.9910092130406434,
+      "mean_length": 82.82849239280775
+    },
+    {
+      "topic_label": "Antitrust & Regulatory Policy",
+      "total_articles": 470,
+      "mean_sentiment": -0.02824404277700059,
+      "mean_confidence": 0.9906206488609314,
+      "mean_length": 78.84468085106383
+    }
+  ],
+  "temporal_trends": [
+    {
+      "year": 2024,
+      "month": 1,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 49,
+      "avg_sentiment": 0.5876367343779729,
+      "avg_word_count": 76.48979591836735
+    },
+    {
+      "year": 2024,
+      "month": 1,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 19,
+      "avg_sentiment": -0.03196315702639128,
+      "avg_word_count": 77.94736842105263
+    },
+    {
+      "year": 2024,
+      "month": 1,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 93,
+      "avg_sentiment": 0.32485376578825775,
+      "avg_word_count": 82.80645161290323
+    },
+    {
+      "year": 2024,
+      "month": 1,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 37,
+      "avg_sentiment": 0.7883702645430694,
+      "avg_word_count": 83.94594594594595
+    },
+    {
+      "year": 2024,
+      "month": 1,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 42,
+      "avg_sentiment": 0.5893023647367954,
+      "avg_word_count": 107.71428571428571
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 31,
+      "avg_sentiment": 0.5716709670039916,
+      "avg_word_count": 78.70967741935483
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 14,
+      "avg_sentiment": 0.01707856836063521,
+      "avg_word_count": 79.35714285714286
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 99,
+      "avg_sentiment": 0.3287777795334055,
+      "avg_word_count": 80.8080808080808
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 20,
+      "avg_sentiment": 0.8249850064516068,
+      "avg_word_count": 83.1
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 55,
+      "avg_sentiment": 0.5708563488992777,
+      "avg_word_count": 107.10909090909091
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 44,
+      "avg_sentiment": 0.520129548216408,
+      "avg_word_count": 76.36363636363636
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 28,
+      "avg_sentiment": -0.027760713760341917,
+      "avg_word_count": 77.07142857142857
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 110,
+      "avg_sentiment": 0.35576636405153705,
+      "avg_word_count": 79.68181818181819
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 32,
+      "avg_sentiment": 0.8042187504470348,
+      "avg_word_count": 83.75
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 58,
+      "avg_sentiment": 0.5417327456947031,
+      "avg_word_count": 103.79310344827586
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 35,
+      "avg_sentiment": 0.5691399955323764,
+      "avg_word_count": 77.85714285714286
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 16,
+      "avg_sentiment": 0.020587497856467962,
+      "avg_word_count": 78.6875
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 101,
+      "avg_sentiment": 0.378530691018199,
+      "avg_word_count": 78.00990099009901
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 37,
+      "avg_sentiment": 0.7856621597264264,
+      "avg_word_count": 82.5945945945946
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 62,
+      "avg_sentiment": 0.6083661123148857,
+      "avg_word_count": 107.88709677419355
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 40,
+      "avg_sentiment": 0.567395001463592,
+      "avg_word_count": 76.775
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 20,
+      "avg_sentiment": -0.10752499923110008,
+      "avg_word_count": 80.4
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 93,
+      "avg_sentiment": 0.3386698919999343,
+      "avg_word_count": 81.6236559139785
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 28,
+      "avg_sentiment": 0.8199749972139087,
+      "avg_word_count": 84.35714285714286
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 52,
+      "avg_sentiment": 0.5403038329229906,
+      "avg_word_count": 104.78846153846153
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 43,
+      "avg_sentiment": 0.5594279102461283,
+      "avg_word_count": 77.02325581395348
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 23,
+      "avg_sentiment": 0.1324826054598974,
+      "avg_word_count": 77.04347826086956
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 95,
+      "avg_sentiment": 0.29063052374281384,
+      "avg_word_count": 79.6842105263158
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 22,
+      "avg_sentiment": 0.8109727258032019,
+      "avg_word_count": 83.9090909090909
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 46,
+      "avg_sentiment": 0.5777999841324661,
+      "avg_word_count": 107.97826086956522
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 26,
+      "avg_sentiment": 0.6218692279205873,
+      "avg_word_count": 81.0
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 14,
+      "avg_sentiment": 0.07100714264171464,
+      "avg_word_count": 81.92857142857143
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 104,
+      "avg_sentiment": 0.2665067330504266,
+      "avg_word_count": 80.54807692307692
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 36,
+      "avg_sentiment": 0.7927694386906095,
+      "avg_word_count": 85.41666666666667
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 68,
+      "avg_sentiment": 0.5744264564093422,
+      "avg_word_count": 106.1029411764706
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 37,
+      "avg_sentiment": 0.5634891892204413,
+      "avg_word_count": 74.72972972972973
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 13,
+      "avg_sentiment": -0.20890768732015902,
+      "avg_word_count": 78.53846153846153
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 107,
+      "avg_sentiment": 0.4234439271423861,
+      "avg_word_count": 79.69158878504673
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 27,
+      "avg_sentiment": 0.7991814834100229,
+      "avg_word_count": 83.22222222222223
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 64,
+      "avg_sentiment": 0.5808749860152602,
+      "avg_word_count": 102.34375
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 41,
+      "avg_sentiment": 0.5833487786897799,
+      "avg_word_count": 79.78048780487805
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 13,
+      "avg_sentiment": -0.037184614974718824,
+      "avg_word_count": 75.46153846153847
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 83,
+      "avg_sentiment": 0.3915168683841286,
+      "avg_word_count": 79.32530120481928
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 30,
+      "avg_sentiment": 0.7886566658814748,
+      "avg_word_count": 82.86666666666666
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 53,
+      "avg_sentiment": 0.5447792339156259,
+      "avg_word_count": 102.16981132075472
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 30,
+      "avg_sentiment": 0.5370733335614204,
+      "avg_word_count": 76.5
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 25,
+      "avg_sentiment": -0.00555199921131134,
+      "avg_word_count": 78.72
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 94,
+      "avg_sentiment": 0.3381095758857245,
+      "avg_word_count": 80.13829787234043
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 26,
+      "avg_sentiment": 0.7793115331576421,
+      "avg_word_count": 85.46153846153847
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 67,
+      "avg_sentiment": 0.5549208797625641,
+      "avg_word_count": 104.25373134328358
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 41,
+      "avg_sentiment": 0.5720756100263538,
+      "avg_word_count": 75.39024390243902
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 30,
+      "avg_sentiment": -0.05079333633184433,
+      "avg_word_count": 81.86666666666666
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 98,
+      "avg_sentiment": 0.35539897816369725,
+      "avg_word_count": 80.90816326530613
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 22,
+      "avg_sentiment": 0.7305272736332633,
+      "avg_word_count": 78.0909090909091
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 65,
+      "avg_sentiment": 0.554732293005173,
+      "avg_word_count": 103.70769230769231
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 35,
+      "avg_sentiment": 0.43202571421861646,
+      "avg_word_count": 76.17142857142858
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 19,
+      "avg_sentiment": -0.18636315825738406,
+      "avg_word_count": 79.26315789473684
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 88,
+      "avg_sentiment": 0.29976590955629945,
+      "avg_word_count": 80.63636363636364
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 29,
+      "avg_sentiment": 0.7817758568401995,
+      "avg_word_count": 82.13793103448276
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 62,
+      "avg_sentiment": 0.5667838552786458,
+      "avg_word_count": 104.79032258064517
+    },
+    {
+      "year": 2025,
+      "month": 1,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 29,
+      "avg_sentiment": 0.6415448278702539,
+      "avg_word_count": 80.24137931034483
+    },
+    {
+      "year": 2025,
+      "month": 1,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 25,
+      "avg_sentiment": -0.08372799783945084,
+      "avg_word_count": 79.56
+    },
+    {
+      "year": 2025,
+      "month": 1,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 112,
+      "avg_sentiment": 0.3752473210915923,
+      "avg_word_count": 79.27678571428571
+    },
+    {
+      "year": 2025,
+      "month": 1,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 24,
+      "avg_sentiment": 0.768758329252402,
+      "avg_word_count": 79.79166666666667
+    },
+    {
+      "year": 2025,
+      "month": 1,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 65,
+      "avg_sentiment": 0.5682922928379133,
+      "avg_word_count": 103.13846153846154
+    },
+    {
+      "year": 2025,
+      "month": 2,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 39,
+      "avg_sentiment": 0.5637179508041112,
+      "avg_word_count": 80.25641025641026
+    },
+    {
+      "year": 2025,
+      "month": 2,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 25,
+      "avg_sentiment": -0.029408000111579895,
+      "avg_word_count": 76.8
+    },
+    {
+      "year": 2025,
+      "month": 2,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 87,
+      "avg_sentiment": 0.29741149481343127,
+      "avg_word_count": 81.94252873563218
+    },
+    {
+      "year": 2025,
+      "month": 2,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 21,
+      "avg_sentiment": 0.7852952338400341,
+      "avg_word_count": 79.52380952380952
+    },
+    {
+      "year": 2025,
+      "month": 2,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 48,
+      "avg_sentiment": 0.5458374867836634,
+      "avg_word_count": 104.91666666666667
+    },
+    {
+      "year": 2025,
+      "month": 3,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 46,
+      "avg_sentiment": 0.5372652105339195,
+      "avg_word_count": 73.95652173913044
+    },
+    {
+      "year": 2025,
+      "month": 3,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 20,
+      "avg_sentiment": 0.0031499989330768586,
+      "avg_word_count": 78.9
+    },
+    {
+      "year": 2025,
+      "month": 3,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 121,
+      "avg_sentiment": 0.31259586840621695,
+      "avg_word_count": 81.91735537190083
+    },
+    {
+      "year": 2025,
+      "month": 3,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 40,
+      "avg_sentiment": 0.7639624968171119,
+      "avg_word_count": 81.05
+    },
+    {
+      "year": 2025,
+      "month": 3,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 66,
+      "avg_sentiment": 0.592619680771322,
+      "avg_word_count": 108.60606060606061
+    },
+    {
+      "year": 2025,
+      "month": 4,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 42,
+      "avg_sentiment": 0.5763952390601238,
+      "avg_word_count": 79.07142857142857
+    },
+    {
+      "year": 2025,
+      "month": 4,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 22,
+      "avg_sentiment": -0.007459090853279287,
+      "avg_word_count": 79.0909090909091
+    },
+    {
+      "year": 2025,
+      "month": 4,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 99,
+      "avg_sentiment": 0.3119939396327192,
+      "avg_word_count": 81.16161616161617
+    },
+    {
+      "year": 2025,
+      "month": 4,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 27,
+      "avg_sentiment": 0.7691629617302506,
+      "avg_word_count": 84.88888888888889
+    },
+    {
+      "year": 2025,
+      "month": 4,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 78,
+      "avg_sentiment": 0.5649589596268458,
+      "avg_word_count": 105.12820512820512
+    },
+    {
+      "year": 2025,
+      "month": 5,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 46,
+      "avg_sentiment": 0.5349108690152997,
+      "avg_word_count": 78.32608695652173
+    },
+    {
+      "year": 2025,
+      "month": 5,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 12,
+      "avg_sentiment": 0.01359166701634725,
+      "avg_word_count": 77.25
+    },
+    {
+      "year": 2025,
+      "month": 5,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 112,
+      "avg_sentiment": 0.3272160709769066,
+      "avg_word_count": 81.33928571428571
+    },
+    {
+      "year": 2025,
+      "month": 5,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 27,
+      "avg_sentiment": 0.8168037003941007,
+      "avg_word_count": 83.37037037037037
+    },
+    {
+      "year": 2025,
+      "month": 5,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 79,
+      "avg_sentiment": 0.5604012518932547,
+      "avg_word_count": 106.9493670886076
+    },
+    {
+      "year": 2025,
+      "month": 6,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 40,
+      "avg_sentiment": 0.5721975015476346,
+      "avg_word_count": 78.075
+    },
+    {
+      "year": 2025,
+      "month": 6,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 17,
+      "avg_sentiment": -0.12707647330620708,
+      "avg_word_count": 79.58823529411765
+    },
+    {
+      "year": 2025,
+      "month": 6,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 105,
+      "avg_sentiment": 0.33354190637667974,
+      "avg_word_count": 81.74285714285715
+    },
+    {
+      "year": 2025,
+      "month": 6,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 38,
+      "avg_sentiment": 0.8128131533923902,
+      "avg_word_count": 84.36842105263158
+    },
+    {
+      "year": 2025,
+      "month": 6,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 60,
+      "avg_sentiment": 0.5890233176449935,
+      "avg_word_count": 107.01666666666667
+    },
+    {
+      "year": 2025,
+      "month": 7,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 32,
+      "avg_sentiment": 0.5655781249515712,
+      "avg_word_count": 74.9375
+    },
+    {
+      "year": 2025,
+      "month": 7,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 22,
+      "avg_sentiment": 0.009404544803229246,
+      "avg_word_count": 78.27272727272727
+    },
+    {
+      "year": 2025,
+      "month": 7,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 88,
+      "avg_sentiment": 0.2717204558747736,
+      "avg_word_count": 80.43181818181819
+    },
+    {
+      "year": 2025,
+      "month": 7,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 32,
+      "avg_sentiment": 0.8131937459111214,
+      "avg_word_count": 84.0625
+    },
+    {
+      "year": 2025,
+      "month": 7,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 64,
+      "avg_sentiment": 0.5578077948885038,
+      "avg_word_count": 104.8125
+    },
+    {
+      "year": 2025,
+      "month": 8,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 50,
+      "avg_sentiment": 0.5480959984660149,
+      "avg_word_count": 77.14
+    },
+    {
+      "year": 2025,
+      "month": 8,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 21,
+      "avg_sentiment": 0.01062857395126706,
+      "avg_word_count": 79.23809523809524
+    },
+    {
+      "year": 2025,
+      "month": 8,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 105,
+      "avg_sentiment": 0.3749171440800031,
+      "avg_word_count": 79.16190476190476
+    },
+    {
+      "year": 2025,
+      "month": 8,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 34,
+      "avg_sentiment": 0.7618176463772269,
+      "avg_word_count": 83.73529411764706
+    },
+    {
+      "year": 2025,
+      "month": 8,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 58,
+      "avg_sentiment": 0.5716758471881521,
+      "avg_word_count": 106.60344827586206
+    },
+    {
+      "year": 2025,
+      "month": 9,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 40,
+      "avg_sentiment": 0.49487499967217446,
+      "avg_word_count": 76.15
+    },
+    {
+      "year": 2025,
+      "month": 9,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 19,
+      "avg_sentiment": 0.04492631711457905,
+      "avg_word_count": 78.89473684210526
+    },
+    {
+      "year": 2025,
+      "month": 9,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 102,
+      "avg_sentiment": 0.3654901962727308,
+      "avg_word_count": 78.93137254901961
+    },
+    {
+      "year": 2025,
+      "month": 9,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 28,
+      "avg_sentiment": 0.8035214245319366,
+      "avg_word_count": 84.96428571428571
+    },
+    {
+      "year": 2025,
+      "month": 9,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 67,
+      "avg_sentiment": 0.5888746105023285,
+      "avg_word_count": 103.85074626865672
+    },
+    {
+      "year": 2025,
+      "month": 10,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 38,
+      "avg_sentiment": 0.5381052633257288,
+      "avg_word_count": 75.34210526315789
+    },
+    {
+      "year": 2025,
+      "month": 10,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 15,
+      "avg_sentiment": -0.12973333249489466,
+      "avg_word_count": 81.33333333333333
+    },
+    {
+      "year": 2025,
+      "month": 10,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 95,
+      "avg_sentiment": 0.36087473532871195,
+      "avg_word_count": 80.47368421052632
+    },
+    {
+      "year": 2025,
+      "month": 10,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 37,
+      "avg_sentiment": 0.7652108041015832,
+      "avg_word_count": 80.16216216216216
+    },
+    {
+      "year": 2025,
+      "month": 10,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 69,
+      "avg_sentiment": 0.5599202753409095,
+      "avg_word_count": 105.02898550724638
+    },
+    {
+      "year": 2025,
+      "month": 11,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 47,
+      "avg_sentiment": 0.5869063786528212,
+      "avg_word_count": 77.08510638297872
+    },
+    {
+      "year": 2025,
+      "month": 11,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 14,
+      "avg_sentiment": 0.014607140528304237,
+      "avg_word_count": 78.42857142857143
+    },
+    {
+      "year": 2025,
+      "month": 11,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 93,
+      "avg_sentiment": 0.28367956811862605,
+      "avg_word_count": 80.16129032258064
+    },
+    {
+      "year": 2025,
+      "month": 11,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 35,
+      "avg_sentiment": 0.7773742863110134,
+      "avg_word_count": 84.2
+    },
+    {
+      "year": 2025,
+      "month": 11,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 65,
+      "avg_sentiment": 0.5275784510832566,
+      "avg_word_count": 101.2
+    },
+    {
+      "year": 2025,
+      "month": 12,
+      "topic_label": "AI Infrastructure & Compute",
+      "article_count": 50,
+      "avg_sentiment": 0.5743179978430271,
+      "avg_word_count": 75.62
+    },
+    {
+      "year": 2025,
+      "month": 12,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "article_count": 24,
+      "avg_sentiment": -0.023420834292968113,
+      "avg_word_count": 78.29166666666667
+    },
+    {
+      "year": 2025,
+      "month": 12,
+      "topic_label": "Clinical Medicine & Genomics",
+      "article_count": 102,
+      "avg_sentiment": 0.3607754894696614,
+      "avg_word_count": 81.42156862745098
+    },
+    {
+      "year": 2025,
+      "month": 12,
+      "topic_label": "Monetary Policy & Markets",
+      "article_count": 34,
+      "avg_sentiment": 0.7536500008667216,
+      "avg_word_count": 77.58823529411765
+    },
+    {
+      "year": 2025,
+      "month": 12,
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "article_count": 57,
+      "avg_sentiment": 0.6072315607677427,
+      "avg_word_count": 107.6842105263158
+    }
+  ],
+  "publisher_distribution": [
+    {
+      "publication": "Associated Press",
+      "topic_label": "Clinical Medicine & Genomics",
+      "count": 298
+    },
+    {
+      "publication": "Associated Press",
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "count": 170
+    },
+    {
+      "publication": "Associated Press",
+      "topic_label": "AI Infrastructure & Compute",
+      "count": 127
+    },
+    {
+      "publication": "Associated Press",
+      "topic_label": "Monetary Policy & Markets",
+      "count": 103
+    },
+    {
+      "publication": "Associated Press",
+      "topic_label": "Antitrust & Regulatory Policy",
+      "count": 54
+    },
+    {
+      "publication": "BBC News",
+      "topic_label": "Clinical Medicine & Genomics",
+      "count": 306
+    },
+    {
+      "publication": "BBC News",
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "count": 157
+    },
+    {
+      "publication": "BBC News",
+      "topic_label": "AI Infrastructure & Compute",
+      "count": 128
+    },
+    {
+      "publication": "BBC News",
+      "topic_label": "Monetary Policy & Markets",
+      "count": 94
+    },
+    {
+      "publication": "BBC News",
+      "topic_label": "Antitrust & Regulatory Policy",
+      "count": 63
+    },
+    {
+      "publication": "Bloomberg",
+      "topic_label": "Clinical Medicine & Genomics",
+      "count": 284
+    },
+    {
+      "publication": "Bloomberg",
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "count": 182
+    },
+    {
+      "publication": "Bloomberg",
+      "topic_label": "AI Infrastructure & Compute",
+      "count": 127
+    },
+    {
+      "publication": "Bloomberg",
+      "topic_label": "Monetary Policy & Markets",
+      "count": 88
+    },
+    {
+      "publication": "Bloomberg",
+      "topic_label": "Antitrust & Regulatory Policy",
+      "count": 60
+    },
+    {
+      "publication": "Financial Times",
+      "topic_label": "Clinical Medicine & Genomics",
+      "count": 297
+    },
+    {
+      "publication": "Financial Times",
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "count": 183
+    },
+    {
+      "publication": "Financial Times",
+      "topic_label": "AI Infrastructure & Compute",
+      "count": 120
+    },
+    {
+      "publication": "Financial Times",
+      "topic_label": "Monetary Policy & Markets",
+      "count": 106
+    },
+    {
+      "publication": "Financial Times",
+      "topic_label": "Antitrust & Regulatory Policy",
+      "count": 59
+    },
+    {
+      "publication": "Reuters",
+      "topic_label": "Clinical Medicine & Genomics",
+      "count": 339
+    },
+    {
+      "publication": "Reuters",
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "count": 208
+    },
+    {
+      "publication": "Reuters",
+      "topic_label": "AI Infrastructure & Compute",
+      "count": 118
+    },
+    {
+      "publication": "Reuters",
+      "topic_label": "Monetary Policy & Markets",
+      "count": 93
+    },
+    {
+      "publication": "Reuters",
+      "topic_label": "Antitrust & Regulatory Policy",
+      "count": 56
+    },
+    {
+      "publication": "TechCrunch",
+      "topic_label": "Clinical Medicine & Genomics",
+      "count": 291
+    },
+    {
+      "publication": "TechCrunch",
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "count": 199
+    },
+    {
+      "publication": "TechCrunch",
+      "topic_label": "AI Infrastructure & Compute",
+      "count": 113
+    },
+    {
+      "publication": "TechCrunch",
+      "topic_label": "Monetary Policy & Markets",
+      "count": 83
+    },
+    {
+      "publication": "TechCrunch",
+      "topic_label": "Antitrust & Regulatory Policy",
+      "count": 62
+    },
+    {
+      "publication": "The New York Times",
+      "topic_label": "Clinical Medicine & Genomics",
+      "count": 280
+    },
+    {
+      "publication": "The New York Times",
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "count": 177
+    },
+    {
+      "publication": "The New York Times",
+      "topic_label": "AI Infrastructure & Compute",
+      "count": 106
+    },
+    {
+      "publication": "The New York Times",
+      "topic_label": "Monetary Policy & Markets",
+      "count": 79
+    },
+    {
+      "publication": "The New York Times",
+      "topic_label": "Antitrust & Regulatory Policy",
+      "count": 67
+    },
+    {
+      "publication": "The Wall Street Journal",
+      "topic_label": "Clinical Medicine & Genomics",
+      "count": 291
+    },
+    {
+      "publication": "The Wall Street Journal",
+      "topic_label": "Quantum Physics & Advanced Materials",
+      "count": 194
+    },
+    {
+      "publication": "The Wall Street Journal",
+      "topic_label": "AI Infrastructure & Compute",
+      "count": 112
+    },
+    {
+      "publication": "The Wall Street Journal",
+      "topic_label": "Monetary Policy & Markets",
+      "count": 77
+    },
+    {
+      "publication": "The Wall Street Journal",
+      "topic_label": "Antitrust & Regulatory Policy",
+      "count": 49
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "component": "Cluster Computing (HDFS + YARN + MapReduce)",
+  "owner": "Member 2 \u2014 Priya Sharma",
+  "cluster_name": "news-bigdata-cluster",
+  "topology": {
+    "cluster_name": "news-bigdata-cluster",
+    "namenode": {
+      "host": "news-namenode-01",
+      "role": "NameNode + ResourceManager",
+      "memory_gb": 16,
+      "disk_tb": 2
+    },
+    "datanodes": [
+      {
+        "host": "news-worker-01",
+        "roles": "DataNode + NodeManager",
+        "memory_gb": 32,
+        "disk_tb": 8,
+        "cores": 8
+      },
+      {
+        "host": "news-worker-02",
+        "roles": "DataNode + NodeManager",
+        "memory_gb": 32,
+        "disk_tb": 8,
+        "cores": 8
+      },
+      {
+        "host": "news-worker-03",
+        "roles": "DataNode + NodeManager",
+        "memory_gb": 32,
+        "disk_tb": 8,
+        "cores": 8
+      }
+    ],
+    "zookeeper_ensemble": [
+      "news-zk-01:2181",
+      "news-zk-02:2181",
+      "news-zk-03:2181"
+    ],
+    "edge_node": {
+      "host": "news-edge-01",
+      "role": "Client gateway (spark-submit / hive / sqoop / flume)"
+    }
+  },
+  "capacity_plan": {
+    "measured_at": "2026-11-21T11:24:38",
+    "raw_csv_bytes": 5673429,
+    "mapreduce_tsv_bytes": 51552,
+    "parquet_bytes": 424298,
+    "parquet_files": 24,
+    "logical_bytes": 6149279,
+    "logical_mb": 5.86,
+    "block_size_mb": 128,
+    "total_blocks": 1,
+    "replication_factor": 3,
+    "replicated_bytes": 18447837,
+    "recommended_hdfs_capacity_bytes": 23982188,
+    "recommended_hdfs_capacity_gb": 0.02,
+    "worker_memory_gb": 96,
+    "yarn_available_memory_gb": 76,
+    "container_size_gb": 4,
+    "max_concurrent_containers": 19,
+    "spark_executor_instances": 18,
+    "spark_executor_cores": 1,
+    "spark_executor_memory_gb": 4,
+    "spark_driver_memory_gb": 4
+  },
+  "config_files": [
+    "data\\hadoop_ecosystem\\cluster\\core-site.xml",
+    "data\\hadoop_ecosystem\\cluster\\hdfs-site.xml",
+    "data\\hadoop_ecosystem\\cluster\\yarn-site.xml",
+    "data\\hadoop_ecosystem\\cluster\\mapred-site.xml",
+    "data\\hadoop_ecosystem\\cluster\\capacity-scheduler.xml",
+    "data\\hadoop_ecosystem\\cluster\\hbase-site.xml",
+    "data\\hadoop_ecosystem\\cluster\\hive-site.xml",
+    "data\\hadoop_ecosystem\\cluster\\spark-defaults.conf"
+  ],
+  "commands_file": "data\\hadoop_ecosystem\\cluster\\real_cluster_commands.md",
+  "out_dir": "data/hadoop_ecosystem\\cluster"
+}

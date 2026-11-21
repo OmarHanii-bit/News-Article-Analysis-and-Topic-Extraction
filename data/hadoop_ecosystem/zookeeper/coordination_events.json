@@ -1,0 +1,20 @@
+{
+  "leader": "/news-pipeline/election/worker-0000000001",
+  "events": [
+    {
+      "session": 1001,
+      "path": "/news-pipeline/config",
+      "event": "NodeDataChanged"
+    },
+    {
+      "session": 1002,
+      "path": "/news-pipeline/config",
+      "event": "NodeDataChanged"
+    },
+    {
+      "session": 1003,
+      "path": "/news-pipeline/config",
+      "event": "NodeDataChanged"
+    }
+  ]
+}

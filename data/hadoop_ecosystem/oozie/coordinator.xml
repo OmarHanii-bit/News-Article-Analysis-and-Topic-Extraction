@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<coordinator-app xmlns="uri:oozie:coordinator:0.4" name="news_pipeline_coordinator" frequency="${coord:days(1)}" start="2025-01-01T00:00Z" end="2026-12-31T00:00Z" timezone="UTC">
+    <datasets>
+        <dataset name="news_input" frequency="${coord:days(1)}" initial-instance="2025-01-01T00:00Z" timezone="UTC">
+            <uri-template>${nameNode}/user/news/stream/${YEAR}/${MONTH}/${DAY}</uri-template>
+        </dataset>
+    </datasets>
+    <action>
+        <workflow>
+            <app-path>${nameNode}/user/news/oozie/news_pipeline</app-path>
+            <configuration>
+                <property>
+                    <name>nameNode</name>
+                    <value>${nameNode}</value>
+                </property>
+                <property>
+                    <name>queueName</name>
+                    <value>${queueName}</value>
+                </property>
+            </configuration>
+        </workflow>
+    </action>
+</coordinator-app>

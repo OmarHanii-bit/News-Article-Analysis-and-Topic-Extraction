@@ -1,0 +1,119 @@
+{
+  "zxid": 13,
+  "sequence": {
+    "/news-pipeline/election": 3,
+    "/news-pipeline/locks/topic-model": 3
+  },
+  "nodes": {
+    "/": {
+      "data": "",
+      "ephemeral": false,
+      "sequential": false,
+      "owner": 0,
+      "czxid": 0,
+      "mzxid": 0,
+      "pzxid": 1,
+      "version": 0,
+      "cversion": 5
+    },
+    "/news-pipeline": {
+      "data": "",
+      "ephemeral": false,
+      "sequential": false,
+      "owner": 0,
+      "czxid": 1,
+      "mzxid": 1,
+      "pzxid": 5,
+      "version": 0,
+      "cversion": 3
+    },
+    "/news-pipeline/election": {
+      "data": "",
+      "ephemeral": false,
+      "sequential": false,
+      "owner": 0,
+      "czxid": 2,
+      "mzxid": 2,
+      "pzxid": 8,
+      "version": 0,
+      "cversion": 4
+    },
+    "/news-pipeline/locks": {
+      "data": "",
+      "ephemeral": false,
+      "sequential": false,
+      "owner": 0,
+      "czxid": 3,
+      "mzxid": 3,
+      "pzxid": 4,
+      "version": 0,
+      "cversion": 1
+    },
+    "/news-pipeline/locks/topic-model": {
+      "data": "",
+      "ephemeral": false,
+      "sequential": false,
+      "owner": 0,
+      "czxid": 4,
+      "mzxid": 4,
+      "pzxid": 12,
+      "version": 0,
+      "cversion": 4
+    },
+    "/news-pipeline/config": {
+      "data": "{\"lda_k\": 8, \"min_word_count\": 5, \"batch_size\": 256, \"spark_partitions\": 16}",
+      "ephemeral": false,
+      "sequential": false,
+      "owner": 0,
+      "czxid": 5,
+      "mzxid": 9,
+      "pzxid": 5,
+      "version": 1,
+      "cversion": 0
+    },
+    "/news-pipeline/election/worker-0000000002": {
+      "data": "session=1002",
+      "ephemeral": true,
+      "sequential": true,
+      "owner": 1002,
+      "czxid": 7,
+      "mzxid": 7,
+      "pzxid": 7,
+      "version": 0,
+      "cversion": 0
+    },
+    "/news-pipeline/election/worker-0000000003": {
+      "data": "session=1003",
+      "ephemeral": true,
+      "sequential": true,
+      "owner": 1003,
+      "czxid": 8,
+      "mzxid": 8,
+      "pzxid": 8,
+      "version": 0,
+      "cversion": 0
+    },
+    "/news-pipeline/locks/topic-model/lock-0000000002": {
+      "data": "owner=worker-2",
+      "ephemeral": true,
+      "sequential": true,
+      "owner": 1002,
+      "czxid": 11,
+      "mzxid": 11,
+      "pzxid": 11,
+      "version": 0,
+      "cversion": 0
+    },
+    "/news-pipeline/locks/topic-model/lock-0000000003": {
+      "data": "owner=worker-3",
+      "ephemeral": true,
+      "sequential": true,
+      "owner": 1003,
+      "czxid": 12,
+      "mzxid": 12,
+      "pzxid": 12,
+      "version": 0,
+      "cversion": 0
+    }
+  }
+}

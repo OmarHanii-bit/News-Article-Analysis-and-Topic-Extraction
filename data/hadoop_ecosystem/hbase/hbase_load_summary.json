@@ -1,0 +1,141 @@
+{
+  "table_name": "news_articles",
+  "column_families": [
+    "cf_meta",
+    "cf_nlp",
+    "cf_raw"
+  ],
+  "cfs": [
+    "cf_meta",
+    "cf_nlp",
+    "cf_raw"
+  ],
+  "rows_loaded": 2000,
+  "tables_created": [
+    "news_articles"
+  ],
+  "sample_row_keys": [
+    "08_ART_100008",
+    "10_ART_100010",
+    "07_ART_100113",
+    "06_ART_100146",
+    "02_ART_100186"
+  ],
+  "row_count": 2000,
+  "num_regions": 16,
+  "prefix_scan_rows": 3,
+  "topic_scan_samples": [
+    {
+      "row_key": "00_ART_100192",
+      "title": "TechCrunch Analysis: Legislative Reform and Bipartisan Coalition in Focus",
+      "topic_label": "Clinical Medicine & Genomics",
+      "sentiment_polarity": 0.4018999934196472
+    },
+    {
+      "row_key": "00_ART_100219",
+      "title": "Special Report: Emerging Trends in Sovereign Debt and Market Dynamics",
+      "topic_label": "Clinical Medicine & Genomics",
+      "sentiment_polarity": 0.025800000876188278
+    },
+    {
+      "row_key": "00_ART_100276",
+      "title": "Breakthrough Developments in Equity Markets Stir Industry Debate",
+      "topic_label": "Clinical Medicine & Genomics",
+      "sentiment_polarity": -0.3181999921798706
+    }
+  ],
+  "most_common_topic": "Clinical Medicine & Genomics",
+  "single_row": {
+    "cf_meta": {
+      "title": "Special Report: Emerging Trends in Quantum Computing and Market Dynamics",
+      "author": "Carlos Mendez",
+      "publication": "TechCrunch",
+      "category": "Science",
+      "sub_topic": "Quantum Computing",
+      "date": "2024-01-20"
+    },
+    "cf_nlp": {
+      "dominant_topic": 2,
+      "topic_label": "Antitrust & Regulatory Policy",
+      "topic_confidence": 0.9892488121986389,
+      "sentiment_polarity": 0.07720000296831131,
+      "clean_word_count": 70
+    },
+    "cf_raw": {
+      "url": "https://www.techcrunch.com/article/art_100008",
+      "word_count": 66
+    }
+  },
+  "table_descriptors": [
+    {
+      "table_name": "news_articles",
+      "column_families": [
+        "cf_meta",
+        "cf_nlp",
+        "cf_raw"
+      ],
+      "num_families": 3,
+      "created": "2026-11-21T11:24:40",
+      "row_count": 2000,
+      "families": [
+        {
+          "name": "cf_meta",
+          "declared_qualifiers": [
+            "title",
+            "author",
+            "publication",
+            "category",
+            "sub_topic",
+            "date"
+          ],
+          "qualifiers_observed": [
+            "author",
+            "category",
+            "date",
+            "publication",
+            "sub_topic",
+            "title"
+          ]
+        },
+        {
+          "name": "cf_nlp",
+          "declared_qualifiers": [
+            "dominant_topic",
+            "topic_label",
+            "topic_confidence",
+            "sentiment_polarity",
+            "clean_word_count"
+          ],
+          "qualifiers_observed": [
+            "clean_word_count",
+            "dominant_topic",
+            "sentiment_polarity",
+            "topic_confidence",
+            "topic_label"
+          ]
+        },
+        {
+          "name": "cf_raw",
+          "declared_qualifiers": [
+            "url",
+            "word_count"
+          ],
+          "qualifiers_observed": [
+            "url",
+            "word_count"
+          ]
+        }
+      ]
+    }
+  ],
+  "storage_files": {
+    "metadata": "data/hadoop_ecosystem/hbase/hbase_metadata.json",
+    "data": "data/hadoop_ecosystem/hbase/news_articles.json"
+  },
+  "real_cluster_commands": "data/hadoop_ecosystem/hbase/real_cluster_commands.md",
+  "hdfs_commands": [
+    "hdfs dfs -mkdir -p hdfs:///user/news/raw",
+    "hdfs dfs -put raw_news_articles.csv hdfs:///user/news/raw/raw_news_articles.csv"
+  ],
+  "out_dir": "data/hadoop_ecosystem/hbase"
+}

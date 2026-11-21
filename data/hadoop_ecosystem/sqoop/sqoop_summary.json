@@ -1,0 +1,23 @@
+{
+  "rdbms": {
+    "engine": "sqlite3 (emulating MySQL news @ jdbc:mysql://rdbms-host:3306/news)",
+    "db_path": "data/hadoop_ecosystem/sqoop/news_staging.db",
+    "size_bytes": 2002944
+  },
+  "tables": [
+    "publishers",
+    "articles_staging",
+    "articles_exported"
+  ],
+  "records_imported": 6008,
+  "records_exported": 6000,
+  "hdfs_paths": [
+    "/user/news/sqoop_import/publishers/part-m-00000.csv",
+    "/user/news/sqoop_import/articles_staging/part-m-00000.csv",
+    "/user/news/sqoop_import/articles_staging/part-m-00001.csv",
+    "/user/news/sqoop_import/articles_staging/part-m-00002.csv",
+    "/user/news/sqoop_import/articles_staging/part-m-00003.csv",
+    "/user/news/export/part-m-00000.csv"
+  ],
+  "out_dir": "data/hadoop_ecosystem/sqoop"
+}

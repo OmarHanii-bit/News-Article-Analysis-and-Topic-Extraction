@@ -1,0 +1,15 @@
+{
+  "cluster_id": "hbase-CID-cae1f6d4db2d",
+  "created": "2026-11-21T10:02:38",
+  "tables": {
+    "news_articles": {
+      "column_families": [
+        "cf_meta",
+        "cf_nlp",
+        "cf_raw"
+      ],
+      "created": "2026-11-21T11:24:40",
+      "row_count": 2000
+    }
+  }
+}

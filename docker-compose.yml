@@ -1,0 +1,75 @@
+# ============================================================================
+# Docker Compose Multi-Container Orchestration
+# Services:
+#   1. mongodb: Official MongoDB document database on port 27017
+#   2. bigdata-pipeline: PySpark + NLP + Streamlit Dashboard on port 8501
+#   3. jupyter-notebook: Interactive Notebook Environment on port 8888
+# ============================================================================
+
+services:
+  # --------------------------------------------------------------------------
+  # SERVICE 1: MongoDB NoSQL Document Store
+  # --------------------------------------------------------------------------
+  mongodb:
+    image: mongo:7.0
+    container_name: news_analytics_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: news_bigdata_analytics
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - bigdata_network
+
+  # --------------------------------------------------------------------------
+  # SERVICE 2: Big Data Analytics & Streamlit Executive Dashboard
+  # --------------------------------------------------------------------------
+  bigdata-pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: news_analytics_dashboard
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    ports:
+      - "8501:8501"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/
+      - SPARK_DRIVER_MEMORY=4g
+    volumes:
+      - .:/app
+    networks:
+      - bigdata_network
+    command: ["streamlit", "run", "src/dashboard.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
+  # --------------------------------------------------------------------------
+  # SERVICE 3: Jupyter Notebook Interactive Lab
+  # --------------------------------------------------------------------------
+  jupyter-notebook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: news_analytics_jupyter
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    ports:
+      - "8888:8888"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/
+    volumes:
+      - .:/app
+    networks:
+      - bigdata_network
+    command: ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--ServerApp.token="]
+
+networks:
+  bigdata_network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local

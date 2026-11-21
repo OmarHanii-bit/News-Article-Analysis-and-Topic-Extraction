@@ -1,0 +1,537 @@
+{
+  "component": "Hadoop Ecosystem \u2014 full stack execution",
+  "executed_at": "2026-11-21T11:24:44",
+  "elapsed_seconds": 7.21,
+  "services_executed": [
+    "hdfs",
+    "cluster",
+    "zookeeper",
+    "sqoop",
+    "flume",
+    "hbase",
+    "hive",
+    "pig",
+    "oozie"
+  ],
+  "services_failed": [],
+  "hdfs_cli_commands_recorded": 80,
+  "components": {
+    "hdfs": {
+      "objects_landed": 27,
+      "files": [
+        {
+          "hdfs_path": "/user/news/raw/raw_news_articles.csv",
+          "bytes": 5673429,
+          "blocks": 6
+        },
+        {
+          "hdfs_path": "/user/news/raw/mapreduce_term_counts.tsv",
+          "bytes": 51552,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=1/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17545,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=10/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17403,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=11/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17705,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=12/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17414,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=2/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 16869,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=3/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 18130,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=4/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17811,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=5/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17480,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=6/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17286,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=7/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17570,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=8/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17413,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=9/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17394,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=1/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17557,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=10/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17809,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=11/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17517,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=12/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17954,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=2/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17253,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=3/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 18561,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=4/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 18198,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=5/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 18179,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=6/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17872,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=7/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17347,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=8/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 18116,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=9/a5d626116627421b834ce1e5e728e2a1-0.parquet",
+          "bytes": 17915,
+          "blocks": 1
+        },
+        {
+          "hdfs_path": "/user/news/raw/pipeline_analytics_summary.json",
+          "bytes": 37301,
+          "blocks": 1
+        }
+      ],
+      "dfs_report": {
+        "cluster_id": "news-bigdata-CID-c0424c00378e",
+        "namenode": "news-namenode-01 (active)",
+        "configured_replication": 3,
+        "live_datanodes": 3,
+        "total_files": 27,
+        "total_directories": 33,
+        "total_blocks": 32,
+        "logical_bytes": 6186580,
+        "physical_bytes_with_replication": 18559740,
+        "under_replicated_blocks": 0,
+        "missing_blocks": 0,
+        "datanodes": [
+          {
+            "datanode": "datanode_1",
+            "role": "DataNode",
+            "capacity_bytes": 524288000,
+            "used_bytes": 6186580,
+            "blocks_stored": 32,
+            "status": "LIVE"
+          },
+          {
+            "datanode": "datanode_2",
+            "role": "DataNode",
+            "capacity_bytes": 524288000,
+            "used_bytes": 6186580,
+            "blocks_stored": 32,
+            "status": "LIVE"
+          },
+          {
+            "datanode": "datanode_3",
+            "role": "DataNode",
+            "capacity_bytes": 524288000,
+            "used_bytes": 6186580,
+            "blocks_stored": 32,
+            "status": "LIVE"
+          }
+        ]
+      }
+    },
+    "cluster": {
+      "component": "Cluster Computing (HDFS + YARN + MapReduce)",
+      "owner": "Member 2 \u2014 Priya Sharma",
+      "cluster_name": "news-bigdata-cluster",
+      "topology": {
+        "cluster_name": "news-bigdata-cluster",
+        "namenode": {
+          "host": "news-namenode-01",
+          "role": "NameNode + ResourceManager",
+          "memory_gb": 16,
+          "disk_tb": 2
+        },
+        "datanodes": [
+          {
+            "host": "news-worker-01",
+            "roles": "DataNode + NodeManager",
+            "memory_gb": 32,
+            "disk_tb": 8,
+            "cores": 8
+          },
+          {
+            "host": "news-worker-02",
+            "roles": "DataNode + NodeManager",
+            "memory_gb": 32,
+            "disk_tb": 8,
+            "cores": 8
+          },
+          {
+            "host": "news-worker-03",
+            "roles": "DataNode + NodeManager",
+            "memory_gb": 32,
+            "disk_tb": 8,
+            "cores": 8
+          }
+        ],
+        "zookeeper_ensemble": [
+          "news-zk-01:2181",
+          "news-zk-02:2181",
+          "news-zk-03:2181"
+        ],
+        "edge_node": {
+          "host": "news-edge-01",
+          "role": "Client gateway (spark-submit / hive / sqoop / flume)"
+        }
+      },
+      "capacity_plan": {
+        "measured_at": "2026-11-21T11:24:38",
+        "raw_csv_bytes": 5673429,
+        "mapreduce_tsv_bytes": 51552,
+        "parquet_bytes": 424298,
+        "parquet_files": 24,
+        "logical_bytes": 6149279,
+        "logical_mb": 5.86,
+        "block_size_mb": 128,
+        "total_blocks": 1,
+        "replication_factor": 3,
+        "replicated_bytes": 18447837,
+        "recommended_hdfs_capacity_bytes": 23982188,
+        "recommended_hdfs_capacity_gb": 0.02,
+        "worker_memory_gb": 96,
+        "yarn_available_memory_gb": 76,
+        "container_size_gb": 4,
+        "max_concurrent_containers": 19,
+        "spark_executor_instances": 18,
+        "spark_executor_cores": 1,
+        "spark_executor_memory_gb": 4,
+        "spark_driver_memory_gb": 4
+      },
+      "config_files": [
+        "data\\hadoop_ecosystem\\cluster\\core-site.xml",
+        "data\\hadoop_ecosystem\\cluster\\hdfs-site.xml",
+        "data\\hadoop_ecosystem\\cluster\\yarn-site.xml",
+        "data\\hadoop_ecosystem\\cluster\\mapred-site.xml",
+        "data\\hadoop_ecosystem\\cluster\\capacity-scheduler.xml",
+        "data\\hadoop_ecosystem\\cluster\\hbase-site.xml",
+        "data\\hadoop_ecosystem\\cluster\\hive-site.xml",
+        "data\\hadoop_ecosystem\\cluster\\spark-defaults.conf"
+      ],
+      "commands_file": "data\\hadoop_ecosystem\\cluster\\real_cluster_commands.md",
+      "out_dir": "data/hadoop_ecosystem\\cluster"
+    },
+    "zookeeper": {
+      "znodes_created": 11,
+      "ephemeral_nodes": 6,
+      "sessions": 4,
+      "leader_elected": "/news-pipeline/election/worker-0000000001",
+      "watches_fired": 3,
+      "config_version": 1,
+      "out_dir": "data/hadoop_ecosystem/zookeeper"
+    },
+    "sqoop": {
+      "rdbms": {
+        "engine": "sqlite3 (emulating MySQL news @ jdbc:mysql://rdbms-host:3306/news)",
+        "db_path": "data/hadoop_ecosystem/sqoop/news_staging.db",
+        "size_bytes": 2002944
+      },
+      "tables": [
+        "publishers",
+        "articles_staging",
+        "articles_exported"
+      ],
+      "records_imported": 6008,
+      "records_exported": 6000,
+      "hdfs_paths": [
+        "/user/news/sqoop_import/publishers/part-m-00000.csv",
+        "/user/news/sqoop_import/articles_staging/part-m-00000.csv",
+        "/user/news/sqoop_import/articles_staging/part-m-00001.csv",
+        "/user/news/sqoop_import/articles_staging/part-m-00002.csv",
+        "/user/news/sqoop_import/articles_staging/part-m-00003.csv",
+        "/user/news/export/part-m-00000.csv"
+      ],
+      "out_dir": "data/hadoop_ecosystem/sqoop"
+    },
+    "flume": {
+      "agent_config": "data/hadoop_ecosystem/flume/agent_news.properties",
+      "events_ingested": 500,
+      "bytes_ingested": 103790,
+      "hdfs_stream_paths": [
+        "/user/news/stream/20261121/FlumeData.20261121.00000.json",
+        "/user/news/stream/20261121/FlumeData.20261121.00001.json",
+        "/user/news/stream/20261121/FlumeData.20261121.00002.json",
+        "/user/news/stream/20261121/FlumeData.20261121.00003.json",
+        "/user/news/stream/20261121/FlumeData.20261121.00004.json"
+      ],
+      "events_per_second": 1457.92,
+      "channel_capacity": 1000,
+      "out_dir": "data/hadoop_ecosystem/flume"
+    },
+    "hbase": {
+      "table_name": "news_articles",
+      "column_families": [
+        "cf_meta",
+        "cf_nlp",
+        "cf_raw"
+      ],
+      "cfs": [
+        "cf_meta",
+        "cf_nlp",
+        "cf_raw"
+      ],
+      "rows_loaded": 2000,
+      "tables_created": [
+        "news_articles"
+      ],
+      "sample_row_keys": [
+        "08_ART_100008",
+        "10_ART_100010",
+        "07_ART_100113",
+        "06_ART_100146",
+        "02_ART_100186"
+      ],
+      "row_count": 2000,
+      "num_regions": 16,
+      "prefix_scan_rows": 3,
+      "topic_scan_samples": [
+        {
+          "row_key": "00_ART_100192",
+          "title": "TechCrunch Analysis: Legislative Reform and Bipartisan Coalition in Focus",
+          "topic_label": "Clinical Medicine & Genomics",
+          "sentiment_polarity": 0.4018999934196472
+        },
+        {
+          "row_key": "00_ART_100219",
+          "title": "Special Report: Emerging Trends in Sovereign Debt and Market Dynamics",
+          "topic_label": "Clinical Medicine & Genomics",
+          "sentiment_polarity": 0.025800000876188278
+        },
+        {
+          "row_key": "00_ART_100276",
+          "title": "Breakthrough Developments in Equity Markets Stir Industry Debate",
+          "topic_label": "Clinical Medicine & Genomics",
+          "sentiment_polarity": -0.3181999921798706
+        }
+      ],
+      "most_common_topic": "Clinical Medicine & Genomics",
+      "single_row": {
+        "cf_meta": {
+          "title": "Special Report: Emerging Trends in Quantum Computing and Market Dynamics",
+          "author": "Carlos Mendez",
+          "publication": "TechCrunch",
+          "category": "Science",
+          "sub_topic": "Quantum Computing",
+          "date": "2024-01-20"
+        },
+        "cf_nlp": {
+          "dominant_topic": 2,
+          "topic_label": "Antitrust & Regulatory Policy",
+          "topic_confidence": 0.9892488121986389,
+          "sentiment_polarity": 0.07720000296831131,
+          "clean_word_count": 70
+        },
+        "cf_raw": {
+          "url": "https://www.techcrunch.com/article/art_100008",
+          "word_count": 66
+        }
+      },
+      "table_descriptors": [
+        {
+          "table_name": "news_articles",
+          "column_families": [
+            "cf_meta",
+            "cf_nlp",
+            "cf_raw"
+          ],
+          "num_families": 3,
+          "created": "2026-11-21T11:24:40",
+          "row_count": 2000,
+          "families": [
+            {
+              "name": "cf_meta",
+              "declared_qualifiers": [
+                "title",
+                "author",
+                "publication",
+                "category",
+                "sub_topic",
+                "date"
+              ],
+              "qualifiers_observed": [
+                "author",
+                "category",
+                "date",
+                "publication",
+                "sub_topic",
+                "title"
+              ]
+            },
+            {
+              "name": "cf_nlp",
+              "declared_qualifiers": [
+                "dominant_topic",
+                "topic_label",
+                "topic_confidence",
+                "sentiment_polarity",
+                "clean_word_count"
+              ],
+              "qualifiers_observed": [
+                "clean_word_count",
+                "dominant_topic",
+                "sentiment_polarity",
+                "topic_confidence",
+                "topic_label"
+              ]
+            },
+            {
+              "name": "cf_raw",
+              "declared_qualifiers": [
+                "url",
+                "word_count"
+              ],
+              "qualifiers_observed": [
+                "url",
+                "word_count"
+              ]
+            }
+          ]
+        }
+      ],
+      "storage_files": {
+        "metadata": "data/hadoop_ecosystem/hbase/hbase_metadata.json",
+        "data": "data/hadoop_ecosystem/hbase/news_articles.json"
+      },
+      "real_cluster_commands": "data/hadoop_ecosystem/hbase/real_cluster_commands.md",
+      "hdfs_commands": [
+        "hdfs dfs -mkdir -p hdfs:///user/news/raw",
+        "hdfs dfs -put raw_news_articles.csv hdfs:///user/news/raw/raw_news_articles.csv"
+      ],
+      "out_dir": "data/hadoop_ecosystem/hbase"
+    },
+    "hive": {
+      "database": "newsdw",
+      "tables_created": [
+        "news_articles",
+        "term_counts",
+        "topics"
+      ],
+      "queries_executed": 6,
+      "result_files": [
+        "data/hadoop_ecosystem/hive/results/topic_volume_ranking.csv",
+        "data/hadoop_ecosystem/hive/results/publisher_topic_crosstab.csv",
+        "data/hadoop_ecosystem/hive/results/mom_volume_change.csv",
+        "data/hadoop_ecosystem/hive/results/sentiment_ranking.csv",
+        "data/hadoop_ecosystem/hive/results/topic_term_join.csv",
+        "data/hadoop_ecosystem/hive/results/partition_pruned_month.csv"
+      ],
+      "total_rows_scanned": 26581,
+      "table_sizes": {
+        "news_articles": 6000,
+        "term_counts": 2255,
+        "topics": 72
+      },
+      "top_topic_by_volume": "Clinical Medicine & Genomics",
+      "hive_ddl": "data/hadoop_ecosystem/hive/news_analytics.hql",
+      "topic_term_ddl": "data/hadoop_ecosystem/hive/topic_term_hive.hql",
+      "real_cluster_commands": "data/hadoop_ecosystem/hive/real_cluster_commands.md",
+      "hdfs_commands": [
+        "hdfs dfs -put term_counts.tsv hdfs:///user/news/mapreduce/term_counts/"
+      ],
+      "out_dir": "data/hadoop_ecosystem/hive"
+    },
+    "pig": {
+      "component": "pig_transform",
+      "scripts_generated": [
+        "data/hadoop_ecosystem/pig/01_clean_and_count.pig",
+        "data/hadoop_ecosystem/pig/02_topic_publisher_join.pig",
+        "data/hadoop_ecosystem/pig/03_sentiment_filter.pig"
+      ],
+      "scripts_executed": 3,
+      "relations_created": 24,
+      "output_files": [
+        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000",
+        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000",
+        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
+      ],
+      "staged_input": "data/hadoop_ecosystem/pig/staging/enriched_articles.csv",
+      "staged_rows": 6000,
+      "execution_log": "data/hadoop_ecosystem/pig/pig_execution_log.json",
+      "real_cluster_commands": "data/hadoop_ecosystem/pig/real_cluster_commands.md",
+      "hdfs_commands": [
+        "hdfs dfs -mkdir -p hdfs:///user/news/pig",
+        "hdfs dfs -put 01_clean_and_count.pig hdfs:///user/news/pig/"
+      ],
+      "out_dir": "data/hadoop_ecosystem/pig"
+    },
+    "oozie": {
+      "workflow_actions": [
+        "sqoop_import",
+        "pig_transform",
+        "hive_analytics",
+        "spark_topics",
+        "shell_verify"
+      ],
+      "actions_executed": 5,
+      "actions_skipped": 0,
+      "final_status": "SUCCEEDED",
+      "journal_path": "data/hadoop_ecosystem/oozie/oozie_execution_journal.json",
+      "out_dir": "data/hadoop_ecosystem/oozie"
+    }
+  }
+}
