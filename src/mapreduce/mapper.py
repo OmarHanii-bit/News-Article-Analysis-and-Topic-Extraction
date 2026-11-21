@@ -45,7 +45,10 @@ STOPWORDS = {
 # Precompile regular expressions for maximum streaming execution performance
 REGEX_CLEAN_HTML = re.compile(r"<[^>]+>")             # Match and purge HTML markup tags
 REGEX_CLEAN_URL = re.compile(r"http[s]?://\S+")        # Match and purge HTTP/HTTPS web links
-REGEX_CLEAN_ENTITIES = re.compile(r"&[a-z]+;")        # Match and purge XML/HTML named entities
+# Keep this EXACTLY in sync with the Spark cleaning regex `&[a-z0-9#]+;`
+# (src/spark_pipeline.py / src/lda_topic_selection.py): numeric and '#'-coded
+# entities must be purged too, otherwise MapReduce and Spark term counts diverge.
+REGEX_CLEAN_ENTITIES = re.compile(r"&[a-z0-9#]+;")    # Match and purge XML/HTML/numeric entities
 REGEX_WORD_TOKENS = re.compile(r"\b[a-zA-Z]{3,20}\b") # Extract clean alphabetic words (length 3 to 20)
 
 def process_stream():

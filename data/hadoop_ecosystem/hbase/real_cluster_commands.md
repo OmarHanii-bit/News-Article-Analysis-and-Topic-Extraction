@@ -1,12 +1,12 @@
-# Real Cluster Commands — Apache HBase
+# Production-Equivalent Cluster Command Templates — Apache HBase
 
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache HBase (column-family NoSQL store)
-Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & MongoDB Specialist)
+Owner   : Member 2 — Priya Sharma (Hadoop Ecosystem & MapReduce Specialist)
 
-These are the **authentic** commands to reproduce this component's workload
-on a real HBase cluster. The local `HBaseSimulator` produces identical
-*logical* results offline.
+These are **production-equivalent command templates**; the workload was executed
+locally via the Python simulation in `src/hadoop/` (`HBaseSimulator`). The templates
+document the equivalent commands on a real HBase cluster.
 
 ## 0. Launch the interactive shell
 ```bash

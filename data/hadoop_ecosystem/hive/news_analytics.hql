@@ -34,7 +34,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS news_articles (
 PARTITIONED BY (year INT, month INT)
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 STORED AS PARQUET
-LOCATION '/user/news/processed/processed_parquet'
+LOCATION '/user/news/lakehouse'
 TBLPROPERTIES ('parquet.compression'='SNAPPY');
 
 -- Load partition metadata for every existing partition directory.
@@ -95,10 +95,11 @@ GROUP BY t.topic_label
 ORDER BY total_keyword_freq DESC;
 
 -- ---- (f) Partition-pruned single-month query ----------------------------
+--      Resolved partition: year=2025/month=12
 SELECT COUNT(*)                       AS article_count,
        ROUND(AVG(sentiment_polarity),4) AS mean_sentiment
 FROM news_articles
-WHERE year = 2025 AND month = 11;
+WHERE year = 2025 AND month = 12;
 
 -- ---- Keep warehouse statistics fresh for the cost-based optimiser -------
 ANALYZE TABLE news_articles COMPUTE STATISTICS;

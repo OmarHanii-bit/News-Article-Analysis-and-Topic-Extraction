@@ -70,6 +70,22 @@ PARQUET_DIR = "data/processed_parquet"
 SUMMARY_JSON = "data/pipeline_analytics_summary.json"
 
 
+def _is_error_payload(value) -> bool:
+    """True when a component result carries a truthy `error` (or FAILED status)."""
+    return isinstance(value, dict) and (
+        bool(value.get("error")) or value.get("status") == "FAILED")
+
+
+def _service_status(results: dict) -> tuple:
+    """
+    Returns (executed, failed) service-name lists. An `{"error": ...}` payload is
+    ALWAYS a failure and must never be counted as an executed/successful service.
+    """
+    failed = [name for name, payload in results.items() if _is_error_payload(payload)]
+    executed = [name for name in results if name not in failed]
+    return executed, failed
+
+
 def _banner() -> None:
     """Prints the orchestrator banner shown at the start of the live demo."""
     print("\n" + "=" * 80)
@@ -169,11 +185,18 @@ def main() -> dict:
         _step(len(results) + 1, total_steps, title)
         try:
             out = fn()
+            # A component may swallow its own exception and return {"error": ...};
+            # treat that as a failure too so the summary cannot claim success.
+            if _is_error_payload(out):
+                print(f"[!] {key} reported an error: {out.get('error', 'FAILED')}")
+                return {"error": str(out.get("error", "FAILED")),
+                        "component": key, "status": "FAILED"}
             print(f"[OK] {key} completed.")
             return out
         except Exception as exc:  # noqa: BLE001 — deliberate: keep the demo alive
             print(f"[!] {key} failed: {type(exc).__name__}: {exc}")
-            return {"error": f"{type(exc).__name__}: {exc}"}
+            return {"error": f"{type(exc).__name__}: {exc}",
+                    "component": key, "status": "FAILED"}
 
     # Step 3 — ZooKeeper coordination (started before HBase/HDFS HA in production).
     results["zookeeper"] = run_guarded(
@@ -237,12 +260,17 @@ def main() -> dict:
     with open(cli_path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(cli_lines))
 
+    # Derive success flags from the guarded results: error payloads are failures.
+    services_executed, services_failed = _service_status(results)
+    all_succeeded = not services_failed
     summary = {
         "component": "Hadoop Ecosystem — full stack execution",
         "executed_at": datetime.datetime.now().isoformat(timespec="seconds"),
         "elapsed_seconds": round(elapsed, 2),
-        "services_executed": [k for k in results if isinstance(results[k], dict) and "error" not in results[k]],
-        "services_failed": [k for k in results if isinstance(results[k], dict) and "error" in results[k]],
+        "services_executed": services_executed,
+        "services_failed": services_failed,
+        "all_services_succeeded": all_succeeded,
+        "success": all_succeeded,
         "hdfs_cli_commands_recorded": len(set(HDFS_CLI_LOG)),
         "components": results,
     }
@@ -252,7 +280,7 @@ def main() -> dict:
 
     print("\n" + "=" * 80)
     print(f"HADOOP ECOSYSTEM COMPLETE in {elapsed:.2f}s")
-    print(f"  Services executed : {len(summary['services_executed'])}/9 -> {summary['services_executed']}")
+    print(f"  Services executed : {len(services_executed)}/9 -> {services_executed}")
     if summary["services_failed"]:
         print(f"  Services failed   : {summary['services_failed']}")
     print(f"  HDFS commands     : {summary['hdfs_cli_commands_recorded']} recorded -> {cli_path}")
@@ -264,4 +292,4 @@ def main() -> dict:
 if __name__ == "__main__":
     # Exit non-zero only if a service genuinely failed, so CI/orchestrators can react.
     outcome = main()
-    sys.exit(0 if not outcome["services_failed"] else 1)
+    sys.exit(0 if outcome["all_services_succeeded"] else 1)

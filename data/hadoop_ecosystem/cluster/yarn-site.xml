@@ -7,7 +7,7 @@
     </property>
     <property>
         <name>yarn.nodemanager.resource.memory-mb</name>
-        <value>26214.0</value>
+        <value>26214</value>
         <description>Memory each NodeManager may offer as containers (~80% of 32 GB).</description>
     </property>
     <property>

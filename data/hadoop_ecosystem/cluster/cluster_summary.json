@@ -44,7 +44,7 @@
     }
   },
   "capacity_plan": {
-    "measured_at": "2026-11-21T11:24:38",
+    "measured_at": "2026-11-21T15:01:39",
     "raw_csv_bytes": 5673429,
     "mapreduce_tsv_bytes": 51552,
     "parquet_bytes": 424298,

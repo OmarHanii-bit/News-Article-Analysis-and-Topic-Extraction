@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-11-21T15:00:41",
+  "parameters": {
+    "rows": 50000,
+    "seed": 42,
+    "chunk_size": 5000,
+    "work_dir": "data/scale_benchmark_work/run_20261121_150036",
+    "output": "data/scale_benchmark.json"
+  },
+  "timings_seconds": {
+    "generation": 1.637,
+    "clean_parquet": 3.31,
+    "measured_total": 4.947
+  },
+  "bytes": {
+    "csv_input_bytes": 47245451,
+    "parquet_output_bytes": 7645740,
+    "total_bytes": 54891191,
+    "csv_input_mb": 45.06,
+    "parquet_output_mb": 7.29
+  },
+  "throughput": {
+    "generation_rows_per_sec": 30540.21,
+    "clean_parquet_rows_per_sec": 15108.0,
+    "end_to_end_rows_per_sec": 10107.77,
+    "generation_mb_per_sec": 27.521,
+    "parquet_mb_per_sec": 2.203,
+    "end_to_end_mb_per_sec": 1.474,
+    "mb_definition": "1 MB = 1048576 bytes (MiB)"
+  },
+  "projections": {
+    "label": "LINEAR PROJECTION (NOT A MEASUREMENT)",
+    "assumes_linear_scaling": true,
+    "is_measurement": false,
+    "basis": "Extrapolated from 50,000 measured articles at 10107.77 rows/sec (generation + cleaning/Parquet). Assumes constant per-row cost; ignores I/O saturation, GC, Spark shuffle/network and schema growth.",
+    "targets": {
+      "143000": {
+        "target_rows": 143000,
+        "projected_seconds": 14.15,
+        "projected_minutes": 0.24,
+        "projected_hours": 0.004,
+        "projected_output_mb": 20.85
+      },
+      "2700000": {
+        "target_rows": 2700000,
+        "projected_seconds": 267.12,
+        "projected_minutes": 4.45,
+        "projected_hours": 0.074,
+        "projected_output_mb": 393.74
+      }
+    }
+  },
+  "environment": {
+    "python_version": "3.13.14",
+    "os": "Windows-11-10.0.26300-SP0",
+    "cpu_count": 12,
+    "pyspark_version": "4.2.0",
+    "pandas_version": "2.3.3",
+    "pyarrow_version": "22.0.0"
+  },
+  "caveats": [
+    "Single-host local benchmark on 12 logical CPUs; NOT a cluster benchmark and NOT a Spark LDA/MapReduce end-to-end timing.",
+    "Linear projections are arithmetic extrapolations of measured rows/sec, not measurements. They assume constant per-row cost and ignore I/O saturation, GC, Spark shuffle/network, and schema growth.",
+    "Corpus is synthetic: the shipped generator is called once per chunk with seed + chunk_index; its limited vocabulary repeats across chunks unlike a real Kaggle archive.",
+    "Timings cover generation and cleaning/Parquet only; interpreter startup, generator prints, and JSON serialization are excluded.",
+    "1 MB = 1,048,576 bytes (MiB). Input CSV bytes are the uncompressed generated chunks; Parquet bytes are Snappy-compressed outputs.",
+    "article_id values are renumbered SCALE_00000000.. in cleaning because independently generated chunks reuse the generator's ART_ ids.",
+    "Temporary full-text CSV/Parquet artifacts are deleted after the run unless --keep-workdir is passed; only the JSON summary is retained."
+  ]
+}

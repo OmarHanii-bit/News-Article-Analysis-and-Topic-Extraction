@@ -11,6 +11,7 @@ Purpose: Orchestrates the entire end-to-end Big Data pipeline from a single entr
 
 import os
 import sys
+import csv
 import time
 import subprocess
 import shutil
@@ -23,7 +24,29 @@ BANNER = """
 ================================================================================
 """
 
-TOTAL_STEPS = 11
+# Steps are 0-indexed: 0 (pre-flight) through 11 (report export), plus the
+# optional step 12 (LDA k sweep) enabled with --run-lda-sweep.
+TOTAL_STEPS = 13
+
+
+def count_csv_rows(path, fallback=None):
+    """Counts data rows in a CSV (header excluded); returns fallback on failure."""
+    if not os.path.exists(path):
+        return fallback
+    try:
+        with open(path, "r", encoding="utf-8", newline="") as fh:
+            reader = csv.reader(fh)
+            next(reader, None)  # skip header
+            return sum(1 for _ in reader)
+    except (OSError, csv.Error, UnicodeError):
+        return fallback
+
+
+def csv_count_label(path, fallback_text="count unavailable"):
+    """Human-readable row count for the deliverables inventory."""
+    rows = count_csv_rows(path)
+    return f"{rows:,} articles" if rows is not None else fallback_text
+
 
 def print_step(step_num, title):
     print(f"\n[{step_num}/{TOTAL_STEPS}] >>> {title.upper()} <<<")
@@ -44,6 +67,9 @@ def preflight_check():
     print_step(0, "Pre-Flight Environment & Dependency Health Check")
     print(f"[*] Operating System: {sys.platform}")
     print(f"[*] Python Version:   {sys.version.split()[0]}")
+    print(f"[*] Spark Master:     {os.environ.get('SPARK_MASTER', 'local[*]')}")
+    print(f"[*] Spark Memory:     driver={os.environ.get('SPARK_DRIVER_MEMORY', '4g')}, "
+          f"executor={os.environ.get('SPARK_EXECUTOR_MEMORY', '4g')}")
     
     # Check Java
     java_bin = shutil.which("java")
@@ -78,6 +104,12 @@ def preflight_check():
 def main():
     print(BANNER)
     total_start = time.time()
+    force = "--force" in sys.argv
+    run_lda_sweep = "--run-lda-sweep" in sys.argv
+    if force:
+        print("[*] --force: stale raw CSV / PySpark summary will be regenerated.")
+    if run_lda_sweep:
+        print("[*] --run-lda-sweep: optional LDA k selection sweep will run at the end.")
 
     # Step 0: Preflight
     preflight_check()
@@ -85,7 +117,9 @@ def main():
     # Step 1: Synthesize Data
     print_step(1, "Data Generation & Profiling (6,000 Full-Text Articles)")
     data_csv = "data/raw_news_articles.csv"
-    if not os.path.exists(data_csv):
+    if not os.path.exists(data_csv) or force:
+        if force and os.path.exists(data_csv):
+            print("[*] --force: regenerating the dataset despite an existing CSV.")
         success = run_command([sys.executable, "src/generate_sample_data.py", "6000"], "Data Generation")
         if not success: return
     else:
@@ -99,7 +133,9 @@ def main():
     # Step 3: PySpark Distributed Pipeline
     print_step(3, "PySpark In-Memory Distributed Processing & LDA Topic Modeling")
     summary_json = "data/pipeline_analytics_summary.json"
-    if not os.path.exists(summary_json):
+    if not os.path.exists(summary_json) or force:
+        if force and os.path.exists(summary_json):
+            print("[*] --force: regenerating the PySpark summary despite an existing file.")
         success = run_command([sys.executable, "src/spark_pipeline.py"], "PySpark Pipeline")
         if not success: return
     else:
@@ -129,8 +165,12 @@ def main():
     # Best-effort acquisition: requires the NLTK Reuters corpus (downloads on first use).
     if not os.path.exists(real_csv):
         print("[*] Real corpus not found. Attempting acquisition (NLTK Reuters-21578)...")
-        run_command([sys.executable, "src/ingest_real_news.py", "--source", "reuters",
-                     "--output", real_csv], "Real Corpus Acquisition")
+        acquired = run_command([sys.executable, "src/ingest_real_news.py", "--source", "reuters",
+                                "--output", real_csv], "Real Corpus Acquisition")
+        if not acquired:
+            print("[!] WARNING: Real-corpus acquisition FAILED (non-zero exit code). "
+                  "The secondary Reuters dataset will be skipped; canonical artifacts "
+                  "remain intact. Check NLTK network access / Reuters corpus availability.")
     if os.path.exists(real_csv):
         success = run_command(
             [sys.executable, "src/spark_pipeline.py",
@@ -176,14 +216,25 @@ def main():
     success = run_command([sys.executable, "src/export_report_docx.py"], "Word Report Export")
     if not success: return
 
+    # Optional Step 12: model-selection evidence (off by default; runtime unchanged).
+    if run_lda_sweep:
+        print_step(12, "Optional LDA k Selection Sweep (held-out perplexity + coherence)")
+        print("[*] Metrics will land in data/lda_k_sweep.json "
+              "(chart: visualizations/lda_k_sweep.png).")
+        sweep_ok = run_command([sys.executable, "src/lda_topic_selection.py"], "LDA k Sweep")
+        if not sweep_ok:
+            print("[!] WARNING: LDA sweep failed; previously generated evidence was left unchanged.")
+        else:
+            print("[+] LDA k sweep evidence refreshed in data/lda_k_sweep.json.")
+    
     # Completion Summary & Streamlit Launch
     total_elapsed = time.time() - total_start
     print("\n[DONE] >>> PIPELINE EXECUTION COMPLETE <<<")
     print("-" * 80)
     print(f"[+] Total Orchestration Runtime: {total_elapsed:.2f} seconds.")
     print("\nDeliverables Inventory:")
-    print("  • Dataset (synthetic):  data/raw_news_articles.csv (6,000 articles)")
-    print("  • Dataset (real):       data/real_news/raw_news_articles_real.csv (10,712 Reuters wire articles)")
+    print(f"  - Dataset (synthetic):  {data_csv} ({csv_count_label(data_csv)})")
+    print(f"  - Dataset (real):       {real_csv} ({csv_count_label(real_csv, 'not generated')})")
     print("  • MapReduce:            data/mapreduce_term_counts.tsv")
     print("  • PySpark Lake:         data/processed_parquet/ (Partitioned year/month)")
     print("  • PySpark Lake (real):  data/real_news/processed_parquet/ (Partitioned year/month)")
@@ -195,7 +246,7 @@ def main():
     print("  • PowerPoint:           presentation/News_Article_Analysis_Presentation.pptx")
     print("  • Word Report:          PROJECT_REPORT.docx (Markdown original untouched)")
     print("  • Notebook:             notebooks/News_Article_Analysis_Pipeline.ipynb (executed)")
-    print("  • Academic Report:      PROJECT_REPORT.md (10/10 rubric)")
+    print("  - Academic Report:      PROJECT_REPORT.md (rubric alignment documented)")
     print("  • Slide Notes:          presentation/slide_deck_outline.md (Speaker scripts & Q&A defense)")
     
     print("\n" + "=" * 80)

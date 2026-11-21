@@ -98,6 +98,38 @@ class TestOfflineDashboardArtifacts(unittest.TestCase):
         self.assertIn("Reuters", html)
         self.assertNotIn("Synthetic Benchmark", html)
 
+    def test_both_html_artifacts_publish_decision_panel(self):
+        """Both corpora must surface the Key Takeaways & Decisions / What next panel."""
+        for key in ("synthetic", "real"):
+            with self.subTest(corpus=key):
+                html = self._read(key)
+                self.assertIn("Key Takeaways & Decisions", html)
+                self.assertIn("What next", html)
+                self.assertIn("Metric / numeric trigger", html)
+                self.assertIn("Owner", html)
+                self.assertIn("Horizon", html)
+
+    def test_both_html_titles_name_the_active_corpus(self):
+        """The two dashboard files must be distinguishable from their <title> alone."""
+        for key in ("synthetic", "real"):
+            with self.subTest(corpus=key):
+                html = self._read(key)
+                title = html.split("<title>", 1)[1].split("</title>", 1)[0]
+                self.assertIn(CORPORA[key]["label"], title)
+        self.assertNotIn(
+            self._read("synthetic").split("<title>", 1)[1].split("</title>", 1)[0],
+            self._read("real").split("<title>", 1)[1].split("</title>", 1)[0],
+        )
+
+    def test_both_html_artifacts_carry_sampling_and_confidence_captions(self):
+        """Sampling and confidence-calibration caveats must travel with the artifacts."""
+        for key in ("synthetic", "real"):
+            with self.subTest(corpus=key):
+                html = self._read(key)
+                self.assertIn("n=1,500 random sample (seed 42)", html)
+                self.assertIn("0.991–0.993", html)
+                self.assertIn("0.684–0.892", html)
+
 
 class TestStreamlitApplication(unittest.TestCase):
     """Headless smoke test of the live Streamlit application."""

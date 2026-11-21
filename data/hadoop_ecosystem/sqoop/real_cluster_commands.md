@@ -1,11 +1,11 @@
-# Apache Sqoop — Real Production Cluster Commands
+# Apache Sqoop — Production-Equivalent Cluster Command Templates
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & Data Integration Specialist)
+Owner   : Member 2 — Priya Sharma (Hadoop Ecosystem & MapReduce Specialist)
 
-These are the genuine Sqoop command lines used to perform the very same
-RDBMS <-> HDFS/Hive transfers that this module simulates locally.
-Replace host/credentials with your environment's values.
+These are **production-equivalent command templates**; the workload was executed
+locally via the Python simulation in `src/hadoop/`. They document the equivalent
+RDBMS <-> HDFS/Hive transfers on a real cluster. Replace host/credentials with your environment's values.
 
 ## 0. Environment
 

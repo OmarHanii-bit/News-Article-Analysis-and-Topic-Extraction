@@ -1,4 +1,4 @@
-# Real HDFS Commands Executed (equivalents of the simulation)
+# Production-Equivalent HDFS Command Templates (equivalents of the local Python simulation in `src/hadoop/`)
 
 ```bash
 hdfs dfs -cat hdfs:///user/news/export/part-m-00000.csv
@@ -28,8 +28,6 @@ hdfs dfs -mkdir -p hdfs:///user/news/lakehouse/year=2025/month=6
 hdfs dfs -mkdir -p hdfs:///user/news/lakehouse/year=2025/month=7
 hdfs dfs -mkdir -p hdfs:///user/news/lakehouse/year=2025/month=8
 hdfs dfs -mkdir -p hdfs:///user/news/lakehouse/year=2025/month=9
-hdfs dfs -mkdir -p hdfs:///user/news/mapreduce
-hdfs dfs -mkdir -p hdfs:///user/news/mapreduce/term_counts
 hdfs dfs -mkdir -p hdfs:///user/news/pig
 hdfs dfs -mkdir -p hdfs:///user/news/raw
 hdfs dfs -mkdir -p hdfs:///user/news/sqoop_import
@@ -68,7 +66,6 @@ hdfs dfs -put flume-sink-1 hdfs:///user/news/stream/20261121/FlumeData.20261121.
 hdfs dfs -put flume-sink-2 hdfs:///user/news/stream/20261121/FlumeData.20261121.00002.json
 hdfs dfs -put flume-sink-3 hdfs:///user/news/stream/20261121/FlumeData.20261121.00003.json
 hdfs dfs -put flume-sink-4 hdfs:///user/news/stream/20261121/FlumeData.20261121.00004.json
-hdfs dfs -put mapreduce_term_counts.tsv hdfs:///user/news/mapreduce/term_counts/term_counts.tsv
 hdfs dfs -put mapreduce_term_counts.tsv hdfs:///user/news/raw/mapreduce_term_counts.tsv
 hdfs dfs -put pipeline_analytics_summary.json hdfs:///user/news/raw/pipeline_analytics_summary.json
 hdfs dfs -put raw_news_articles.csv hdfs:///user/news/raw/raw_news_articles.csv

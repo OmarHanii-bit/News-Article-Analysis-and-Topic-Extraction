@@ -2,8 +2,15 @@
 MapReduce Local & Cluster Execution Runner
 ==========================================
 Demonstrates how to run the Hadoop MapReduce job both:
-1. Locally using Python streaming pipes (simulating Hadoop Shuffle/Sort)
+1. Locally using Python streaming pipes (pedagogical emulation of Shuffle/Sort)
 2. In a real Hadoop cluster using 'hadoop jar hadoop-streaming.jar'
+
+IMPORTANT: On a real Hadoop cluster the shuffle/sort is DISTRIBUTED — the
+framework partitions mapper output by key, transfers it to reducer nodes and
+merges/sorts it there. This runner intentionally collects all mapper output in
+driver memory and sorts it with Python (`lines.sort()`) purely as a local,
+offline teaching aid; it is NOT how production MapReduce scales. Use the printed
+`hadoop jar ... -mapper ... -reducer ...` command for the real distributed job.
 
 Component: Testing & Deployment Harness
 Authors: Big Data Engineering Team (Member 2: Hadoop/HDFS Pipeline Lead)
@@ -43,7 +50,10 @@ def run_local_simulation(input_csv="data/raw_news_articles.csv", output_tsv="dat
         return False
 
     print(f"[2/3] Simulating Hadoop Shuffle & Sort phase...")
-    # Sort lines alphabetically by key
+    # LOCAL EMULATION ONLY: a real Hadoop shuffle partitions by reducer and sorts
+    # the key/value stream across many nodes; here the whole mapper output is
+    # buffered in this driver process and sorted alphabetically with Python.
+    # This keeps the demo dependency-free and offline, but does not scale.
     lines = map_out.strip().splitlines()
     lines.sort()
     sorted_stream = "\n".join(lines) + "\n"

@@ -221,7 +221,7 @@ def generate_realistic_news_dataset(
         records.append(record)
 
     df = pd.DataFrame(records)
-    os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
+    os.makedirs(os.path.dirname(output_csv_path) or ".", exist_ok=True)
     df.to_csv(output_csv_path, index=False, encoding="utf-8")
     
     print(f"[+] Dataset successfully created at: {output_csv_path}")

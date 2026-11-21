@@ -51,6 +51,54 @@ CLUSTER_TOPOLOGY = {
 PROD_BLOCK_SIZE_MB = 128
 # Production replication factor for a rack-aware, fault-tolerant cluster.
 PROD_REPLICATION = 3
+# NodeManager capacity: ~80% of each worker's 32 GB, computed with INTEGER maths
+# (32 * 1024 * 8 // 10 == 26214). Float arithmetic would emit "26214.0", which
+# Hadoop's integer parser rejects.
+NODEMANAGER_MEMORY_MB = (32 * 1024 * 8) // 10
+
+# Properties that Hadoop parses as strict positive integers. Validating them at
+# generation time prevents plausible-looking but invalid XML (e.g. "26214.0").
+_POSITIVE_INT_PROPERTIES = {
+    "io.file.buffer.size", "fs.trash.interval", "dfs.replication", "dfs.blocksize",
+    "dfs.namenode.handler.count", "yarn.nodemanager.resource.memory-mb",
+    "yarn.nodemanager.resource.cpu-vcores", "yarn.scheduler.minimum-allocation-mb",
+    "yarn.scheduler.maximum-allocation-mb", "mapreduce.map.memory.mb",
+    "mapreduce.reduce.memory.mb", "mapreduce.job.reduces", "mapreduce.task.io.sort.mb",
+    "hbase.hregion.max.filesize", "hbase.regionserver.handler.count",
+}
+_BOOLEAN_PROPERTIES = {
+    "dfs.webhdfs.enabled", "yarn.nodemanager.vmem-check-enabled",
+    "yarn.log-aggregation-enable",
+}
+
+
+def _validate_config_values(properties: list, filename: str) -> None:
+    """Rejects empty, malformed or physically implausible Hadoop settings."""
+    by_name = {}
+    for name, value, _comment in properties:
+        text = str(value)
+        if name in by_name:
+            raise ValueError(f"{filename}: duplicate property {name}")
+        by_name[name] = text
+        if not text.strip():
+            raise ValueError(f"{filename}: empty value for {name}")
+        # Integer fields must be digit strings - never '26214.0' or '32 GB'.
+        if name in _POSITIVE_INT_PROPERTIES and (not text.isdigit() or int(text) <= 0):
+            raise ValueError(f"{filename}: {name} must be a positive integer, got {text!r}")
+        # Boolean flags are lower-case true/false, as Hadoop's parser expects.
+        if name in _BOOLEAN_PROPERTIES and text.lower() not in {"true", "false"}:
+            raise ValueError(f"{filename}: {name} must be true/false, got {text!r}")
+    # Container bounds must fit inside the memory a NodeManager advertises.
+    yarn_keys = {"yarn.scheduler.minimum-allocation-mb",
+                 "yarn.scheduler.maximum-allocation-mb",
+                 "yarn.nodemanager.resource.memory-mb"}
+    if yarn_keys.issubset(by_name):
+        low = int(by_name["yarn.scheduler.minimum-allocation-mb"])
+        high = int(by_name["yarn.scheduler.maximum-allocation-mb"])
+        node = int(by_name["yarn.nodemanager.resource.memory-mb"])
+        if not (0 < low <= high <= node):
+            raise ValueError(f"{filename}: YARN bounds {low}..{high} do not fit "
+                             f"inside NodeManager memory {node}")
 
 
 def _write_property_xml(path: str, root_tag: str, properties: list) -> str:
@@ -61,6 +109,8 @@ def _write_property_xml(path: str, root_tag: str, properties: list) -> str:
     <property><name/><value/><description/></property> element — the exact
     structure Hadoop's Configuration class parses.
     """
+    # Fail fast on implausible values before any file is written to disk.
+    _validate_config_values(properties, os.path.basename(path))
     configuration = ET.Element(root_tag)
     for name, value, comment in properties:
         prop = ET.SubElement(configuration, "property")
@@ -194,8 +244,10 @@ def generate_hadoop_configs(out_dir: str = "data/hadoop_ecosystem/cluster") -> d
              "Comma-separated DataNode volume list (one entry per physical disk)."),
             ("dfs.namenode.handler.count", "200",
              "Concurrent RPC handler threads on the NameNode (large clusters)."),
-            ("dfs.blocksize.balancer.bandwidthPerSec", "104857600",
-             "100 MB/s cap for the HDFS balancer to avoid saturating the network."),
+            # No 'dfs.blocksize.balancer.bandwidthPerSec': that name is NOT a real
+            # Hadoop property. The balancer actually uses
+            # 'dfs.datanode.balance.bandwidthPerSec'; it is intentionally omitted
+            # here so every emitted configuration key is valid on a real cluster.
             ("dfs.webhdfs.enabled", "true",
              "Enable WebHDFS REST API for programmatic file access."),
         ]))
@@ -205,7 +257,7 @@ def generate_hadoop_configs(out_dir: str = "data/hadoop_ecosystem/cluster") -> d
         os.path.join(out_dir, "yarn-site.xml"), "configuration", [
             ("yarn.resourcemanager.hostname", nn,
              "ResourceManager host — the single authority for cluster containers."),
-            ("yarn.nodemanager.resource.memory-mb", str(32 * 1024 * 0.8 // 1),
+            ("yarn.nodemanager.resource.memory-mb", str(NODEMANAGER_MEMORY_MB),
              "Memory each NodeManager may offer as containers (~80% of 32 GB)."),
             ("yarn.nodemanager.resource.cpu-vcores", "8",
              "vCores each NodeManager advertises for container scheduling."),

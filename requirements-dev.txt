@@ -1,0 +1,9 @@
+# Development / CI extras on top of the flexible runtime requirements.
+# For a fully reproducible environment, install requirements.lock.txt first:
+#     python -m pip install -r requirements.lock.txt -r requirements-dev.txt
+-r requirements.txt
+
+# Test runner. tests/run_tests.py works with the stdlib `unittest` module, but
+# pytest is convenient for running individual pure-helper test modules:
+#     python -m pytest tests/test_lda_topic_selection.py -q
+pytest>=7.4.0

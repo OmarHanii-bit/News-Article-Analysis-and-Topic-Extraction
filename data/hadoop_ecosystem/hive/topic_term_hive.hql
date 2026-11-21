@@ -15,7 +15,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS term_counts (
 )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 STORED AS TEXTFILE
-LOCATION '/user/news/mapreduce/term_counts';
+LOCATION '/user/news/raw/mapreduce_term_counts.tsv';
 
 -- The topic->term dimension table (loaded from the LDA model output).
 CREATE TABLE IF NOT EXISTS topics (

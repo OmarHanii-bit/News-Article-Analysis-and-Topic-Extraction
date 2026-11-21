@@ -22,15 +22,23 @@ Key Capabilities:
 
 import os
 import sys
+import json
 import argparse
 import pandas as pd
 from datetime import datetime
 
-# Canonical 12-attribute pipeline schema
+# Canonical 12-attribute pipeline schema (intentionally unchanged: the date
+# imputation report is a SIDECAR file, never an extra CSV column).
 TARGET_COLUMNS = [
     "article_id", "title", "author", "date", "year", "month",
     "publication", "category", "sub_topic", "content", "word_count", "url"
 ]
+
+# Sidecar evidence for rows whose timestamp could not be parsed. These rows
+# must be excluded from any temporal-trend conclusion.
+DATE_IMPUTATION_REPORT_PATH = "data/date_imputation_report.json"
+DEFAULT_IMPUTED_DATE = "2024-06-15"
+_DATE_IMPUTATION_STATS = {"imputed_rows": 0, "total_rows": 0}
 
 def map_kaggle_row_chunk(chunk, chunk_idx, default_category="General"):
     """
@@ -81,6 +89,7 @@ def map_kaggle_row_chunk(chunk, chunk_idx, default_category="General"):
     dates_extracted = []
     years_extracted = []
     months_extracted = []
+    imputed_in_chunk = 0
 
     for d_val in df_mapped.index:
         raw_d = chunk.loc[d_val, matched_date] if matched_date else None
@@ -96,9 +105,20 @@ def map_kaggle_row_chunk(chunk, chunk_idx, default_category="General"):
             years_extracted.append(int(parsed_d.year))
             months_extracted.append(int(parsed_d.month))
         else:
-            dates_extracted.append("2024-06-15")
+            # Keep the canonical 12-column schema: count + report the imputation
+            # in a sidecar JSON instead of adding an extra CSV flag column.
+            imputed_in_chunk += 1
+            dates_extracted.append(DEFAULT_IMPUTED_DATE)
             years_extracted.append(2024)
             months_extracted.append(6)
+
+    _DATE_IMPUTATION_STATS["imputed_rows"] += imputed_in_chunk
+    _DATE_IMPUTATION_STATS["total_rows"] += len(df_mapped)
+    if imputed_in_chunk:
+        print(f"    [!] WARNING: {imputed_in_chunk:,}/{len(df_mapped):,} rows in chunk "
+              f"{chunk_idx} had missing/unparseable dates and were imputed to "
+              f"{DEFAULT_IMPUTED_DATE}. Exclude them from temporal conclusions "
+              f"(see {DATE_IMPUTATION_REPORT_PATH}).")
 
     df_mapped["date"] = dates_extracted
     df_mapped["year"] = years_extracted
@@ -126,14 +146,37 @@ def map_kaggle_row_chunk(chunk, chunk_idx, default_category="General"):
     # Reorder columns to canonical schema
     return df_mapped[TARGET_COLUMNS]
 
+
+def write_date_imputation_report(report_path: str = DATE_IMPUTATION_REPORT_PATH) -> dict:
+    """Writes sidecar JSON describing how many rows received a fallback date."""
+    report = {
+        "imputed_rows": _DATE_IMPUTATION_STATS["imputed_rows"],
+        "total_rows": _DATE_IMPUTATION_STATS["total_rows"],
+        "note": ("Rows with missing/unparseable dates were imputed to "
+                 "2024-06-15 solely to populate year/month partition keys. "
+                 "These rows MUST be excluded from temporal conclusions; the "
+                 "canonical 12-column CSV deliberately carries no imputation flag."),
+    }
+    os.makedirs(os.path.dirname(report_path) or ".", exist_ok=True)
+    with open(report_path, "w", encoding="utf-8") as fh:
+        json.dump(report, fh, indent=2)
+    print(f"[+] Date imputation report -> {report_path} "
+          f"({report['imputed_rows']:,}/{report['total_rows']:,} rows)")
+    return report
+
+
 def ingest_kaggle_file(
     input_file_path: str,
     output_csv_path: str = "data/raw_news_articles.csv",
     chunk_size: int = 10000,
-    max_records: int = None
+    max_records: int = None,
+    dedup: bool = False
 ):
     """
     Ingests and adapts a real-world Kaggle news CSV file into the pipeline format.
+
+    ``dedup`` (CLI: --dedup, default off) drops repeated article_id/url values
+    across chunks before writing so the canonical corpus stays unique.
     """
     print("=" * 80)
     print("  KAGGLE 'ALL THE NEWS' DATASET INGESTION & NORMALIZATION")
@@ -141,8 +184,16 @@ def ingest_kaggle_file(
     print(f"[*] Input File:      {input_file_path}")
     print(f"[*] Output Target:   {output_csv_path}")
     print(f"[*] Chunk Size:      {chunk_size:,} rows per iteration")
+    print("[*] CSV decoding:    encoding_errors='replace' (malformed bytes are "
+          "replaced with U+FFFD instead of aborting ingestion).")
     if max_records:
         print(f"[*] Record Limit:    {max_records:,} articles")
+    print(f"[*] Deduplication:   {'ON (--dedup)' if dedup else 'OFF (default)'}")
+
+    # Reset the per-run imputation counters so repeated CLI invocations in one
+    # interpreter cannot contaminate the sidecar report.
+    _DATE_IMPUTATION_STATS["imputed_rows"] = 0
+    _DATE_IMPUTATION_STATS["total_rows"] = 0
 
     if not os.path.exists(input_file_path):
         print(f"\n[!] Input file not found: {input_file_path}")
@@ -152,9 +203,12 @@ def ingest_kaggle_file(
         print(f"    3. Run: python src/ingest_kaggle_real.py --input {input_file_path}")
         return False
 
-    os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
+    os.makedirs(os.path.dirname(output_csv_path) or ".", exist_ok=True)
     total_written = 0
     first_chunk = True
+    dropped_duplicates = 0
+    seen_ids = set()
+    seen_urls = set()
 
     try:
         reader = pd.read_csv(input_file_path, chunksize=chunk_size, encoding="utf-8", encoding_errors="replace")
@@ -162,6 +216,20 @@ def ingest_kaggle_file(
             df_clean = map_kaggle_row_chunk(chunk, chunk_idx)
             if df_clean.empty:
                 continue
+
+            # Optional --dedup: drop repeats within this chunk and against all
+            # previously written chunks, keyed on article_id/url.
+            if dedup:
+                before = len(df_clean)
+                df_clean = df_clean.drop_duplicates(subset="article_id", keep="first")
+                df_clean = df_clean.drop_duplicates(subset="url", keep="first")
+                df_clean = df_clean[~df_clean["article_id"].isin(seen_ids)]
+                df_clean = df_clean[~df_clean["url"].isin(seen_urls)]
+                dropped_duplicates += before - len(df_clean)
+                seen_ids.update(df_clean["article_id"].astype(str))
+                seen_urls.update(df_clean["url"].astype(str))
+                if df_clean.empty:
+                    continue
 
             # Check if limit reached
             if max_records and (total_written + len(df_clean)) > max_records:
@@ -180,6 +248,9 @@ def ingest_kaggle_file(
                 print(f"[*] Reached configured record limit of {max_records:,} articles.")
                 break
 
+        if dedup:
+            print(f"[*] --dedup removed {dropped_duplicates:,} duplicate article_id/url rows.")
+        write_date_imputation_report()
         print(f"\n[+] Ingestion Complete! Total adapted records: {total_written:,}")
         print(f"[+] Output ready at: {output_csv_path}")
         print("[*] You can now re-run 'python run_all.py' to process the real Kaggle dataset.")
@@ -187,6 +258,7 @@ def ingest_kaggle_file(
 
     except Exception as e:
         print(f"[!] Error during Kaggle ingestion: {e}")
+        write_date_imputation_report()
         return False
 
 if __name__ == "__main__":
@@ -196,6 +268,8 @@ if __name__ == "__main__":
     # "--max-rows" / "--chunk-size" are the flag spellings documented in README Method 7.
     parser.add_argument("--limit", "-l", "--max-rows", dest="limit", type=int, default=None, help="Maximum number of articles to ingest")
     parser.add_argument("--chunksize", "-c", "--chunk-size", dest="chunksize", type=int, default=10000, help="Chunk size for streaming processing")
+    parser.add_argument("--dedup", action="store_true",
+                        help="Drop duplicate article_id/url rows before writing (default: off).")
 
     args = parser.parse_args()
-    ingest_kaggle_file(args.input, args.output, args.chunksize, args.limit)
+    ingest_kaggle_file(args.input, args.output, args.chunksize, args.limit, dedup=args.dedup)

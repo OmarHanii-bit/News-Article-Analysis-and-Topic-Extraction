@@ -1,4 +1,6 @@
 @echo off
+REM Force UTF-8 console encoding so Unicode pipeline output cannot crash cp1252.
+set PYTHONIOENCODING=utf-8
 REM ============================================================================
 REM One-Click Master Pipeline Launcher (Windows)
 REM News Article Analysis and Topic Extraction (Big Data Architecture)

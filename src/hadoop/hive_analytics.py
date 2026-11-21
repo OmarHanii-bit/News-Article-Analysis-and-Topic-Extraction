@@ -55,10 +55,19 @@ import pandas as pd                # read the Parquet lakehouse, write CSV
 # ---------------------------------------------------------------------------
 # PATHS & CONSTANTS
 # ---------------------------------------------------------------------------
-# HDFS location of the Parquet lakehouse (used inside the generated HiveQL).
-HDFS_PARQUET_LOCATION = "/user/news/processed/processed_parquet"
-# HDFS location of the MapReduce term-count output (external TSV table).
-HDFS_TERMCOUNTS_LOCATION = "/user/news/mapreduce/term_counts"
+# The orchestrator (run_hadoop_ecosystem.land_corpus_in_hdfs) writes each Parquet
+# part-file under /user/news/lakehouse/year=.../month=... — so this is the real
+# LOCATION the external table must reference, not an old processed/ path.
+HDFS_PARQUET_LOCATION = "/user/news/lakehouse"
+# The MapReduce TSV is landed at this EXACT path by the same orchestrator. An
+# external Hive table can point at a single text file, which avoids exposing the
+# unrelated CSV/JSON files that also live in /user/news/raw.
+HDFS_TERMCOUNTS_LOCATION = "/user/news/raw/mapreduce_term_counts.tsv"
+
+# Fallback partition values, used ONLY when neither the corpus nor the explicit
+# HIVE_PARTITION_YEAR / HIVE_PARTITION_MONTH environment overrides provide one.
+DEFAULT_PARTITION_YEAR = 2025
+DEFAULT_PARTITION_MONTH = 11
 
 # Default project-relative input paths and output directory.
 DEFAULT_PARQUET_DIR = "data/processed_parquet"
@@ -72,7 +81,47 @@ DATABASE_NAME = "newsdw"
 
 def _alias(label: str) -> str:
     """Sanitises a topic label into a valid SQL / HiveQL column alias."""
+    # Any run of non-alphanumeric characters becomes one underscore so the label
+    # is safe to use as a quoted Hive identifier / cross-tab column name.
     return re.sub(r"[^0-9a-zA-Z]+", "_", str(label)).strip("_")
+
+
+def resolve_partition(parquet_dir: str = DEFAULT_PARQUET_DIR, df=None) -> tuple:
+    """
+    Resolves the (year, month) partition used by the pruned query.
+
+    Priority: explicit HIVE_PARTITION_YEAR / HIVE_PARTITION_MONTH env vars, then
+    the latest (year, month) actually present in the corpus, then the historical
+    2025/11 fallback. Deriving the pair from data keeps generated HiveQL aligned
+    with the lakehouse instead of silently querying a stale hard-coded slice.
+    """
+    env_year = os.environ.get("HIVE_PARTITION_YEAR")
+    env_month = os.environ.get("HIVE_PARTITION_MONTH")
+    if env_year and env_month:
+        try:
+            return int(env_year), int(env_month)
+        except ValueError:
+            pass  # malformed overrides: fall through to the corpus-derived value
+
+    if df is None:
+        try:
+            if os.path.exists(parquet_dir):
+                df = pd.read_parquet(parquet_dir, columns=["year", "month"])
+        except Exception:
+            df = None  # unreadable lakehouse -> use the documented fallback
+
+    if df is not None and not df.empty and {"year", "month"}.issubset(df.columns):
+        # Parquet partition columns are often categorical: coerce before max().
+        years = pd.to_numeric(df["year"], errors="coerce")
+        months = pd.to_numeric(df["month"], errors="coerce")
+        valid = years.notna() & months.notna() & (years > 0) & (months > 0)
+        if valid.any():
+            latest_year = int(years[valid].max())
+            # Choose the newest month WITHIN that year so the pair really exists.
+            latest_month = int(months[valid & (years == latest_year)].max())
+            return latest_year, latest_month
+
+    return DEFAULT_PARTITION_YEAR, DEFAULT_PARTITION_MONTH
 
 
 def _read_topic_labels(parquet_dir: str) -> list:
@@ -84,6 +133,7 @@ def _read_topic_labels(parquet_dir: str) -> list:
     try:
         if os.path.exists(parquet_dir):
             df = pd.read_parquet(parquet_dir, columns=["topic_label"])
+            # One column per DISTINCT label, sorted for a reproducible query.
             return sorted(x for x in df["topic_label"].dropna().unique().tolist())
     except Exception:
         pass
@@ -103,13 +153,15 @@ def generate_hive_ddl(parquet_dir: str = DEFAULT_PARQUET_DIR,
     """
     os.makedirs(out_dir, exist_ok=True)
     topic_labels = _read_topic_labels(parquet_dir)
+    # Keep the generated pruned-query partition in sync with the actual corpus.
+    partition_year, partition_month = resolve_partition(parquet_dir)
 
     # Build the conditional-aggregation cross-tab columns for query (b) using the
-    # real topic labels discovered from the data.
+    # real topic labels discovered from the data (one SUM(CASE...) per label).
     crosstab_cols = ",\n        ".join(
         f"SUM(CASE WHEN topic_label = '{lbl}' THEN 1 ELSE 0 END) AS `{_alias(lbl)}`"
         for lbl in topic_labels
-    ) or "COUNT(*) AS all_topics"
+    ) or "COUNT(*) AS all_topics"  # empty corpus -> one harmless placeholder column
 
     # -------- news_analytics.hql ------------------------------------------ #
     hql = "\n".join([
@@ -206,10 +258,11 @@ def generate_hive_ddl(parquet_dir: str = DEFAULT_PARQUET_DIR,
         "ORDER BY total_keyword_freq DESC;",
         "",
         "-- ---- (f) Partition-pruned single-month query ----------------------------",
+        f"--      Resolved partition: year={partition_year}/month={partition_month}",
         "SELECT COUNT(*)                       AS article_count,",
         "       ROUND(AVG(sentiment_polarity),4) AS mean_sentiment",
         "FROM news_articles",
-        "WHERE year = 2025 AND month = 11;",
+        f"WHERE year = {partition_year} AND month = {partition_month};",
         "",
         "-- ---- Keep warehouse statistics fresh for the cost-based optimiser -------",
         "ANALYZE TABLE news_articles COMPUTE STATISTICS;",
@@ -273,7 +326,9 @@ def generate_hive_ddl(parquet_dir: str = DEFAULT_PARQUET_DIR,
     return hql_path
 
 
-def _build_real_cluster_commands(out_dir: str) -> str:
+def _build_real_cluster_commands(out_dir: str,
+                                 partition_year: int = DEFAULT_PARTITION_YEAR,
+                                 partition_month: int = DEFAULT_PARTITION_MONTH) -> str:
     """Returns the content of `real_cluster_commands.md` (authentic hive/beeline)."""
     hive_dir = out_dir.replace(os.sep, "/")
     return "\n".join([
@@ -293,7 +348,7 @@ def _build_real_cluster_commands(out_dir: str) -> str:
         "```",
         "By default a **managed** table's data lives under the warehouse directory;",
         "our `news_articles` table is **EXTERNAL**, so its data stays in the Spark",
-        "output path `/user/news/processed/processed_parquet`.",
+        f"output path `{HDFS_PARQUET_LOCATION}` (partitioned year=/month=).",
         "",
         "## 1. Run the DDL to register the external Parquet table",
         "```bash",
@@ -330,7 +385,8 @@ def _build_real_cluster_commands(out_dir: str) -> str:
         "",
         "## 7. Explain a partition-pruned query (proves pruning in the plan)",
         "```bash",
-        "hive -e \"EXPLAIN SELECT COUNT(*) FROM news_articles WHERE year=2025 AND month=11;\"",
+        "hive -e \"EXPLAIN SELECT COUNT(*) FROM news_articles "
+        f"WHERE year={partition_year} AND month={partition_month};\"",
         "```",
         "",
     ]) + "\n"
@@ -340,23 +396,22 @@ def _build_real_cluster_commands(out_dir: str) -> str:
 # LOCAL WAREHOUSE LOADING (SQLite)
 # ---------------------------------------------------------------------------
 def _load_parquet(parquet_dir: str) -> pd.DataFrame:
-    """Loads the enriched corpus from Parquet, else the raw CSV, else a stub."""
+    """
+    Loads the enriched corpus from Parquet. If the lakehouse is missing/empty we
+    return an EMPTY frame: fabricating a summary row here would make the query
+    results look real when no input data exists. The caller reports the gap via
+    `warnings` and marks every query `no_input_data`.
+    """
     df = None
     try:
         if os.path.exists(parquet_dir):
             df = pd.read_parquet(parquet_dir)
     except Exception:
         df = None
-    if df is None or df.empty:
-        # Very small synthetic fallback so the simulation never crashes.
-        df = pd.DataFrame([{
-            "article_id": "ART_SYNTH_1", "title": "Synthetic", "author": "N/A",
-            "date": "2025-01-01", "publication": "Synthetic Press", "category": "General",
-            "sub_topic": "General", "clean_word_count": 10, "dominant_topic": 0,
-            "topic_label": "Synthetic Topic", "topic_confidence": 0.5,
-            "sentiment_polarity": 0.0, "year": 2025, "month": 1,
-        }])
-    # Guarantee every column the SQL relies on exists.
+    if df is None:
+        # Schema-only frame: SQL still executes, but over zero real articles.
+        df = pd.DataFrame()
+    # Guarantee every column the SQL relies on exists (also on the empty frame).
     for col, default in {
         "article_id": "", "title": "", "author": "", "date": "", "publication": "",
         "category": "", "sub_topic": "", "clean_word_count": 0, "dominant_topic": -1,
@@ -365,7 +420,8 @@ def _load_parquet(parquet_dir: str) -> pd.DataFrame:
     }.items():
         if col not in df.columns:
             df[col] = default
-    # SQLite needs concrete integer types for the partition columns.
+    # SQLite needs concrete integer types for the partition columns; coerce
+    # categorical/string partition values coming from the Parquet directory layout.
     df["year"] = pd.to_numeric(df["year"], errors="coerce").fillna(0).astype(int)
     df["month"] = pd.to_numeric(df["month"], errors="coerce").fillna(0).astype(int)
     return df
@@ -378,11 +434,12 @@ def _load_term_counts(tsv_path: str) -> pd.DataFrame:
         with open(tsv_path, "r", encoding="utf-8") as fh:
             for line in fh:
                 parts = line.rstrip("\n").split("\t")
+                # Only well-formed (term, integer-count) pairs become table rows.
                 if len(parts) == 2:
                     try:
                         rows.append((parts[0], int(parts[1])))
                     except ValueError:
-                        pass
+                        pass  # malformed count -> skip instead of crashing
     return pd.DataFrame(rows, columns=["term", "cnt"])
 
 
@@ -405,9 +462,10 @@ def _load_topics(summary_json: str, df: pd.DataFrame) -> pd.DataFrame:
         label = None
         match = df[df["dominant_topic"] == tid]
         if not match.empty:
-            label = match["topic_label"].mode().iloc[0]
+            label = match["topic_label"].mode().iloc[0]  # most frequent corpus label
         if label is None:
-            label = _key
+            label = _key  # LDA key is a reasonable fallback label
+        # One dimension row per LDA keyword so the term-count JOIN can match it.
         for term in info.get("terms", []):
             rows.append((label, tid, term))
     return pd.DataFrame(rows, columns=["topic_label", "topic_id", "term"])
@@ -421,7 +479,9 @@ def _exec(conn: sqlite3.Connection, sql: str) -> dict:
     start = time.perf_counter()
     cur = conn.cursor()
     cur.execute(sql)
+    # cursor.description is None for DDL; a SELECT always gives column names.
     cols = [c[0] for c in cur.description] if cur.description else []
+    # Zip each result tuple with its columns -> ready-to-serialise dict rows.
     rows = [dict(zip(cols, r)) for r in cur.fetchall()]
     elapsed_ms = (time.perf_counter() - start) * 1000.0
     return {"columns": cols, "rows": rows, "elapsed_ms": round(elapsed_ms, 3)}
@@ -450,6 +510,20 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
     term_df = _load_term_counts(mapreduce_tsv)
     topics_df = _load_topics(summary_json, df)
 
+    # Report missing inputs explicitly instead of hiding them behind a fake row.
+    warnings = []
+    input_available = not df.empty
+    if not input_available:
+        warnings.append(
+            f"Parquet corpus missing or empty at '{parquet_dir}': analytics ran "
+            "with no input data; no placeholder rows were fabricated.")
+    if term_df.empty:
+        warnings.append(f"MapReduce term-count TSV missing or empty at '{mapreduce_tsv}'.")
+    if topics_df.empty:
+        warnings.append(f"LDA topic mapping missing or empty at '{summary_json}'.")
+    # Resolve the pruned partition from the corpus (or HIVE_PARTITION_* overrides).
+    partition_year, partition_month = resolve_partition(parquet_dir, df)
+
     # --- 2) Build the in-memory SQL warehouse and load the three tables -------
     conn = sqlite3.connect(":memory:")
     # `news_articles` = the Parquet lakehouse projected into a relational table.
@@ -476,8 +550,9 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
         "term_counts": int(len(term_df)),
         "topics": int(len(topics_df)),
     }
-    # Partition pruning is measured on the actual `year=2025/month=11` slice.
-    pruned_partition_rows = int(df[(df["year"] == 2025) & (df["month"] == 11)].shape[0])
+    # Partition pruning is measured on the partition resolved from the corpus.
+    pruned_partition_rows = int(
+        df[(df["year"] == partition_year) & (df["month"] == partition_month)].shape[0])
 
     # --- 5) Define the six queries (id, question, SQL, rows scanned) ----------
     # `source_rows` is the number of rows that query must read (used to budget the
@@ -518,10 +593,12 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
          "GROUP BY t.topic_label ORDER BY total_keyword_freq DESC;",
          table_sizes["topics"] + table_sizes["term_counts"]),
         ("partition_pruned_month",
-         "Partition-pruned single-month query (reads only year=2025/month=11)",
+         f"Partition-pruned single-month query "
+         f"(reads only year={partition_year}/month={partition_month})",
          "SELECT COUNT(*) AS article_count, "
          "ROUND(AVG(sentiment_polarity),4) AS mean_sentiment "
-         "FROM news_articles WHERE year = 2025 AND month = 11;",
+         "FROM news_articles "
+         f"WHERE year = {partition_year} AND month = {partition_month};",
          pruned_partition_rows),
     ]
 
@@ -530,6 +607,10 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
     result_files = []
     for qid, question, sql, source_rows in queries:
         outcome = _exec(conn, sql)
+        # With no real corpus, emit an EMPTY result instead of a fabricated row.
+        if not input_available:
+            outcome["rows"] = []
+        status = "ok" if input_available else "no_input_data"
         # Write the result set to results/<query_name>.csv with pandas.
         result_df = pd.DataFrame(outcome["rows"], columns=outcome["columns"] or None)
         csv_path = os.path.join(results_dir, f"{qid}.csv")
@@ -539,6 +620,7 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
             "query_name": qid,
             "business_question": question,
             "sql": " ".join(sql.split()),
+            "status": status,
             "rows_scanned": int(source_rows),
             "columns": outcome["columns"],
             "row_count": len(outcome["rows"]),
@@ -557,8 +639,10 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
         "tables": tables_created,
         "table_sizes": table_sizes,
         "top_topic_by_volume": top_topic,
+        "status": "ok" if input_available else "no_input_data",
+        "warnings": warnings,
         "partition_pruning": {
-            "pruned_partition": "year=2025/month=11",
+            "pruned_partition": f"year={partition_year}/month={partition_month}",
             "rows_in_pruned_partition": pruned_partition_rows,
             "rows_in_full_table": int(len(df)),
         },
@@ -576,22 +660,28 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
     topics_df.to_csv(topics_tsv, sep="\t", index=False, header=False)
     commands_path = os.path.join(out_dir, "real_cluster_commands.md")
     with open(commands_path, "w", encoding="utf-8") as fh:
-        fh.write(_build_real_cluster_commands(out_dir))
+        fh.write(_build_real_cluster_commands(out_dir, partition_year, partition_month))
 
     # --- 10) Optionally record an authentic HDFS staging command --------------
     hdfs_commands = []
     try:
         fs = LocalHDFS(root="data/hadoop_ecosystem/hdfs", verbose=False)
-        fs.mkdirs("/user/news/mapreduce")
+        # Stage into the directory that actually holds the orchestrator's TSV.
+        fs.mkdirs("/user/news/raw")
         if os.path.exists(mapreduce_tsv):
-            fs.put(mapreduce_tsv, f"{HDFS_TERMCOUNTS_LOCATION}/term_counts.tsv")
-            hdfs_commands.append(f"hdfs dfs -put term_counts.tsv hdfs://{HDFS_TERMCOUNTS_LOCATION}/")
+            fs.put(mapreduce_tsv, HDFS_TERMCOUNTS_LOCATION)
+            hdfs_commands.append(
+                f"hdfs dfs -put {os.path.basename(mapreduce_tsv)} hdfs://{HDFS_TERMCOUNTS_LOCATION}")
     except Exception as exc:
         print(f"[Hive] HDFS staging skipped: {type(exc).__name__}: {exc}")
 
     # --- 11) Assemble, persist and return the contract dict ------------------
     summary = {
         "database": DATABASE_NAME,
+        "input_available": input_available,
+        "status": "ok" if input_available else "no_input_data",
+        "warnings": warnings,
+        "partition": {"year": partition_year, "month": partition_month},
         "tables_created": tables_created,
         "queries_executed": len(query_results),
         "result_files": result_files,

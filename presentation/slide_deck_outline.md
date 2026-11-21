@@ -49,7 +49,7 @@
   - Rack-awareness and fault tolerance against worker DataNode termination.
   - NameNode metadata namespace (`fsimage`) + `hdfs dfs` client operations (mkdir/put/cat/ls/du/rm).
   - Raw Ingestion Layer: Handling multi-paragraph text across 6 distinct news domains.
-- **Key Visual:** Diagram showing NameNode metadata coordination and DataNode block distribution.
+- **Key Visual:** Diagram showing NameNode metadata coordination and DataNode block distribution. Show the rendered end-to-end blueprint from `presentation/architecture.png` (captioned "End-to-end architecture (rendered from report §3.1)") — the PowerPoint generator embeds it here when the PNG is available.
 
 ### Slide 4: First-Stage Batch Processing: Hadoop MapReduce
 - **Speaker:** Priya Sharma (Hadoop Specialist)
@@ -71,7 +71,7 @@
   - **Oozie:** Workflow + coordinator DAG (`sqoop` $\rightarrow$ `pig` $\rightarrow$ `hive` $\rightarrow$ `spark` $\rightarrow$ `shell`); final status SUCCEEDED, 5/5 actions.
   - **ZooKeeper:** 11 znodes (6 ephemeral) for leader election, distributed config and locks; 3 watches fired.
   - **Cluster Computing (YARN):** CapacityScheduler queues sized from measured on-disk volume; `core-site`/`hdfs-site`/`yarn-site`/`mapred-site` XML emitted.
-- **Verification:** 9/9 ecosystem services executed, 0 failures; 80 real `hdfs dfs` commands logged as evidence in `data/hadoop_ecosystem/`.
+- **Verification:** 9 orchestrated ecosystem modules covering 10 named technologies, 0 failures in the verified 7.21 s run (the notebook records a separate 11.13 s run); 80 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/`.
 
 ### Slide 6: Distributed In-Memory Processing: Apache Spark Engine
 - **Speaker:** Marcus Chen (PySpark Engineer)
@@ -84,7 +84,7 @@
 ### Slide 7: Lakehouse Parquet Storage & Partitioning Strategy
 - **Speaker:** Marcus Chen (PySpark Engineer)
 - **Core Headings:**
-  - Columnar compression: Snappy-compressed Parquet yielding an 82% storage reduction over raw CSV.
+  - Columnar compression: Snappy-compressed Parquet yielding ~92% storage reduction over raw CSV (92.5% in the artifacts).
   - Two-level partitioning scheme: `partitionBy("year", "month")` enabling partition pruning during analytical time-slice scans.
   - Cross-platform fault-tolerant writing: native Hadoop FileSystem with PyArrow fallback for Windows environments.
 
@@ -92,8 +92,8 @@
 - **Speaker:** Elena Rostova (NLP & ML Scientist)
 - **Core Headings:**
   - Distributed `RegexTokenizer` and custom domain stopword filtering.
-  - `CountVectorizer`: Building a 5,000-term distributed sparse vector space with $minDF=3$.
-  - `IDF` (Inverse Document Frequency) model formulation:
+  - `CountVectorizer`: Building a 5,000-term distributed sparse vector space with $minDF=3$; its **term counts feed LDA**.
+  - `IDF` (Inverse Document Frequency) is computed for downstream TF-IDF analytics, not as an LDA input:
     $$\text{TF-IDF}(t, d, D) = \text{TF}(t, d) \times \log\left(\frac{|D| + 1}{\text{DF}(t, D) + 1}\right)$$
 - **Key Visual:** Token frequency distribution curve and sparsity visualization.
 
@@ -111,6 +111,7 @@
     - Topic 5: AI Infrastructure & Large Model Clusters
   - Document Dominant Topic Assignment with Dirichlet posterior probability confidence scores.
   - **Corpus-Agnostic Labelling:** curated labels for the graded synthetic benchmark, auto-derived labels (top learned terms) for real corpora.
+  - **Selection Evidence Figure:** the generator embeds `visualizations/lda_k_sweep.png` here when available. Speaker caption: "k sweep (438 terms): statistical knee selected k=3; production retains k=6 for interpretability/cross-corpus comparability." See `src/lda_topic_selection.py` and `data/lda_k_sweep.json`.
 
 ### Slide 10: Real-World Corpus Validation (Reuters-21578 Wire Archive)
 - **Speaker:** Alex Vance (Project Lead)
@@ -142,27 +143,29 @@
 - **Speaker:** Sophia Taylor (Visualization Lead)
 - **Core Headings:**
   - Cross-tabulation heatmap: Publisher Editorial Focus across Topics (Reuters, Bloomberg, WSJ, NYT, TechCrunch, BBC).
-  - Editorial findings: TechCrunch exhibits an 84% skew toward AI Infrastructure and Quantum Computing, whereas Bloomberg concentrates 76% on Monetary Policy and Corporate Debt.
+  - Editorial findings: TechCrunch concentrates 41.7% of its sampled coverage in AI Infrastructure & Compute and Quantum Physics (113 + 199 of 748); Bloomberg devotes 11.9% (88/741) and the Financial Times 13.9% (106/765) to Monetary Policy & Markets — computed from data/pipeline_analytics_summary.json publisher_distribution.
 - **Key Visual:** Side-by-side display of `publisher_topic_heatmap.png` and `topic_volume_distribution.png`.
 
 ### Slide 14: Sentiment Dynamics & Temporal Trajectories
 - **Speaker:** Sophia Taylor (Visualization Lead)
 - **Core Headings:**
   - Sentiment polarity distribution across topics (VADER compound score).
-  - Regulatory & Antitrust articles exhibit negative mean polarity ($-0.32$), while Clean Energy & AI Infrastructure trend moderately positive ($+0.41$).
+  - Regulatory & Antitrust articles exhibit negative mean polarity ($-0.028$), while AI Infrastructure & Cloud Compute trend strongly positive ($+0.558$).
   - Multi-year temporal trajectories identifying seasonal event surges and regulatory hearing spikes.
+  - Held-out 2024→2025 forecast: naive persistence beat the linear trend (macro MAE 10.03 vs 10.72) — an honest negative result on 24 monthly points; chart `temporal_forecast_evaluation.png`, metrics `data/temporal_forecast_evaluation.json`.
 - **Key Visual:** Display of `temporal_topic_trends.png` and `topic_sentiment_distribution.png`.
 
 ### Slide 15: System Benchmarks, Scalability & Performance Analysis
 - **Speaker:** David Kim (Benchmarking Lead)
 - **Core Headings:**
   - Comparative execution profiling:
-    - Hadoop ecosystem stack (9 services: HDFS/Hive/HBase/Pig/Sqoop/Flume/Oozie/ZooKeeper/cluster): ~14 seconds
+    - Hadoop ecosystem stack (9 orchestrated ecosystem modules covering 10 named technologies): 7.21 s in the verified run (the notebook records a separate 11.13 s run)
     - MapReduce Tokenization: 3.8 seconds
-    - PySpark Pipeline (6,000 documents, LDA 20 iterations, TF-IDF): ~45 seconds
-    - PySpark Pipeline (10,712 real Reuters documents): ~61 seconds
-    - Parquet Columnar Querying vs. CSV: 9.4x speedup on group-by queries
-  - Horizontal scalability projections: Spark linear speedup curve from 1 to 32 worker nodes.
+    - PySpark Pipeline (6,000 documents, LDA 20 iterations, TF-IDF): ~50 seconds
+    - PySpark Pipeline (10,712 real Reuters documents): ~72 seconds
+    - Parquet Columnar Querying vs. CSV: indicative columnar-scan advantage (not a controlled benchmark)
+  - Horizontal scalability projections: projected scale-out model (not measured; pipeline runs `local[*]` on one host).
+  - Measured scale benchmark: 50,000 articles at 10,108 rows/s (45 MiB CSV → 7.3 MiB Parquet); labelled linear projection (NOT measured) ~14 s for 143k and ~4.45 min for 2.7M articles. Details in `docs/SCALABILITY_AND_KAGGLE.md`.
 
 ### Slide 16: Managerial Recommendations & "What Next?" Decisions
 - **Speaker:** David Kim (Benchmarking Lead)
@@ -174,9 +177,10 @@
 ### Slide 17: Conclusion & Technical Defense Handoff
 - **Speaker:** Alex Vance (Project Lead)
 - **Core Headings:**
-  - Summary of accomplishments: complete 10/10 rubric fulfillment.
-  - Verified integration across the full Hadoop ecosystem (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), PySpark, MongoDB, and Streamlit.
+  - Summary of accomplishments: full rubric coverage (10/10 self-assessed target; instructor final).
+  - Verified integration across 9 orchestrated ecosystem modules covering 10 named technologies (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), PySpark, MongoDB, and Streamlit.
   - Dual-corpus validation: 6,000-article synthetic benchmark + 10,712-article real Reuters wire corpus.
+  - Evidence depth: 106 passing tests, held-out 2024→2025 forecast evaluation (naive baseline wins), measured 50k-article scale benchmark (10,108 rows/s), honest k-selection reconciliation.
   - Seamless handoff to Live Interactive Demonstration and technical Q&A session.
 
 ---
@@ -185,7 +189,7 @@
 
 ### Step 0: Hadoop Ecosystem Stack Execution (1 min) - Member 2 (Priya)
 - Command: `python src/hadoop/run_hadoop_ecosystem.py`
-- Highlight: Watch all 9 services run in order (HDFS format & corpus landing, YARN capacity plan, ZooKeeper election, Sqoop import/export, Flume streaming, HBase load, Hive HiveQL rollups, Pig Latin ETL, Oozie DAG). Point to the 80 real `hdfs dfs` commands captured in `data/hadoop_ecosystem/hadoop_cli_commands.md`.
+- Highlight: Watch 9 orchestrated ecosystem modules covering 10 named technologies run in order (HDFS format & corpus landing, YARN capacity plan, ZooKeeper election, Sqoop import/export, Flume streaming, HBase load, Hive HiveQL rollups, Pig Latin ETL, Oozie DAG). Point to the 80 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/hadoop_cli_commands.md`.
 
 ### Step 1: Terminal MapReduce Execution (1 min) - Member 2 (Priya)
 - Command: `python src/mapreduce/run_mapreduce_local.py`
@@ -214,7 +218,7 @@
 
 ### Q2: How did you select $k=6$ as the number of topics for Latent Dirichlet Allocation?
 **Answer (Member 4 - Elena):**  
-"We determined $k=6$ through a rigorous evaluation of topic coherence metrics ($C_v$ and UMass) and model perplexity sweeps across $k \in [3, 12]$. At $k=6$, the topic coherence curve peaked, demonstrating clear semantic orthogonality between distinct domains (AI Infrastructure, Monetary Policy, Antitrust, Healthcare, Clean Energy, Quantum Physics). Higher values of $k$ ($k \ge 8$) caused semantic splitting (e.g., splitting AI into sub-fragments with high word overlap), while lower values ($k \le 4$) merged disparate subjects like Regulatory Law and Central Banking."
+"`src/lda_topic_selection.py` swept $k \in [3,12]$ over the same 438-term feature space, recording log perplexity, UMass-style document co-occurrence coherence and topic distinctness (`data/lda_k_sweep.json`). Perplexity was non-monotonic, so it was reported but not decisive; a statistical knee rule (marginal coherence gain <5% of the coherence span) selected $k=3$. Mean UMass coherence was actually best at $k=5$ ($-0.3270$) and $k=10$ ($-0.3588$) versus $k=6$ ($-0.3668$). Production retains $k=6$ because the curated six-domain synthetic benchmark and cross-corpus comparability require a fixed $k$, and the topic labels are interpretable at $k=6$. This is an engineering/interpretability choice, not a proven optimum; a 5,000-term rerun is future work. No alternative coherence variant was computed."
 
 ### Q3: What is the mathematical foundation of Latent Dirichlet Allocation?
 **Answer (Member 4 - Elena):**  
@@ -224,7 +228,7 @@ In Spark MLlib, this is solved via the Online Variational Bayes algorithm (Hoffm
 
 ### Q4: Why add Hive, HBase, Pig, Sqoop, Flume, Oozie and ZooKeeper instead of only HDFS + MapReduce + Spark?
 **Answer (Member 2 - Priya):**  
-"Each service solves a distinct production concern. **Hive** gives analysts a SQL warehouse over the same Parquet lakehouse. **HBase** provides low-latency key lookups for randomly-accessed enriched articles. **Pig** offers a higher-level ETL scripting layer above MapReduce. **Sqoop** connects the Hadoop world to operational RDBMSs. **Flume** handles continuous streaming ingestion. **Oozie** orchestrates the whole DAG as a scheduled workflow. **ZooKeeper** underpins coordination — leader election, distributed configuration and locks — which is what makes HDFS High Availability and HBase region assignment possible. Together they demonstrate that we can operate a real cluster, not just a single job."
+"Each service solves a distinct production concern. **Hive** gives analysts a SQL warehouse over the same Parquet lakehouse. **HBase** provides low-latency key lookups for randomly-accessed enriched articles. **Pig** offers a higher-level ETL scripting layer above MapReduce. **Sqoop** connects the Hadoop world to operational RDBMSs. **Flume** handles continuous streaming ingestion. **Oozie** orchestrates the whole DAG as a scheduled workflow. **ZooKeeper** underpins coordination — leader election, distributed configuration and locks — which is what makes HDFS High Availability and HBase region assignment possible. Together they demonstrate operating procedures for a real cluster; local validation is simulation-based."
 
 ### Q5: How does your architecture handle node failure during execution?
 **Answer (Member 3 - Marcus):**  

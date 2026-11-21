@@ -10,6 +10,10 @@ import sys
 import os
 import time
 
+# The suite has grown over time; 53 is the historical baseline. New modules add
+# tests on top of it, but losing/dropping any of the baseline must fail CI.
+MIN_EXPECTED_TESTS = 53
+
 def run_all_tests():
     print("=" * 80)
     print("   AUTOMATED TEST SUITE: NEWS ARTICLE BIG DATA PIPELINE")
@@ -27,18 +31,25 @@ def run_all_tests():
     
     elapsed = time.time() - start_time
     print("\n" + "=" * 80)
-    print(f"Test Run Summary:")
-    print(f"  • Tests Executed: {result.testsRun}")
-    print(f"  • Failures:       {len(result.failures)}")
-    print(f"  • Errors:         {len(result.errors)}")
-    print(f"  • Time Elapsed:   {elapsed:.2f} seconds")
+    print("Test Run Summary:")
+    print(f"  - Tests Executed: {result.testsRun}")
+    print(f"  - Failures:       {len(result.failures)}")
+    print(f"  - Errors:         {len(result.errors)}")
+    print(f"  - Time Elapsed:   {elapsed:.2f} seconds")
     print("=" * 80)
-    
+
+    # Guard against discovery regressions on Windows / CI: never accept a run
+    # with fewer tests than the established baseline (53).
+    if result.testsRun < MIN_EXPECTED_TESTS:
+        print(f"[FAIL] Only {result.testsRun} tests ran; expected at least "
+              f"{MIN_EXPECTED_TESTS}. Discovery may have dropped a module.")
+        return 1
+
     if result.wasSuccessful():
-        print("✅ ALL TESTS PASSED SUCCESSFULLY! Codebase is ready for grading defense.")
+        print("[PASS] ALL TESTS PASSED SUCCESSFULLY! Codebase is ready for grading defense.")
         return 0
     else:
-        print("❌ SOME TESTS FAILED. Review tracebacks above.")
+        print("[FAIL] SOME TESTS FAILED. Review tracebacks above.")
         return 1
 
 if __name__ == "__main__":

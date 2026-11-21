@@ -12,7 +12,7 @@ Design notes
 - A focused Markdown parser handles exactly the constructs used in the report:
   ATX headings, pipe tables, fenced code blocks, bullet/numbered lists,
   blockquotes, horizontal rules and inline **bold** / *italic* / `code`.
-- All 12 publication charts are appended as an embedded "Visualization Gallery".
+- All 14 publication charts plus the architecture diagram are appended as an embedded "Visualization Gallery".
 
 Run:
     python src/export_report_docx.py
@@ -46,6 +46,9 @@ GALLERY_CHARTS = [
     ("notebook_publisher_heatmap.png", "Figure 10 — Notebook Publisher Editorial Heatmap"),
     ("notebook_temporal_trends.png", "Figure 11 — Notebook Temporal Trend Analysis"),
     ("notebook_wordclouds.png", "Figure 12 — Notebook Semantic Word Clouds"),
+    ("lda_k_sweep.png", "Figure 13 — LDA k Sweep: Perplexity / Coherence / Overlap"),
+    ("temporal_forecast_evaluation.png", "Figure 14 — Held-Out Topic-Volume Forecast Evaluation"),
+    ("presentation/architecture.png", "Figure 15 — End-to-End System Architecture"),
 ]
 
 INLINE_PATTERN = re.compile(r"(\*\*.+?\*\*|`[^`]+`|\*[^*]+?\*|\[[^\]]+\]\([^)]+\))")
@@ -241,13 +244,18 @@ def convert(md_path, docx_path):
     doc.add_heading("Appendix: Visualization Gallery", level=1)
     add_inline(
         doc.add_paragraph(),
-        "All twelve 300-DPI analysis charts are embedded below. The *interactive* "
-        "version of these dashboards (hover, zoom, filter) is available as a "
-        "self-contained HTML file (`dashboard/interactive_dashboard.html`) and as "
-        "the live Streamlit app (`src/dashboard.py`).",
+        "All fourteen 300-DPI analysis charts plus the system architecture diagram "
+        "are embedded below. The *interactive* versions (hover, zoom, filter) are "
+        "available as self-contained HTML files for both corpora "
+        "(`dashboard/interactive_dashboard.html` and "
+        "`dashboard/interactive_dashboard_real.html`), with a landing page at "
+        "`dashboard/index.html`, and as the live Streamlit app (`src/dashboard.py`).",
     )
     for filename, caption in GALLERY_CHARTS:
-        image_path = os.path.join(VISUALIZATION_DIR, filename)
+        # Most figures live in visualizations/; the architecture diagram is in
+        # presentation/. Keep both resolvable from the project root.
+        image_path = (filename if filename.startswith("presentation/")
+                      else os.path.join(VISUALIZATION_DIR, filename))
         if not os.path.exists(image_path):
             continue
         add_inline(doc.add_paragraph(), f"**{caption}**")

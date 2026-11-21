@@ -23,17 +23,25 @@ Visualizations Generated:
 import os
 import sys
 import json
+import math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from wordcloud import WordCloud
 
+try:  # supports `import src.visualize_analytics` from the project root
+    from src.viz_palette import TOPIC_PALETTE, TOPIC_COLORMAP, CONTINUOUS_CMAP_MPL
+except ImportError:  # pragma: no cover - direct script execution
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from viz_palette import TOPIC_PALETTE, TOPIC_COLORMAP, CONTINUOUS_CMAP_MPL
+
 # Configure Matplotlib styling for professional publication standards
 plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
 plt.rcParams['font.sans-serif'] = 'Arial'
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['figure.dpi'] = 300
+plt.rcParams['savefig.dpi'] = 300   # every savefig below is explicitly 300 DPI
 
 def load_data(
     summary_json_path="data/pipeline_analytics_summary.json",
@@ -62,8 +70,9 @@ def plot_topic_volume(summary_data, output_dir="visualizations"):
     if topics_summary.empty:
         return
 
-    plt.figure(figsize=(10, 5.5))
-    palette = sns.color_palette("mako", len(topics_summary))
+    plt.figure(figsize=(10, 6))
+    # Shared project palette: the same topic keeps the same colour in every artifact.
+    palette = TOPIC_PALETTE[:len(topics_summary)]
     ax = sns.barplot(
         x="total_articles",
         y="topic_label",
@@ -86,10 +95,15 @@ def plot_topic_volume(summary_data, output_dir="visualizations"):
     plt.xlabel("Total Ingested Articles", fontsize=11, labelpad=10)
     plt.ylabel("Extracted Latent Topic", fontsize=11)
     plt.xlim(0, topics_summary["total_articles"].max() * 1.25)
-    plt.tight_layout()
+    plt.figtext(
+        0.01, -0.02,
+        "Note: topic_summary reports 5 labels for 6 LDA components — two components share a dominant label.",
+        fontsize=8, color='#505F6E',
+    )
+    plt.tight_layout(rect=(0, 0.04, 1, 1))
     
     save_path = os.path.join(output_dir, "topic_volume_distribution.png")
-    plt.savefig(save_path)
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     print(f"[+] Saved: {save_path}")
 
@@ -106,7 +120,7 @@ def plot_lda_top_terms(summary_data, output_dir="visualizations"):
     fig, axes = plt.subplots(rows, cols, figsize=(16, 5 * rows), sharex=False)
     axes = axes.flatten()
 
-    colors = ["#2b5c8f", "#2a9d8f", "#e76f51", "#7209b7", "#3a86ff", "#f4a261"]
+    colors = TOPIC_PALETTE
 
     for idx, (tkey, tdata) in enumerate(topics.items()):
         ax = axes[idx]
@@ -128,10 +142,15 @@ def plot_lda_top_terms(summary_data, output_dir="visualizations"):
         fig.delaxes(axes[j])
 
     plt.suptitle("PySpark Latent Dirichlet Allocation (LDA) - Top Keywords per Topic", fontsize=14, weight='bold', y=0.99)
-    plt.tight_layout()
+    plt.figtext(
+        0.01, 0.01,
+        "Note: 6 LDA components collapse to 5 dominant labels in topic_summary (two components share a label).",
+        fontsize=8, color='#505F6E',
+    )
+    plt.tight_layout(rect=(0, 0.03, 1, 0.97))
     
     save_path = os.path.join(output_dir, "lda_topic_top_terms.png")
-    plt.savefig(save_path)
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     print(f"[+] Saved: {save_path}")
 
@@ -151,7 +170,7 @@ def plot_publisher_heatmap(summary_data, output_dir="visualizations"):
         pivot_pct,
         annot=True,
         fmt=".1f",
-        cmap="YlGnBu",
+        cmap=CONTINUOUS_CMAP_MPL,
         cbar_kws={'label': 'Publisher Editorial Share (%)'},
         linewidths=0.5,
         linecolor='white'
@@ -164,7 +183,7 @@ def plot_publisher_heatmap(summary_data, output_dir="visualizations"):
     plt.tight_layout()
 
     save_path = os.path.join(output_dir, "publisher_topic_heatmap.png")
-    plt.savefig(save_path)
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     print(f"[+] Saved: {save_path}")
 
@@ -184,10 +203,13 @@ def plot_temporal_trends(summary_data, output_dir="visualizations"):
     pivot_trends = pivot_trends.sort_index()
 
     plt.figure(figsize=(13, 6))
+    column_colors = {col: TOPIC_PALETTE[i % len(TOPIC_PALETTE)]
+                     for i, col in enumerate(pivot_trends.columns)}
     for col_name in pivot_trends.columns:
-        plt.plot(pivot_trends.index, pivot_trends[col_name], marker='o', markersize=4, linewidth=2, label=col_name)
+        plt.plot(pivot_trends.index, pivot_trends[col_name], marker='o', markersize=4,
+                 linewidth=2, color=column_colors[col_name], label=col_name)
 
-    plt.title("Temporal Trajectory: Monthly Article Volume by Topic (2024 - 2026)", fontsize=13, weight='bold', pad=15)
+    plt.title("Temporal Trajectory: Monthly Article Volume by Topic (2024-2025)", fontsize=13, weight='bold', pad=15)
     plt.xlabel("Time Horizon (Year-Month)", fontsize=11, labelpad=10)
     plt.ylabel("Aggregated Monthly Article Count", fontsize=11)
     plt.xticks(rotation=45, ha='right', fontsize=9)
@@ -196,7 +218,7 @@ def plot_temporal_trends(summary_data, output_dir="visualizations"):
     plt.tight_layout()
 
     save_path = os.path.join(output_dir, "temporal_topic_trends.png")
-    plt.savefig(save_path)
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     print(f"[+] Saved: {save_path}")
 
@@ -206,7 +228,7 @@ def plot_sentiment_distribution(df_parquet, output_dir="visualizations"):
         return
 
     plt.figure(figsize=(11, 5.5))
-    palette = sns.color_palette("coolwarm", df_parquet["topic_label"].nunique())
+    palette = TOPIC_PALETTE[:df_parquet["topic_label"].nunique()]
     
     sns.boxplot(
         x="topic_label",
@@ -226,7 +248,7 @@ def plot_sentiment_distribution(df_parquet, output_dir="visualizations"):
     plt.tight_layout()
 
     save_path = os.path.join(output_dir, "topic_sentiment_distribution.png")
-    plt.savefig(save_path)
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     print(f"[+] Saved: {save_path}")
 
@@ -237,22 +259,24 @@ def plot_wordclouds_grid(summary_data, output_dir="visualizations"):
         return
 
     num_topics = len(topics)
-    fig, axes = plt.subplots(2, 3, figsize=(15, 9))
+    # Dynamic grid: one panel per discovered component (no hard-coded 2×3 bound).
+    cols = min(3, num_topics)
+    rows = math.ceil(num_topics / cols)
+    fig, axes = plt.subplots(rows, cols, figsize=(5 * cols, 3.2 * rows), squeeze=False)
     axes = axes.flatten()
 
     for idx, (tkey, tdata) in enumerate(topics.items()):
-        if idx >= 6:
-            break
         ax = axes[idx]
-        
-        # Build frequency dictionary from terms and weights
+
+        # Beta-weighted keyword clouds, not raw term frequency.
+        # Dict values are Dirichlet β weights emitted by the PySpark LDA model.
         freq_dict = {term: weight for term, weight in zip(tdata["terms"], tdata["weights"])}
-        
+
         wc = WordCloud(
             width=600,
             height=400,
             background_color='white',
-            colormap='viridis',
+            colormap=TOPIC_COLORMAP,
             max_words=15
         ).generate_from_frequencies(freq_dict)
 
@@ -260,11 +284,19 @@ def plot_wordclouds_grid(summary_data, output_dir="visualizations"):
         ax.set_title(f"Topic {tdata['topic_id']}: {tdata.get('label_summary', tkey)[:28]}", fontsize=11, weight='bold')
         ax.axis('off')
 
+    for j in range(num_topics, len(axes)):
+        axes[j].axis('off')
+
     plt.suptitle("Semantic Keyword Clouds per Extracted Latent Topic", fontsize=14, weight='bold', y=0.98)
-    plt.tight_layout()
+    plt.figtext(
+        0.01, 0.01,
+        "Beta-weighted keyword clouds, not raw term frequency (term size proportional to LDA Dirichlet beta).",
+        fontsize=8, color='#505F6E',
+    )
+    plt.tight_layout(rect=(0, 0.04, 1, 0.95))
 
     save_path = os.path.join(output_dir, "topic_wordclouds_grid.png")
-    plt.savefig(save_path)
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     print(f"[+] Saved: {save_path}")
 

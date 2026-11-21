@@ -26,11 +26,6 @@
         <description>Concurrent RPC handler threads on the NameNode (large clusters).</description>
     </property>
     <property>
-        <name>dfs.blocksize.balancer.bandwidthPerSec</name>
-        <value>104857600</value>
-        <description>100 MB/s cap for the HDFS balancer to avoid saturating the network.</description>
-    </property>
-    <property>
         <name>dfs.webhdfs.enabled</name>
         <value>true</value>
         <description>Enable WebHDFS REST API for programmatic file access.</description>

@@ -16,11 +16,23 @@ Hive / HBase / Pig / Sqoop / Flume / Oozie / ZooKeeper) alongside the analytics.
 """
 
 import os
+import sys
 import json
+import math
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+
+try:  # supports `import src.dashboard` from the project root
+    from src.viz_palette import (
+        TOPIC_PALETTE, CONTINUOUS_CMAP_PLOTLY, color_map, topic_colors,
+    )
+except ImportError:  # pragma: no cover - Streamlit does not add src/ to sys.path
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from viz_palette import (
+        TOPIC_PALETTE, CONTINUOUS_CMAP_PLOTLY, color_map, topic_colors,
+    )
 
 # Configure page settings
 st.set_page_config(
@@ -78,6 +90,81 @@ def load_hadoop_ecosystem():
     return {}
 
 
+def summary_topic_labels(summary):
+    """Canonical label order used for the shared topic -> colour mapping."""
+    return [row.get("topic_label", f"Topic {i}")
+            for i, row in enumerate(summary.get("topic_summary", []))]
+
+
+def static_artifact(filename, is_real):
+    """Prefer a corpus-specific PNG if one exists; otherwise fall back to the
+    synthetic benchmark artifact and label it explicitly in the UI."""
+    prefixed = os.path.join("visualizations", f"real_{filename}")
+    default = os.path.join("visualizations", filename)
+    return prefixed if (is_real and os.path.exists(prefixed)) else default
+
+
+def compute_business_kpis(summary, df_articles):
+    """Derive the three decision KPIs (velocity, sentiment drift, coverage gaps).
+
+    All thresholds are explicit so the colour state is reproducible rather than
+    decorative: velocity |MoM| <=10% green / <=25% amber / >25% red;
+    sentiment delta >=-0.05 green / >=-0.15 amber / else red;
+    coverage gaps <=2 green / <=5 amber / >5 red.
+    """
+    velocity = float("nan")
+    sentiment_delta = float("nan")
+    gaps = 0
+    trends = pd.DataFrame(summary.get("temporal_trends", []))
+    if not trends.empty and {"year", "month", "article_count"}.issubset(trends.columns):
+        rows = []
+        for (year, month), group in trends.groupby(["year", "month"]):
+            count = float(group["article_count"].sum())
+            sentiment = float(
+                (group["article_count"] * group.get("avg_sentiment", 0)).sum() / count
+            ) if count else float("nan")
+            rows.append({"period": f"{int(year)}-{int(month):02d}",
+                         "articles": count, "sentiment": sentiment})
+        monthly = pd.DataFrame(rows).sort_values("period")
+        if len(monthly) >= 2:
+            previous, latest = monthly.iloc[-2], monthly.iloc[-1]
+            if previous["articles"]:
+                velocity = (latest["articles"] / previous["articles"] - 1) * 100
+            baseline = monthly["sentiment"].mean()
+            sentiment_delta = latest["sentiment"] - baseline
+
+    pub_dist = pd.DataFrame(summary.get("publisher_distribution", []))
+    if not pub_dist.empty and {"publication", "topic_label", "count"}.issubset(pub_dist.columns):
+        pivot = pub_dist.pivot_table(index="publication", columns="topic_label",
+                                     values="count", aggfunc="sum").fillna(0)
+        share = pivot.div(pivot.sum(axis=1).replace(0, math.nan), axis=0)
+        gaps = int((share < 0.05).sum().sum())
+
+    def state(value, green, amber, invert=False):
+        if value is None or (isinstance(value, float) and math.isnan(value)):
+            return "amber", "n/a"
+        magnitude = value if invert else abs(value)
+        if magnitude <= green:
+            return "green", "within target"
+        if magnitude <= amber:
+            return "amber", "watch closely"
+        return "red", "breach — act now"
+
+    v_state, v_note = state(velocity, 10, 25)
+    s_state, s_note = state(sentiment_delta, 0.05, 0.15, invert=False) if not math.isnan(sentiment_delta) else ("amber", "n/a")
+    if not math.isnan(sentiment_delta):
+        s_state = "green" if sentiment_delta >= -0.05 else ("amber" if sentiment_delta >= -0.15 else "red")
+    g_state, g_note = state(gaps, 2, 5)
+    return {
+        "velocity": velocity, "velocity_state": v_state, "velocity_note": v_note,
+        "sentiment_delta": sentiment_delta, "sentiment_state": s_state, "sentiment_note": s_note,
+        "gaps": gaps, "gaps_state": g_state, "gaps_note": g_note,
+    }
+
+
+STATUS_ICON = {"green": "🟢", "amber": "🟡", "red": "🔴"}
+
+
 # -----------------------------------------------------------------------------
 # SIDEBAR NAVIGATION & GLOBAL FILTERS
 # -----------------------------------------------------------------------------
@@ -91,7 +178,11 @@ st.sidebar.divider()
 # Corpus selector — drives every analytics view below
 corpus_label = st.sidebar.selectbox("Active Corpus", list(CORPORA.keys()))
 corpus = CORPORA[corpus_label]
+is_real_corpus = "Reuters" in corpus_label
 summary, df_articles = load_analytics_data(corpus["summary"], corpus["parquet"])
+topic_labels = summary_topic_labels(summary)
+TOPIC_COLOR_MAP = color_map(topic_labels)
+STATIC_BADGE = "Synthetic benchmark only" if is_real_corpus else "Synthetic benchmark artifact"
 
 label_mode = summary.get("metadata", {}).get("label_mode", "n/a")
 st.sidebar.caption(f"Loaded **{len(df_articles):,}** articles · label mode: `{label_mode}`")
@@ -100,7 +191,7 @@ view_mode = st.sidebar.radio(
     "Navigation Menu",
     ["Executive Overview", "Topic Modeling & Keywords", "Publisher Editorial Analysis",
      "Temporal Trajectory", "Article Explorer", "Hadoop Ecosystem Stack",
-     "Architecture & 7-Member Team"]
+     "Architecture & 7-Member Team", "Insights & What Next"]
 )
 
 # Offline (server-less) dashboard handoff — always the artifact for the ACTIVE corpus
@@ -142,6 +233,32 @@ if view_mode == "Executive Overview":
     with col4:
         st.metric("Distributed Pipeline Runtime", f"{metadata.get('elapsed_seconds', 0):.1f} sec")
 
+    st.caption("**Business KPIs (red / amber / green thresholds)** — decision triggers, not decoration.")
+    biz = compute_business_kpis(summary, df_articles)
+    kcol1, kcol2, kcol3 = st.columns(3)
+    velocity_text = f"{biz['velocity']:+.1f}%" if not math.isnan(biz["velocity"]) else "n/a"
+    delta_text = f"{biz['sentiment_delta']:+.3f}" if not math.isnan(biz["sentiment_delta"]) else "n/a"
+    with kcol1:
+        st.metric(
+            f"{STATUS_ICON[biz['velocity_state']]} Topic Velocity MoM", velocity_text,
+            delta=f"vs prior month · {biz['velocity_note']}", delta_color="off",
+        )
+    with kcol2:
+        st.metric(
+            f"{STATUS_ICON[biz['sentiment_state']]} Sentiment Δ vs Baseline", delta_text,
+            delta=f"latest month − 24-month mean · {biz['sentiment_note']}", delta_color="off",
+        )
+    with kcol3:
+        st.metric(
+            f"{STATUS_ICON[biz['gaps_state']]} Coverage-Gap Count", f"{biz['gaps']}",
+            delta=f"publisher×topic shares <5% · {biz['gaps_note']}", delta_color="off",
+        )
+    st.caption(
+        "Thresholds — velocity: 🟢 |Δ|≤10% · 🟡 ≤25% · 🔴 >25% · "
+        "sentiment: 🟢 Δ≥−0.05 · 🟡 ≥−0.15 · 🔴 <−0.15 · "
+        "coverage gaps: 🟢 ≤2 · 🟡 ≤5 · 🔴 >5."
+    )
+
     st.divider()
 
     col_left, col_right = st.columns([3, 2])
@@ -171,8 +288,8 @@ if view_mode == "Executive Overview":
     if not df_articles.empty and {"topic_label", "sentiment_polarity"}.issubset(df_articles.columns):
         sentiment_box = px.box(
             df_articles, x="topic_label", y="sentiment_polarity", color="topic_label",
-            points=False,
-            color_discrete_sequence=["#2A9D8F", "#E76F51", "#264653", "#E9C46A", "#8AB17D", "#6D597A"],
+            points=False, color_discrete_map=TOPIC_COLOR_MAP,
+            color_discrete_sequence=TOPIC_PALETTE,
         )
         sentiment_box.update_layout(
             showlegend=False, xaxis_title="", yaxis_title="VADER Sentiment",
@@ -183,14 +300,37 @@ if view_mode == "Executive Overview":
     else:
         st.info("Sentiment distribution requires the processed Parquet lakehouse.")
 
-    with st.expander("Publication-quality static artifacts (300 DPI) for the written report"):
+    if not df_articles.empty and {"topic_confidence", "sentiment_polarity"}.issubset(df_articles.columns):
+        st.subheader("Topic Confidence vs. Sentiment (Interactive)")
+        st.caption(
+            "n=1,500 random sample (seed 42). Confidence calibration differs by corpus: "
+            "synthetic LDA dominant-topic confidence is 0.991–0.993, while Reuters "
+            "auto-label confidence is 0.684–0.892 — do not compare the two scales directly."
+        )
+        sample = df_articles.sample(min(1500, len(df_articles)), random_state=42)
+        confidence_scatter = px.scatter(
+            sample, x="topic_confidence", y="sentiment_polarity", color="topic_label",
+            color_discrete_map=TOPIC_COLOR_MAP, color_discrete_sequence=TOPIC_PALETTE,
+            opacity=0.55, hover_data=["publication", "clean_word_count"],
+        )
+        confidence_scatter.update_layout(height=430, margin=dict(l=10, r=10, t=30, b=10))
+        st.plotly_chart(confidence_scatter, width="stretch")
+
+    with st.expander(f"Publication-quality static artifacts (300 DPI) — {STATIC_BADGE}"):
+        st.caption(
+            f"⚠️ **{STATIC_BADGE}.** These PNGs are generated from the synthetic benchmark. "
+            + ("Select a `visualizations/real_*.png` variant when available to view corpus-specific charts."
+               if is_real_corpus else "They match the currently selected synthetic corpus.")
+        )
         img_col1, img_col2 = st.columns(2)
         with img_col1:
-            if os.path.exists("visualizations/topic_volume_distribution.png"):
-                st.image("visualizations/topic_volume_distribution.png", caption="Topic Volume Distribution")
+            path = static_artifact("topic_volume_distribution.png", is_real_corpus)
+            if os.path.exists(path):
+                st.image(path, caption="Topic Volume Distribution")
         with img_col2:
-            if os.path.exists("visualizations/topic_sentiment_distribution.png"):
-                st.image("visualizations/topic_sentiment_distribution.png", caption="Lexical Sentiment Distribution")
+            path = static_artifact("topic_sentiment_distribution.png", is_real_corpus)
+            if os.path.exists(path):
+                st.image(path, caption="Lexical Sentiment Distribution")
 
 # -----------------------------------------------------------------------------
 # VIEW 2: TOPIC MODELING & KEYWORDS
@@ -244,7 +384,7 @@ elif view_mode == "Topic Modeling & Keywords":
         term_tree = pd.DataFrame(term_rows)
         treemap = px.treemap(
             term_tree, path=["Topic", "Term"], values="Weight",
-            color="Weight", color_continuous_scale="Tealgrn",
+            color="Weight", color_continuous_scale=CONTINUOUS_CMAP_PLOTLY,
         )
         treemap.update_traces(
             hovertemplate="<b>%{label}</b><br>Dirichlet weight: %{value:.4f}<extra></extra>"
@@ -252,9 +392,13 @@ elif view_mode == "Topic Modeling & Keywords":
         treemap.update_layout(height=470, margin=dict(l=10, r=10, t=30, b=10))
         st.plotly_chart(treemap, width="stretch")
 
-        if os.path.exists("visualizations/topic_wordclouds_grid.png"):
-            with st.expander("Semantic Topic Word Clouds (300 DPI static artifact)"):
-                st.image("visualizations/topic_wordclouds_grid.png", width="stretch")
+        wc_path = static_artifact("topic_wordclouds_grid.png", is_real_corpus)
+        if os.path.exists(wc_path):
+            with st.expander(f"Semantic Topic Word Clouds (300 DPI static artifact) — {STATIC_BADGE}"):
+                st.caption(
+                    f"⚠️ **{STATIC_BADGE}.** Beta-weighted keyword clouds (Dirichlet β), not raw term frequency."
+                )
+                st.image(wc_path, width="stretch")
     else:
         st.warning("No topic definitions found. Run spark_pipeline.py first.")
 
@@ -282,7 +426,7 @@ elif view_mode == "Publisher Editorial Analysis":
             z=pivot_table.values,
             x=list(pivot_table.columns),
             y=list(pivot_table.index),
-            colorscale="Tealgrn",
+            colorscale=CONTINUOUS_CMAP_PLOTLY,
             colorbar=dict(title="Articles"),
             hovertemplate="Publisher: %{y}<br>Topic: %{x}<br>Articles: %{z}<extra></extra>",
         ))
@@ -318,15 +462,20 @@ elif view_mode == "Temporal Trajectory":
         trend_long = trends.sort_values("period")
         trajectory = px.line(
             trend_long, x="period", y="article_count", color="topic_label", markers=True,
-            color_discrete_sequence=["#2A9D8F", "#E76F51", "#264653", "#E9C46A", "#8AB17D", "#6D597A"],
+            color_discrete_map=TOPIC_COLOR_MAP, color_discrete_sequence=TOPIC_PALETTE,
             labels={"period": "Month", "article_count": "Articles", "topic_label": ""},
         )
         trajectory.update_layout(height=450, margin=dict(l=10, r=10, t=30, b=10))
         st.plotly_chart(trajectory, width="stretch")
 
-        if os.path.exists("visualizations/temporal_topic_trends.png"):
-            with st.expander("Temporal Monthly Trajectory (300 DPI static artifact)"):
-                st.image("visualizations/temporal_topic_trends.png", width="stretch")
+        trend_path = static_artifact("temporal_topic_trends.png", is_real_corpus)
+        if os.path.exists(trend_path):
+            with st.expander(f"Temporal Monthly Trajectory (300 DPI static artifact) — {STATIC_BADGE}"):
+                st.caption(
+                    f"⚠️ **{STATIC_BADGE}.** Static PNG from the synthetic benchmark; "
+                    "2024-2025 (24 months) observation window."
+                )
+                st.image(trend_path, width="stretch")
     else:
         st.warning("Temporal data missing.")
 
@@ -359,6 +508,21 @@ elif view_mode == "Article Explorer":
         st.write(f"Showing **{len(filtered_df):,}** matching articles out of **{len(df_articles):,}**:")
         display_cols = ["article_id", "title", "publication", "date", "topic_label", "sentiment_polarity", "clean_word_count"]
         st.dataframe(filtered_df[display_cols].head(100), width="stretch")
+
+        if "topic_confidence" in df_articles.columns:
+            st.divider()
+            st.subheader("Most Confident Articles")
+            st.caption(
+                "Confidence scales are corpus-specific: synthetic LDA dominant-topic confidence "
+                "is 0.991–0.993, whereas Reuters auto-label confidence is 0.684–0.892. "
+                "Only rank within a corpus — never benchmark one corpus against the other."
+            )
+            confident_cols = ["article_id", "title", "publication", "topic_label", "topic_confidence"]
+            st.dataframe(
+                filtered_df[confident_cols]
+                .sort_values("topic_confidence", ascending=False).head(10),
+                width="stretch",
+            )
     else:
         st.info("Parquet dataset not loaded or spark_pipeline.py hasn't run yet.")
 
@@ -540,3 +704,61 @@ elif view_mode == "Architecture & 7-Member Team":
         {"Member": "Member 7", "Name": "David Kim", "Role": "QA, Benchmarking & Presentation Lead", "Primary Responsibility": "Cluster benchmarking, 53-test automated suite, slide deck formulation, technical Q&A defense preparation."}
     ]
     st.table(pd.DataFrame(team_data))
+
+# -----------------------------------------------------------------------------
+# VIEW 8 (FINAL): INSIGHTS & WHAT NEXT — findings -> decisions -> triggers
+# Sourced from PROJECT_REPORT.md §6.3 (Actionable Managerial & Engineering
+# Recommendations). This view is deliberately last so the original 7 views
+# remain in their established order.
+# -----------------------------------------------------------------------------
+elif view_mode == "Insights & What Next":
+    st.title("🎯 Insights & What Next — Findings to Decisions")
+    st.markdown(
+        f"Every finding below is paired with an owner, a numeric trigger and a time "
+        f"horizon for the **{corpus_label}** corpus. Triggers implement the three "
+        "recommendations in `PROJECT_REPORT.md` §6.3."
+    )
+
+    kpi = compute_business_kpis(summary, df_articles)
+    trigger_col1, trigger_col2, trigger_col3 = st.columns(3)
+    with trigger_col1:
+        st.metric("Topic velocity trigger", "|MoM| > 25%",
+                  help="🟢 ≤10% · 🟡 ≤25% · 🔴 >25% — current "
+                       + (f"{kpi['velocity']:+.1f}%" if not math.isnan(kpi["velocity"]) else "n/a"))
+    with trigger_col2:
+        st.metric("Sentiment drift trigger", "Δ ≤ −0.15",
+                  help="Latest month vs 24-month mean; 🟢 ≥−0.05 · 🟡 ≥−0.15 · 🔴 <−0.15")
+    with trigger_col3:
+        st.metric("Coverage-gap trigger", "> 5 cells",
+                  help="Publisher×topic shares <5%; green ≤2 · amber ≤5 · red >5")
+
+    st.subheader("Key Takeaways & Decisions — What next?")
+    st.markdown(
+        """
+| Finding | Metric / trigger | Decision | Owner | Horizon |
+| :--- | :--- | :--- | :--- | :--- |
+| Regulatory sentiment anomaly (only negative-topic mean) | Antitrust share 470/6,000 = 7.8%; alert when topic volume **exceeds its 30-day mean + 2σ** | Alert risk desk; auto-hedge large-cap tech 48–72 h before subpoena publication | Quantitative portfolio managers | Real-time |
+| Editorial specialization / competitive gap | TechCrunch AI+Quantum share **41.7%**; Bloomberg Monetary share **11.9%**; FT **13.9%**. If a peer's topic share jumps **>10 pp MoM** while ours is 0 | Create editorial assignment; fire Slack/email competitor-gap alert | Newsroom editors | Daily |
+| Clinical-topic concentration | Clinical Medicine **2,386/6,000 = 39.8%** of all articles | Commission follow-on healthcare desk coverage only if 30-day share exceeds mean + 2σ; otherwise hold staffing | Editorial board | Monthly |
+| Confidence calibration differs by corpus | Synthetic LDA **0.991–0.993** vs Reuters **0.684–0.892** | Gate auto-publishing at ≥0.90; route lower-confidence articles to human review | NLP / ML lead | Next release |
+| Batch latency cannot serve breaking news | 49.99 s synthetic / 71.66 s Reuters batch run; target classification **<5 s** | Deploy Kafka `news-wire-incoming` + PySpark Structured Streaming micro-batches | Platform engineering | 1 sprint |
+        """
+    )
+
+    st.info(
+        "**Action 1 — Financial trading alpha:** 30-day volume > mean + 2σ for "
+        "*Antitrust & Regulatory Policy* → risk desk hedge."
+    )
+    st.warning(
+        "**Action 2 — Streaming upgrade:** replace static CSV ingestion with Kafka + "
+        "PySpark Structured Streaming; 3-minute classification → under 5 seconds."
+    )
+    st.success(
+        "**Action 3 — Competitive editorial intelligence:** peer publisher topic share "
+        ">10 pp MoM with zero own coverage → automatic editorial assignment."
+    )
+    st.caption(
+        "Portable equivalent: open `dashboard/index.html` → "
+        "`interactive_dashboard.html` (synthetic) or `interactive_dashboard_real.html` "
+        "(Reuters); both repeat this decision panel."
+    )

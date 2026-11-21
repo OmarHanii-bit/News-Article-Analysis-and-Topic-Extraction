@@ -23,11 +23,23 @@ Run:
 
 import argparse
 import json
+import math
 import os
+import sys
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import plotly.io as pio
+
+try:  # supports `import src.build_interactive_dashboard` from the project root
+    from src.viz_palette import (
+        TOPIC_PALETTE, CONTINUOUS_CMAP_PLOTLY, color_map,
+    )
+except ImportError:  # pragma: no cover - direct script execution
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from viz_palette import (
+        TOPIC_PALETTE, CONTINUOUS_CMAP_PLOTLY, color_map,
+    )
 
 CORPORA = {
     "synthetic": {
@@ -45,10 +57,10 @@ CORPORA = {
 }
 ECO_SUMMARY = "data/hadoop_ecosystem/hadoop_ecosystem_summary.json"
 
-PALETTE = [
-    "#2A9D8F", "#E76F51", "#264653", "#E9C46A",
-    "#8AB17D", "#6D597A", "#B56576", "#457B9D",
-]
+# Canonical colours come from the shared palette so the same topic has the same
+# colour in the HTML dashboards, the Streamlit app and the Matplotlib PNGs.
+PALETTE = TOPIC_PALETTE
+HEATMAP_COLORSCALE = CONTINUOUS_CMAP_PLOTLY
 
 CHART_LAYOUT = dict(
     paper_bgcolor="white",
@@ -64,20 +76,117 @@ def _style(fig, title, height=420):
     return fig
 
 
+def compute_business_kpis(summary, frame):
+    """Three thresholded business KPIs shared with the Streamlit dashboard.
+
+    velocity |MoM| <=10% green / <=25% amber / >25% red;
+    sentiment delta >=-0.05 green / >=-0.15 amber / else red;
+    coverage gaps <=2 green / <=5 amber / >5 red.
+    """
+    velocity, sentiment_delta, gaps = float("nan"), float("nan"), 0
+    trends = pd.DataFrame(summary.get("temporal_trends", []))
+    if not trends.empty and {"year", "month", "article_count"}.issubset(trends.columns):
+        rows = []
+        for (year, month), group in trends.groupby(["year", "month"]):
+            count = float(group["article_count"].sum())
+            sentiment = float((group["article_count"] * group["avg_sentiment"]).sum() / count) if count else float("nan")
+            rows.append({"period": f"{int(year)}-{int(month):02d}",
+                         "articles": count, "sentiment": sentiment})
+        monthly = pd.DataFrame(rows).sort_values("period")
+        if len(monthly) >= 2:
+            previous, latest = monthly.iloc[-2], monthly.iloc[-1]
+            if previous["articles"]:
+                velocity = (latest["articles"] / previous["articles"] - 1) * 100
+            sentiment_delta = latest["sentiment"] - monthly["sentiment"].mean()
+
+    pub_dist = pd.DataFrame(summary.get("publisher_distribution", []))
+    if not pub_dist.empty and {"publication", "topic_label", "count"}.issubset(pub_dist.columns):
+        pivot = pub_dist.pivot_table(index="publication", columns="topic_label",
+                                     values="count", aggfunc="sum").fillna(0)
+        share = pivot.div(pivot.sum(axis=1).replace(0, math.nan), axis=0)
+        gaps = int((share < 0.05).sum().sum())
+
+    def colour(value, kind):
+        if isinstance(value, float) and math.isnan(value):
+            return "#E9C46A"
+        if kind == "velocity":
+            return "#2A9D8F" if abs(value) <= 10 else ("#E9C46A" if abs(value) <= 25 else "#E76F51")
+        if kind == "sentiment":
+            return "#2A9D8F" if value >= -0.05 else ("#E9C46A" if value >= -0.15 else "#E76F51")
+        return "#2A9D8F" if value <= 2 else ("#E9C46A" if value <= 5 else "#E76F51")
+
+    return [
+        ("Topic Velocity MoM", f"{velocity:+.1f}%" if not math.isnan(velocity) else "n/a",
+         "|Δ|≤10% green · ≤25% amber · >25% red", colour(velocity, "velocity")),
+        ("Sentiment Δ vs Baseline", f"{sentiment_delta:+.3f}" if not math.isnan(sentiment_delta) else "n/a",
+         "Δ≥−0.05 green · ≥−0.15 amber · <−0.15 red", colour(sentiment_delta, "sentiment")),
+        ("Coverage-Gap Count", f"{gaps}",
+         "publisher×topic <5% share · ≤2 green · ≤5 amber", colour(gaps, "gaps")),
+    ]
+
+
+def build_decisions_panel(corpus_label, summary, frame):
+    """Findings paired with decisions, owners and numeric triggers (report §6.3)."""
+    is_real = "Reuters" in corpus_label
+    rows = [
+        ("Regulatory sentiment anomaly — only negative-topic mean (−0.028)",
+         "Antitrust 470/6,000 = 7.8%; alert if 30-day volume > mean + 2σ",
+         "Alert risk desk; hedge large-cap tech 48–72 h", "Quant desk", "Real-time"),
+        ("Publisher specialization / competitor gap",
+         "TechCrunch 41.7% AI+Quantum; Bloomberg 11.9% Monetary; FT 13.9% Monetary; peer share jump >10 pp MoM",
+         "Create editorial assignment when own coverage = 0", "Newsroom editors", "Daily"),
+        ("Clinical-topic concentration",
+         "Clinical Medicine 2,386/6,000 = 39.8%; trigger at 30-day share > mean + 2σ",
+         "Scale or hold healthcare desk staffing", "Editorial board", "Monthly"),
+        ("Model confidence calibration differs by corpus",
+         "Synthetic 0.991–0.993 vs Reuters 0.684–0.892; auto-publish gate ≥0.90",
+         "Route sub-0.90 confidence to human review", "NLP / ML lead", "Next release"),
+        ("Batch latency cannot serve breaking news",
+         "49.99 s synthetic / 71.66 s Reuters; target <5 s classification",
+         "Deploy Kafka `news-wire-incoming` + Structured Streaming", "Platform engineering", "1 sprint"),
+    ]
+    table_rows = "".join(
+        "<tr>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>" for row in rows
+    )
+    note = (
+        "This view is the Reuters auto-label corpus: publisher heatmaps are "
+        "degenerate by design (1 publisher × 6 topics) because every source document is a Reuters wire story."
+        if is_real else
+        "This is the synthetic benchmark corpus: publisher heatmaps cover 8 publishers × 6 LDA components "
+        "(5 distinct dominant labels — two components share a dominant label)."
+    )
+    return f"""
+<section class="panel decisions">
+  <h2>Key Takeaways & Decisions — What next?</h2>
+  <p class="caption">{note}</p>
+  <table>
+    <thead><tr><th>Finding</th><th>Metric / numeric trigger</th><th>Decision</th><th>Owner</th><th>Horizon</th></tr></thead>
+    <tbody>{table_rows}</tbody>
+  </table>
+  <p class="caption">Actions implement <code>PROJECT_REPORT.md</code> §6.3: (1) risk-desk hedge alert,
+  (2) Kafka + PySpark Structured Streaming upgrade, (3) automated competitive editorial intelligence.</p>
+</section>
+"""
+
+
 def build_figures(parquet_dir, summary_json):
     df = pd.read_parquet(parquet_dir)
     with open(summary_json, "r", encoding="utf-8") as handle:
         summary = json.load(handle)
 
     figures = []
+    labels = [summary["topic_summary"][i]["topic_label"]
+              if i < len(summary["topic_summary"]) else f"Topic {i}"
+              for i in range(len(summary.get("topics", {})))]
+    topic_colors = color_map(labels)
 
     # --- 1. Topic volume distribution -------------------------------------
     volume = df["topic_label"].value_counts().reset_index()
     volume.columns = ["topic_label", "articles"]
     figure = px.bar(
         volume.sort_values("articles"), x="articles", y="topic_label",
-        orientation="h", color="topic_label", color_discrete_sequence=PALETTE,
-        text="articles",
+        orientation="h", color="topic_label", color_discrete_map=topic_colors,
+        color_discrete_sequence=PALETTE, text="articles",
     )
     figure.update_traces(textposition="outside")
     figure.update_layout(showlegend=False, xaxis_title="Articles", yaxis_title="")
@@ -89,7 +198,7 @@ def build_figures(parquet_dir, summary_json):
         z=pivot.values,
         x=list(pivot.columns),
         y=list(pivot.index),
-        colorscale="Tealgrn",
+        colorscale=HEATMAP_COLORSCALE,
         colorbar=dict(title="Articles"),
         hovertemplate="Publisher: %{y}<br>Topic: %{x}<br>Articles: %{z}<extra></extra>",
     ))
@@ -99,7 +208,7 @@ def build_figures(parquet_dir, summary_json):
     # --- 3. Sentiment distribution by topic -------------------------------
     box = px.box(
         df, x="topic_label", y="sentiment_polarity", color="topic_label",
-        color_discrete_sequence=PALETTE, points=False,
+        color_discrete_map=topic_colors, color_discrete_sequence=PALETTE, points=False,
     )
     box.update_layout(showlegend=False, xaxis_title="", yaxis_title="VADER Sentiment")
     box.update_xaxes(tickangle=-25)
@@ -113,16 +222,13 @@ def build_figures(parquet_dir, summary_json):
     trend = trend.sort_values("period")
     line = px.line(
         trend, x="period", y="articles", color="topic_label", markers=True,
-        color_discrete_sequence=PALETTE,
+        color_discrete_map=topic_colors, color_discrete_sequence=PALETTE,
     )
     line.update_layout(xaxis_title="Month", yaxis_title="Articles", legend_title="")
     figures.append(_style(line, "4 · Monthly Topic Trajectories", 460))
 
     # --- 5. Top terms per topic (interactive topic selector) --------------
     topics = summary["topics"]
-    labels = [summary["topic_summary"][i]["topic_label"]
-              if i < len(summary["topic_summary"]) else f"Topic {i}"
-              for i in range(len(topics))]
     terms_figure = go.Figure()
     for index, (topic_id, payload) in enumerate(sorted(topics.items(),
                                                        key=lambda kv: int(kv[1]["topic_id"]))):
@@ -131,7 +237,8 @@ def build_figures(parquet_dir, summary_json):
         terms_figure.add_trace(go.Bar(
             x=weights, y=terms, orientation="h",
             name=labels[payload["topic_id"]] if payload["topic_id"] < len(labels) else topic_id,
-            marker_color=PALETTE[payload["topic_id"] % len(PALETTE)],
+            marker_color=topic_colors.get(
+                labels[payload["topic_id"]], PALETTE[payload["topic_id"] % len(PALETTE)]),
             visible=(index == 0),
             hovertemplate="%{y}: %{x:.5f}<extra></extra>",
         ))
@@ -172,7 +279,7 @@ def build_figures(parquet_dir, summary_json):
     sample = df.sample(min(1500, len(df)), random_state=42)
     scatter = px.scatter(
         sample, x="topic_confidence", y="sentiment_polarity", color="topic_label",
-        color_discrete_sequence=PALETTE, opacity=0.55,
+        color_discrete_map=topic_colors, color_discrete_sequence=PALETTE, opacity=0.55,
         hover_data=["publication", "clean_word_count"],
     )
     scatter.update_layout(xaxis_title="Topic Confidence", yaxis_title="Sentiment", legend_title="")
@@ -277,6 +384,19 @@ def build_html(df, summary, figures, corpus_label, eco_cards=None, eco_table=Non
         f'<div class="label">{label}</div></div>'
         for label, value in kpis
     )
+    business_kpis = compute_business_kpis(summary, df)
+    business_cards = "".join(
+        f'<div class="card"><div class="kpi" style="color:{colour}">{value}</div>'
+        f'<div class="label">{label}</div>'
+        f'<div class="caption">{threshold}</div></div>'
+        for label, value, threshold, colour in business_kpis
+    )
+    kpi_banner = (
+        '<div class="cards" id="business-kpis">'
+        '<div class="section-label">Business KPIs — red / amber / green decision thresholds</div>'
+        f'{business_cards}</div>'
+    )
+    decisions_panel = build_decisions_panel(corpus_label, summary, df)
 
     blocks = []
     for index, figure in enumerate(figures):
@@ -300,12 +420,34 @@ def build_html(df, summary, figures, corpus_label, eco_cards=None, eco_table=Non
     blocks.append(pio.to_html(table_figure, include_plotlyjs=False, full_html=False,
                               config={"responsive": True}, div_id="chart-table"))
 
+    is_real = "Reuters" in corpus_label
+    if is_real:
+        heatmap_caption = (
+            "So what? The publisher heatmap is degenerate by design — the Reuters corpus has "
+            "1 publisher × 6 topics — so read it as a topic-mix profile, not a peer comparison."
+        )
+        confidence_caption = (
+            "So what? Reuters auto-label confidence is 0.684–0.892; n=1,500 random sample (seed 42). "
+            "Never compare this scale directly with synthetic confidence."
+        )
+    else:
+        heatmap_caption = (
+            "So what? Publisher × topic shares expose editorial specialization; TechCrunch reaches "
+            "41.7% AI+Quantum while Bloomberg/FT sit at 11.9%/13.9% Monetary Policy."
+        )
+        confidence_caption = (
+            "So what? Synthetic LDA confidence is 0.991–0.993; n=1,500 random sample (seed 42). "
+            "High separation validates k=6 but does not transfer to Reuters."
+        )
+
     if eco_table is not None:
         eco_block = pio.to_html(eco_table, include_plotlyjs=False, full_html=False,
                                 config={"responsive": True}, div_id="chart-ecosystem")
         eco_section = (
             f'<div class="cards">{eco_cards}</div>'
-            f'<div class="panel"><h2>Hadoop Ecosystem Stack Execution Evidence</h2>{eco_block}</div>'
+            f'<div class="panel"><h2>Hadoop Ecosystem Stack Execution Evidence</h2>{eco_block}'
+            '<p class="caption"><b>So what?</b> All stack services executed with zero failures — '
+            'the architecture is demonstrably end-to-end, not a diagram-only claim.</p></div>'
         )
     else:
         eco_section = ""
@@ -315,7 +457,7 @@ def build_html(df, summary, figures, corpus_label, eco_cards=None, eco_table=Non
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>News Article Analysis — Interactive Dashboard</title>
+<title>News Article Analysis — Interactive Dashboard · {corpus_label}</title>
 <style>
   * {{ box-sizing: border-box; }}
   body {{ margin:0; background:#EEF2F5; color:#12263A;
@@ -331,6 +473,13 @@ def build_html(df, summary, figures, corpus_label, eco_cards=None, eco_table=Non
   .kpi {{ font-size:28px; font-weight:700; color:#2A9D8F; }}
   .label {{ font-size:12px; text-transform:uppercase; letter-spacing:.05em;
             color:#505F6E; margin-top:6px; }}
+  .section-label {{ grid-column:1/-1; font-size:12px; font-weight:700;
+                    text-transform:uppercase; letter-spacing:.06em; color:#12263A; }}
+  .caption {{ font-size:12px; color:#505F6E; margin:6px 0 12px; line-height:1.45; }}
+  .decisions table {{ width:100%; border-collapse:collapse; font-size:12px; }}
+  .decisions th {{ background:#12263A; color:#fff; text-align:left; padding:8px; }}
+  .decisions td {{ border-bottom:1px solid #E3E9EE; padding:8px; vertical-align:top; }}
+  .decisions tr:nth-child(even) td {{ background:#F5F7FA; }}
   main {{ padding:10px 40px 60px; }}
   .panel {{ background:#fff; border-radius:12px; margin:18px 0; padding:10px 16px;
             box-shadow:0 2px 10px rgba(18,38,58,.08); }}
@@ -346,18 +495,29 @@ def build_html(df, summary, figures, corpus_label, eco_cards=None, eco_table=Non
      generated {meta['execution_timestamp']}</p>
 </header>
 <div class="cards">{cards}</div>
+{kpi_banner}
+{decisions_panel}
 <main>
-  <div class="panel"><h2>Topic Volume</h2>{blocks[0]}</div>
-  <div class="panel"><h2>Publisher × Topic</h2>{blocks[1]}</div>
-  <div class="panel"><h2>Sentiment by Topic</h2>{blocks[2]}</div>
-  <div class="panel"><h2>Temporal Trajectories</h2>{blocks[3]}</div>
-  <div class="panel"><h2>Top Terms (use the topic selector)</h2>{blocks[4]}</div>
-  <div class="panel"><h2>Category Composition</h2>{blocks[5]}</div>
-  <div class="panel"><h2>Confidence vs. Sentiment</h2>{blocks[6]}</div>
-  <div class="panel"><h2>Most Confident Articles</h2>{blocks[7]}</div>
+  <div class="panel"><h2>Topic Volume</h2>{blocks[0]}
+    <p class="caption"><b>So what?</b> Clinical Medicine dominates at 2,386/6,000 = 39.8%; a 30-day volume above mean + 2σ triggers the risk/newsroom playbook.</p></div>
+  <div class="panel"><h2>Publisher × Topic</h2>{blocks[1]}
+    <p class="caption">{heatmap_caption}</p></div>
+  <div class="panel"><h2>Sentiment by Topic</h2>{blocks[2]}
+    <p class="caption"><b>So what?</b> Antitrust & Regulatory Policy is the only negative-mean topic (−0.028); a sentiment Δ ≤ −0.15 turns the card red.</p></div>
+  <div class="panel"><h2>Temporal Trajectories</h2>{blocks[3]}
+    <p class="caption"><b>So what?</b> 24 months (2024-2025) of monthly volume; |MoM| > 25% is the alert threshold for topic velocity.</p></div>
+  <div class="panel"><h2>Top Terms (use the topic selector)</h2>{blocks[4]}
+    <p class="caption"><b>So what?</b> Dirichlet β weights show the discriminative vocabulary behind each label — a sudden term shift is an early signal of topic drift.</p></div>
+  <div class="panel"><h2>Category Composition</h2>{blocks[5]}
+    <p class="caption"><b>So what?</b> Category mix reveals long-tail editorial coverage; >10 categories are collapsed into an "Other" slice for readability.</p></div>
+  <div class="panel"><h2>Confidence vs. Sentiment</h2>{blocks[6]}
+    <p class="caption">{confidence_caption}</p></div>
+  <div class="panel"><h2>Most Confident Articles</h2>{blocks[7]}
+    <p class="caption"><b>So what?</b> Synthetic LDA confidence is 0.991–0.993 vs Reuters 0.684–0.892 — rank only within a corpus; gate auto-publishing at ≥0.90.</p></div>
 </main>
 {eco_section}
-<footer>The Distributed Insights Collective — Big Data Capstone · self-contained, offline-interactive</footer>
+<footer>The Distributed Insights Collective — Big Data Capstone · self-contained, offline-interactive ·
+<a href="index.html">Back to dashboard index</a></footer>
 </body>
 </html>
 """

@@ -1,0 +1,38 @@
+# Reproducible lock file for the News Article Analysis project.
+# requirements.txt intentionally keeps flexible lower bounds; this file pins the
+# EXACT versions currently installed in the project environment (captured on
+# 2026-11-21 with importlib.metadata / pip freeze). Use it when byte-for-byte
+# reproducibility matters:
+#     python -m pip install -r requirements.lock.txt
+# Core Big Data & Distributed Computing
+pyspark==4.2.0
+pyarrow==22.0.0
+
+# Database & Storage Connectors
+pymongo==4.19.0
+
+# Natural Language Processing & Text Mining
+nltk==3.10.4
+scikit-learn==1.8.0
+
+# Data Manipulation & Numerical Computations
+pandas==2.3.3
+numpy==2.3.5
+
+# Visualization & Dashboards
+matplotlib==3.10.7
+seaborn==0.13.2
+wordcloud==1.9.6
+streamlit==1.52.1
+plotly==7.1.0
+
+# Jupyter Notebook Environment
+jupyter==1.1.1
+ipykernel==7.4.0
+nbformat==5.11.1
+
+# Presentation & Slides
+python-pptx==1.0.2
+
+# Report Document Export
+python-docx==1.2.0

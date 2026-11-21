@@ -118,11 +118,17 @@ def compute_vader_sentiment(text: str) -> float:
     """
     Computes compound sentiment polarity score (-1.0 to +1.0) using VADER lexicon.
     Executed in parallel across distributed Spark executor worker partitions.
+    Note: scoring is intentionally bounded to the first 1,000 characters of the
+    cleaned article body to control distributed UDF cost (see implementation).
     """
     if not text or not isinstance(text, str):
         return 0.0
     analyzer = get_vader()
-    scores = analyzer.polarity_scores(text[:1000]) # evaluate first 1,000 chars for efficiency
+    # Bounded-cost design choice: only the first 1,000 characters are scored so
+    # the UDF stays cheap inside every Spark executor partition. Long article
+    # tails are deliberately ignored; this is unchanged for comparability with
+    # the shipped analytics and visualizations.
+    scores = analyzer.polarity_scores(text[:1000])
     return float(scores.get("compound", 0.0))
 
 def extract_dominant_topic(topic_distribution):
@@ -151,9 +157,10 @@ def init_spark_session(app_name: str = "NewsArticleTopicExtraction") -> SparkSes
     builder = (
         SparkSession.builder
         .appName(app_name)
-        .master("local[*]")  # Leverage all available CPU cores locally
-        .config("spark.driver.memory", "4g")
-        .config("spark.executor.memory", "4g")
+        # Orchestrator/CI can override these without editing source code.
+        .master(os.environ.get("SPARK_MASTER", "local[*]"))  # all cores by default
+        .config("spark.driver.memory", os.environ.get("SPARK_DRIVER_MEMORY", "4g"))
+        .config("spark.executor.memory", os.environ.get("SPARK_EXECUTOR_MEMORY", "4g"))
         .config("spark.sql.shuffle.partitions", "8") # Balanced partitions for local multi-threading
         .config("spark.default.parallelism", "8")
         .config("spark.ui.enabled", "false") # Suppress UI overhead during batch pipeline runs
@@ -289,19 +296,24 @@ def run_distributed_pipeline(
     )
     df_filtered_tokens = remover.transform(df_tokenized)
 
-    # CountVectorizer: creates sparse term-frequency count vectors
+    # CountVectorizer: creates sparse term-frequency count vectors.
+    # minDF is data-driven: the normal 3-document floor keeps noisy hapax terms
+    # out of a full corpus, but on a tiny/sample corpus (fewer than 3 surviving
+    # documents) it would leave an empty vocabulary, so fall back to 1.0.
+    min_df = 3.0 if valid_count >= 3 else 1.0
     vectorizer = CountVectorizer(
         inputCol="filtered_tokens",
         outputCol="tf_features",
         vocabSize=vocab_size,
-        minDF=3.0 # Word must appear in at least 3 documents
+        minDF=min_df
     )
     cv_model = vectorizer.fit(df_filtered_tokens)
     df_tf = cv_model.transform(df_filtered_tokens)
     vocabulary = cv_model.vocabulary
-    print(f"[+] Vocabulary built with {len(vocabulary):,} unique terms.")
+    print(f"[+] Vocabulary built with {len(vocabulary):,} unique terms (minDF={min_df}).")
 
-    # IDF Model: calculates inverse document frequency weights
+    # IDF Model: calculates inverse document frequency weights.
+    # IDF features are computed for downstream TF-IDF analytics/export; LDA intentionally uses raw count features to preserve comparability with shipped results.
     idf = IDF(inputCol="tf_features", outputCol="tfidf_features")
     idf_model = idf.fit(df_tf)
     df_features = idf_model.transform(df_tf)
@@ -367,10 +379,12 @@ def run_distributed_pipeline(
     #   - Curated mode (default): fixed labels tuned to the synthetic corpus.
     #   - Auto mode (real corpora) : labels derived from each topic's top terms.
     if auto_labels:
-        active_labels = {
-            tid: derive_topic_label(extracted_topics[f"Topic_{tid}"]["terms"])
-            for tid in range(num_topics)
-        }
+        active_labels = {}
+        for tid in range(num_topics):
+            # describeTopics() can omit a topic on degenerate corpora; .get()
+            # keeps auto-labelling total instead of raising a KeyError.
+            topic_terms = extracted_topics.get(f"Topic_{tid}", {}).get("terms", [])
+            active_labels[tid] = derive_topic_label(topic_terms)
         print("\n[*] Auto-derived topic labels from learned top terms:")
     else:
         active_labels = dict(topic_labels_map or CANONICAL_TOPIC_LABELS)
@@ -441,8 +455,15 @@ def run_distributed_pipeline(
     
     df_export = df_final.select(*export_cols)
 
-    # Cross-platform Parquet export: attempts native Spark writer first,
-    # gracefully falling back to PyArrow partitioned export on Windows without winutils.exe
+    # Cross-platform Parquet export: attempt the native Spark writer, then fall
+    # back to a bounded PyArrow export. On Windows the usual cause is a missing
+    # winutils.exe / Hadoop native library, but the cause MAY BE UNRELATED, so
+    # the exception type and message are logged instead of being assumed.
+    try:
+        from py4j.protocol import Py4JError as _SparkWriterError
+    except ImportError:  # pragma: no cover - py4j ships with PySpark
+        _SparkWriterError = OSError
+    parquet_fallback_max_rows = 50000  # driver-memory guard; > full 6k corpus
     try:
         (
             df_export
@@ -452,10 +473,14 @@ def run_distributed_pipeline(
             .parquet(output_parquet_dir)
         )
         print(f"[+] Native Spark partitioned Parquet dataset saved at {output_parquet_dir}")
-    except Exception as win_err:
-        print(f"[*] Note: Native Hadoop winutils.exe not present on Windows ({type(win_err).__name__}).")
-        print(f"[*] Engaging PyArrow high-performance partitioned Parquet exporter...")
-        df_export_pd = df_export.toPandas()
+    except (OSError, ImportError, RuntimeError, ValueError, _SparkWriterError) as write_err:
+        print(f"[*] Native Spark Parquet writer failed "
+              f"({type(write_err).__name__}: {write_err}).")
+        print("[*] Often this is missing winutils.exe/Hadoop native libs on "
+              "Windows, but the cause may be unrelated; using bounded PyArrow fallback.")
+        # Bound the driver-side fallback so a very large corpus cannot exhaust
+        # local RAM; the default ceiling comfortably covers the shipped corpus.
+        df_export_pd = df_export.limit(parquet_fallback_max_rows).toPandas()
         import pyarrow as pa
         import pyarrow.parquet as pq
         
@@ -468,7 +493,12 @@ def run_distributed_pipeline(
             use_dictionary=True,
             compression="snappy"
         )
-        print(f"[+] Partitioned Parquet lakehouse successfully written via PyArrow at {output_parquet_dir}")
+        print(f"[+] Partitioned Parquet lakehouse successfully written via PyArrow at "
+              f"{output_parquet_dir} ({len(df_export_pd):,} rows, cap={parquet_fallback_max_rows:,})")
+
+    # All actions on the cached feature frame (LDA fit/transform, rollups and
+    # the Parquet export) are complete: release executor memory explicitly.
+    df_features.unpersist()
 
     # Build comprehensive JSON payload for MongoDB and Visualizers
     analytics_payload = {
@@ -487,7 +517,7 @@ def run_distributed_pipeline(
         "publisher_distribution": topic_by_pub.to_dict(orient="records")
     }
 
-    os.makedirs(os.path.dirname(output_summary_json), exist_ok=True)
+    os.makedirs(os.path.dirname(output_summary_json) or ".", exist_ok=True)
     with open(output_summary_json, "w", encoding="utf-8") as f:
         json.dump(analytics_payload, f, indent=2)
     print(f"[+] Analytics summary exported to {output_summary_json}")

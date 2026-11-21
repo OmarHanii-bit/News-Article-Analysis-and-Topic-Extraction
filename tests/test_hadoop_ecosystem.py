@@ -13,9 +13,15 @@ import unittest
 import sys
 import os
 import json
+import tempfile
+import xml.etree.ElementTree as ET
 
 # Add project root to sys.path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.hadoop.run_hadoop_ecosystem import _service_status
+from src.hadoop.hive_analytics import run_hive_analytics
+from src.hadoop.pig_transform import stage_enriched_csv
 
 ECOSYSTEM_ROOT = "data/hadoop_ecosystem"
 SUMMARY_PATH = os.path.join(ECOSYSTEM_ROOT, "hadoop_ecosystem_summary.json")
@@ -128,6 +134,97 @@ class TestHadoopEcosystem(unittest.TestCase):
         self.assertGreater(oozie["actions_executed"], 0)
         self.assertTrue(os.path.exists(os.path.join(ECOSYSTEM_ROOT, "oozie", "workflow.xml")))
         self.assertTrue(os.path.exists(os.path.join(ECOSYSTEM_ROOT, "oozie", "coordinator.xml")))
+
+    def test_error_payloads_are_counted_as_failures(self):
+        """An {'error': ...} component result must never be reported as executed."""
+        executed, failed = _service_status({
+            "hdfs": {"total_files": 3},
+            "hive": {"error": "RuntimeError: boom"},
+            "pig": {"error": "ValueError: bad input", "status": "FAILED"},
+            "oozie": {"final_status": "SUCCEEDED"},
+        })
+        self.assertEqual(executed, ["hdfs", "oozie"])
+        self.assertEqual(failed, ["hive", "pig"])
+        # The persisted summary must agree with the same status helper.
+        real_executed, real_failed = _service_status(self.components)
+        self.assertEqual(set(self.summary["services_executed"]), set(real_executed))
+        self.assertEqual(self.summary["services_failed"], real_failed)
+        self.assertTrue(self.summary["all_services_succeeded"])
+        self.assertTrue(self.summary["success"])
+
+    def test_hive_no_fabricated_rows_when_inputs_absent(self):
+        """Missing corpus -> empty results + warnings, never a synthetic row."""
+        with tempfile.TemporaryDirectory() as tmp:
+            summary = run_hive_analytics(
+                parquet_dir=os.path.join(tmp, "missing_parquet"),
+                mapreduce_tsv=os.path.join(tmp, "missing_counts.tsv"),
+                summary_json=os.path.join(tmp, "missing_summary.json"),
+                out_dir=os.path.join(tmp, "hive"))
+            self.assertFalse(summary["input_available"])
+            self.assertEqual(summary["status"], "no_input_data")
+            self.assertTrue(summary["warnings"])
+            results_json = os.path.join(tmp, "hive", "hive_query_results.json")
+            with open(results_json, "r", encoding="utf-8") as fh:
+                payload = json.load(fh)
+            self.assertEqual(payload["status"], "no_input_data")
+            for query in payload["queries"]:
+                self.assertEqual(query["status"], "no_input_data")
+                self.assertEqual(query["row_count"], 0)
+            for csv_path in summary["result_files"]:
+                with open(csv_path, "r", encoding="utf-8") as fh:
+                    body = fh.read()
+                self.assertNotIn("Synthetic", body)
+                self.assertNotIn("ART_SYNTH", body)
+
+    def test_pig_no_fabricated_rows_when_inputs_absent(self):
+        """Pig staging must not invent corpus rows when both inputs are missing."""
+        with tempfile.TemporaryDirectory() as tmp:
+            staged_path, staged_rows = stage_enriched_csv(
+                parquet_dir=os.path.join(tmp, "missing_parquet"),
+                input_csv=os.path.join(tmp, "missing.csv"),
+                staging_dir=os.path.join(tmp, "staging"))
+            self.assertEqual(staged_rows, 0)
+            with open(staged_path, "r", encoding="utf-8") as fh:
+                body = fh.read()
+            self.assertEqual(body.strip(), "")  # headerless AND rowless
+            self.assertNotIn("Synthetic", body)
+            self.assertNotIn("ART_SYNTH", body)
+        # Real part-files from the ecosystem run must also be placeholder-free.
+        for part in self.components["pig"]["output_files"]:
+            with open(part, "r", encoding="utf-8") as fh:
+                self.assertNotIn("Synthetic", fh.read())
+
+    def test_yarn_memory_config_is_integer_string(self):
+        """Generated YARN memory must be an int string, and keys must be valid."""
+        yarn = ET.parse(os.path.join(ECOSYSTEM_ROOT, "cluster", "yarn-site.xml")).getroot()
+        values = {}
+        for prop in yarn.findall("property"):
+            values[prop.findtext("name")] = prop.findtext("value")
+        memory = values["yarn.nodemanager.resource.memory-mb"]
+        self.assertTrue(memory.isdigit(), f"Expected an int string, got {memory!r}")
+        self.assertEqual(memory, str((32 * 1024 * 8) // 10))
+        low = int(values["yarn.scheduler.minimum-allocation-mb"])
+        high = int(values["yarn.scheduler.maximum-allocation-mb"])
+        self.assertLessEqual(low, high)
+        self.assertLessEqual(high, int(memory))
+        hdfs_site = ET.parse(os.path.join(ECOSYSTEM_ROOT, "cluster", "hdfs-site.xml")).getroot()
+        names = [p.findtext("name") for p in hdfs_site.findall("property")]
+        self.assertNotIn("dfs.blocksize.balancer.bandwidthPerSec", names)
+
+    def test_hive_ddl_locations_match_orchestrator(self):
+        """Hive LOCATIONs must point at paths the orchestrator actually produces."""
+        hive_dir = os.path.join(ECOSYSTEM_ROOT, "hive")
+        with open(os.path.join(hive_dir, "news_analytics.hql"), "r", encoding="utf-8") as fh:
+            ddl = fh.read()
+        with open(os.path.join(hive_dir, "topic_term_hive.hql"), "r", encoding="utf-8") as fh:
+            term_ddl = fh.read()
+        self.assertIn("LOCATION '/user/news/lakehouse'", ddl)
+        self.assertIn("LOCATION '/user/news/raw/mapreduce_term_counts.tsv'", term_ddl)
+        self.assertNotIn("/user/news/processed/processed_parquet", ddl + term_ddl)
+        self.assertNotIn("/user/news/mapreduce/term_counts", ddl + term_ddl)
+        # The partition predicate is generated from the corpus, not hardcoded.
+        partition = self.components["hive"]["partition"]
+        self.assertIn(f"year = {partition['year']} AND month = {partition['month']}", ddl)
 
 
 if __name__ == "__main__":

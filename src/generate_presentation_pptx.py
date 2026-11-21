@@ -77,7 +77,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         p_b.font.color.rgb = NAVY
         p_b.alignment = PP_ALIGN.CENTER
 
-    def add_card(slide, left, top, width, height, title, items, highlight=False):
+    def add_card(slide, left, top, width, height, title, items, highlight=False, font_size=11):
         """Renders an analytical content card with bullet points."""
         card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
         card.fill.solid()
@@ -102,9 +102,44 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         for item in items:
             p = tf.add_paragraph()
             p.text = f"•  {item}"
-            p.font.size = Pt(11)
+            p.font.size = Pt(font_size)
             p.font.color.rgb = DARK_TEXT
             p.space_after = Pt(6)
+
+    def add_figure_with_caption(slide, image_path, left, top, max_width, max_height, caption):
+        """Embed an evidence PNG (if generated) with a consistent caption band."""
+        image_box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, max_width, max_height)
+        image_box.fill.solid()
+        image_box.fill.fore_color.rgb = RGBColor(237, 242, 247)
+        image_box.line.color.rgb = BORDER_COLOR
+        if os.path.exists(image_path):
+            pic = slide.shapes.add_picture(image_path, left, top, width=max_width)
+            if pic.height > max_height:
+                scale = float(max_height) / float(pic.height)
+                pic.width = int(pic.width * scale)
+                pic.height = max_height
+            pic.left = int(left + (max_width - pic.width) / 2)
+            pic.top = int(top + (max_height - pic.height) / 2)
+        else:
+            pending = slide.shapes.add_textbox(int(left + Inches(0.2)), int(top + Inches(0.5)),
+                                              int(max_width - Inches(0.4)), int(max_height - Inches(0.6)))
+            tf_p = pending.text_frame
+            tf_p.word_wrap = True
+            p_p = tf_p.paragraphs[0]
+            p_p.text = f"Figure pending: {image_path}"
+            p_p.font.size = Pt(12)
+            p_p.font.color.rgb = SLATE
+            p_p.alignment = PP_ALIGN.CENTER
+        cap = slide.shapes.add_textbox(int(left), int(top + max_height + Inches(0.05)),
+                                      int(max_width), Inches(0.38))
+        tf_cap = cap.text_frame
+        tf_cap.word_wrap = True
+        p_cap = tf_cap.paragraphs[0]
+        p_cap.text = caption
+        p_cap.font.size = Pt(10)
+        p_cap.font.italic = True
+        p_cap.font.color.rgb = SLATE
+        p_cap.alignment = PP_ALIGN.CENTER
 
     # =========================================================================
     # SLIDE 1: Title Slide (Alex Vance)
@@ -189,20 +224,27 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     # =========================================================================
     s3 = prs.slides.add_slide(blank_layout)
     add_header(s3, "Distributed Storage Layer: Hadoop HDFS & YARN", "Cluster Infrastructure", "Priya Sharma")
-    add_card(s3, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Hadoop Distributed File System (HDFS)", [
+    add_card(s3, Inches(0.8), Inches(1.6), Inches(5.6), Inches(3.15), "Hadoop Distributed File System (HDFS)", [
         "Block Architecture: Files are automatically split into 128 MB blocks distributed across DataNodes.",
         "3x Replication Factor: Guarantees zero data loss even if two storage nodes fail simultaneously.",
         "Rack-Aware Placement: Distributes block replicas across distinct server racks to safeguard against switch or power failures.",
         "NameNode Metadata Master: Maintains the in-memory namespace tree and block mapping with secondary checkpointing.",
         "Massive Streaming Throughput: Designed for sequential read operations over large multi-gigabyte text corpora."
     ])
-    add_card(s3, Inches(6.8), Inches(1.6), Inches(5.7), Inches(5.3), "Apache YARN Resource Management", [
+    add_card(s3, Inches(6.8), Inches(1.6), Inches(5.7), Inches(3.15), "Apache YARN Resource Management", [
         "Decoupled Architecture: Separates resource management from compute execution models.",
         "ResourceManager: Global arbiter allocating CPU core and memory containers across concurrent jobs.",
         "NodeManager: Per-worker agent monitoring container resource utilization and heartbeat health.",
         "Multi-Tenancy Scheduling: Enforces CapacityScheduler queues ensuring batch MapReduce jobs and in-memory Spark pipelines co-exist without resource starvation.",
         "Dynamic Allocation: Scales worker containers elastically based on pending shuffle stage demand."
     ], highlight=True)
+
+    # Rendered end-to-end architecture diagram (report section 3.1)
+    add_figure_with_caption(
+        s3, "presentation/architecture.png",
+        Inches(0.8), Inches(4.9), Inches(11.7), Inches(1.65),
+        "End-to-end architecture (rendered from report §3.1)"
+    )
 
     # =========================================================================
     # SLIDE 4: First-Pass Processing: MapReduce (Priya Sharma)
@@ -242,7 +284,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "Oozie: Workflow + coordinator DAG (sqoop -> pig -> hive -> spark -> shell); final status SUCCEEDED, 5/5 actions.",
         "ZooKeeper: 11 znodes (6 ephemeral) for leader election, distributed config and locks; 3 watches fired.",
         "HDFS: Real client simulation — 128 MB block splitting, 3x replication, NameNode fsimage, 0 missing blocks.",
-        "Verified Live: 9/9 ecosystem services executed, 0 failures; 80 real `hdfs dfs` commands logged to evidence."
+        "Verified Live: 9/9 ecosystem modules executed, 0 failures; 80 production-equivalent `hdfs dfs` commands emitted by the local simulation."
     ], highlight=True)
 
     # =========================================================================
@@ -260,7 +302,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     add_card(s5, Inches(6.8), Inches(1.6), Inches(5.7), Inches(5.3), "7-Stage Distributed Pipeline Execution", [
         "Stage 1: Strict schema ingestion (6,000 raw documents ingested).",
         "Stage 2: Imputation & text hygiene (6,000 clean valid records).",
-        "Stage 3: Tokenizer → StopWordsRemover → CountVectorizer (5K vocab) → IDF.",
+        "Stage 3: Tokenizer → StopWordsRemover → CountVectorizer term counts (5K vocab) feed LDA; IDF for downstream TF-IDF analytics.",
         "Stage 4: PySpark MLlib Online LDA (k=6 topics, 20 iterations).",
         "Stage 5: Dominant topic inference & VADER sentiment scoring UDFs.",
         "Stage 6: Multi-dimensional aggregations (publisher & temporal rollups).",
@@ -274,7 +316,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     add_header(s6, "Enterprise Lakehouse: Snappy Partitioned Parquet", "Columnar Storage Architecture", "Marcus Chen")
     add_card(s6, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Parquet Storage Optimizations", [
         "Columnar Layout: Organizes values by column rather than row, maximizing compression ratios.",
-        "Snappy Compression: Yields an 82% storage size reduction over raw CSV while maintaining fast decompression speed.",
+        "Snappy Compression: Yields ~92% storage size reduction over raw CSV (92.5% in the artifacts) while maintaining fast decompression speed.",
         "Dictionary Encoding: Compresses repetitive string attributes (publisher, category, author) into compact integer tokens.",
         "Predicate Pushdown: Pushes filters directly to the storage reader level, avoiding loading unused columns into RAM.",
         "Cross-Platform Resilience: Native Spark writer with automatic PyArrow fallback for Windows environments."
@@ -296,7 +338,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "RegexTokenizer: Splits cleaned prose into token arrays on whitespace with minTokenLength=3.",
         "Domain Stopwords Removal: Combines standard NLTK English stopwords with custom journalistic tokens ('said', 'bloomberg', 'reuters').",
         "CountVectorizer: Builds a 5,000-term vocabulary with minDF=3.0 (terms must appear in >= 3 documents).",
-        "IDF Transformer: Computes Inverse Document Frequency log-scaling to penalize non-discriminative ubiquitous words.",
+        "IDF Transformer: Computes Inverse Document Frequency log-scaling for downstream TF-IDF analytics; LDA consumes CountVectorizer term counts, not TF-IDF weights.",
         "Sparse Vector Representation: Compresses high-dimensional vectors, preserving memory across worker partitions."
     ])
     add_card(s7, Inches(6.8), Inches(1.6), Inches(5.7), Inches(5.3), "TF-IDF Mathematical Formulation", [
@@ -304,7 +346,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "Inverse Document Frequency: IDF(t, D) = log((|D| + 1) / (DF(t, D) + 1)).",
         "Combined Score: TF-IDF(t, d, D) = TF(t, d) * IDF(t, D).",
         "Statistical Effect: Highlights highly specific domain keywords (e.g. 'qubit', 'oncology', 'subpoena') while suppressing common conversational vocabulary.",
-        "Vocabulary Efficiency: 438 high-signal terms selected for LDA topic discovery."
+        "Vocabulary Efficiency: 438 high-signal term counts selected for LDA topic discovery (5,000-term rerun of the k sweep is future work)."
     ], highlight=True)
 
     # =========================================================================
@@ -316,10 +358,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "Hierarchical Bayesian Model: Documents are mixtures of K topics; topics are distributions over vocabulary V.",
         "Dirichlet Priors: theta_d ~ Dir(alpha) governs document-topic mix; beta_k ~ Dir(eta) governs topic-word mix.",
         "Online Variational Bayes: Evaluates mini-batches iteratively, enabling linear scaling over massive corpora.",
-        "Model Selection: k=6 chosen via perplexity minimization and semantic coherence sweeps across k in [3, 12].",
+        "Model Selection: src/lda_topic_selection.py swept k in [3,12] on 438 terms (data/lda_k_sweep.json); the statistical knee rule selected k=3, while production keeps fixed k=6 for interpretability/cross-corpus comparability — an engineering choice, not a proven optimum.",
         "Topic Confidence: Achieved >99% average dominant topic assignment probability across 6,000 documents."
     ])
-    add_card(s8, Inches(6.8), Inches(1.6), Inches(5.7), Inches(5.3), "Discovered Latent Topic Portfolio (k=6)", [
+    add_card(s8, Inches(6.8), Inches(1.6), Inches(5.7), Inches(3.15), "Discovered Latent Topic Portfolio (k=6)", [
         "Topic 0 — Clinical Medicine: breakthrough, clinical, phase iii, trial, oncology (2,386 articles, 39.8%).",
         "Topic 1 — Clean Energy: trade, offs, climate, battery, grid, capacity.",
         "Topic 2 — Quantum Physics: quantum, coherence, qubit, spectroscopic, lattice (1,470 articles, 24.5%).",
@@ -327,7 +369,14 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "Topic 4 — Enterprise Analytics: throughput, benchmark, fiscal, data, margin.",
         "Topic 5 — AI Infrastructure: data, throughput, cluster, latency, inference (951 articles, 15.8%).",
         "Regulatory Anomaly: Antitrust litigation identified as distinct negative domain (470 articles, 7.8%)."
-    ], highlight=True)
+    ], highlight=True, font_size=9)
+
+    # Honest k-selection evidence figure (438-term sweep; knee rule k=3, production k=6)
+    add_figure_with_caption(
+        s8, "visualizations/lda_k_sweep.png",
+        Inches(6.8), Inches(4.9), Inches(5.7), Inches(1.65),
+        "k sweep (438 terms): statistical knee selected k=3; production retains k=6 for interpretability/cross-corpus comparability"
+    )
 
     # =========================================================================
     # SLIDE 10: Real-World Corpus Validation (Alex Vance)
@@ -338,7 +387,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     add_card(s_real, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Authentic Full-Text Dataset", [
         "Source: NLTK Reuters-21578 news wire corpus (10,788 documents) — genuine article text, not just headlines.",
         "Ingested: 10,712 full-text articles (1,377,941 words; mean 128.6 words/article).",
-        "Ground Truth: 90 authentic Reuters topic categories (acq, crude, earn, trade, cpu...).",
+        "Ground Truth: 90 Reuters topic categories in the source taxonomy (25 sampled labels recorded in provenance.json; acq, crude, earn, trade, cpu...).",
         "Honest Provenance: Reuters-21578 carries no timestamps, so dates are derived deterministically across 2024-2025 for year/month partitioning.",
         "Schema-Faithful: Mapped to the identical 12-column canonical contract, so zero pipeline code changes were required."
     ])
@@ -347,7 +396,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "Real Corpus: 10,712 articles, auto-derived labels from learned top terms (Mln/Tonnes, Pct/Bank/Rate, Trade/Japan/Market).",
         "Corpus-Agnostic Design: python src/spark_pipeline.py --input-csv <corpus> --auto-labels.",
         "Outputs: data/real_news/processed_parquet/ and data/real_news/pipeline_analytics_summary.json.",
-        "Validation: 53 automated tests pass (incl. 11 Hadoop-ecosystem assertions); both lakehouses verified coherent."
+        "Validation: 106 automated tests pass (incl. Hadoop-ecosystem, forecast & scale assertions); both lakehouses verified coherent."
     ], highlight=True)
 
     # =========================================================================
@@ -399,8 +448,9 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     # Left: Explanation card
     add_card(s11, Inches(0.8), Inches(1.6), Inches(5.2), Inches(5.3), "Publisher Editorial Specialization", [
         "Publisher Bias Matrix: Cross-tabulation reveals stark editorial concentration across major news agencies.",
-        "TechCrunch: 84.2% of coverage concentrated in AI Infrastructure and Quantum Computing.",
-        "Bloomberg & FT: 76.4% focused on Monetary Policy, Corporate Earnings, and Capital Markets.",
+        "TechCrunch: 41.7% of sampled coverage in AI Infrastructure & Compute and Quantum Physics (113 + 199 of 748).",
+        "Bloomberg: 11.9% (88/741) and Financial Times: 13.9% (106/765) focused on Monetary Policy & Markets.",
+        "computed from data/pipeline_analytics_summary.json publisher_distribution",
         "Reuters & AP: Balanced generalist distribution across all 6 topics.",
         "Managerial Takeaway: Media intelligence systems must adjust topic priors based on publisher provenance."
     ])
@@ -420,10 +470,11 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     
     # Left: Text card
     add_card(s12, Inches(0.8), Inches(1.6), Inches(5.2), Inches(5.3), "Key Analytical Revelations", [
-        "The Regulatory Sentiment Anomaly: Antitrust & Regulatory Policy is the only topic displaying a negative mean polarity (-0.028, p < 0.001).",
+        "The Regulatory Sentiment Anomaly: Antitrust & Regulatory Policy is the only topic with a negative mean polarity (-0.028); the sampled data show a large, consistent separation and no inferential test was run.",
         "Market Optimism: Monetary Policy & Markets exhibits the highest positive sentiment (+0.787) driven by earnings releases.",
         "Biomedical Rigor: Clinical Medicine maintains cautious positive valence (+0.337).",
         "Temporal Trajectories: Baseline reporting remains stable (~250 articles/month) with event-driven quarterly surges.",
+        "Held-Out Forecast (2024->2025): naive persistence beat the linear trend (macro MAE 10.03 vs 10.72) - an honest negative result on 24 monthly points; see temporal_forecast_evaluation.png.",
         "Interactive Dashboard: Live exploration available in Streamlit web interface."
     ])
     
@@ -442,7 +493,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     add_card(s13, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Execution Profiling (6,000 Articles)", [
         "Hadoop MapReduce Tokenization: 3.8 seconds (disk-streaming).",
         "PySpark Schema & Ingestion: 2.1 seconds.",
-        "PySpark NLP & Feature Engineering: 4.8 seconds (TF-IDF vector space).",
+        "PySpark NLP & Feature Engineering: 4.8 seconds (CountVectorizer term counts + IDF/TF-IDF analytics).",
         "PySpark MLlib Online LDA (20 iterations): 142.3 seconds across worker threads.",
         "VADER Sentiment Scoring UDF: 38.2 seconds.",
         "Partitioned Parquet Writing: 9.2 seconds.",
@@ -450,9 +501,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ])
     add_card(s13, Inches(6.8), Inches(1.6), Inches(5.7), Inches(5.3), "Horizontal Cluster Scaling Projections", [
         "Single Node (4 cores): 196.6 seconds for 6K articles.",
-        "4-Node YARN Cluster (16 cores): Projected 52.4 seconds (3.7x linear speedup).",
+        "4-Node YARN Cluster (16 cores): Projected 52.4 seconds (ideal 3.7x scale-out model; not measured — pipeline runs local[*] on one host).",
         "16-Node YARN Cluster (64 cores): Projected 14.8 seconds; capable of ingesting 100K articles in under 4 minutes.",
-        "Parquet Query Speedup: 9.4x faster than raw CSV for analytical group-by rollups due to partition pruning and columnar reads.",
+        "Parquet vs. CSV: indicative columnar-scan advantage (not a controlled benchmark) for analytical group-by rollups.",
+        "Measured Scale Benchmark: 50,000 articles at 10,108 rows/s (45 MiB CSV -> 7.3 MiB Parquet); linear projection (NOT measured) ~14 s for 143k and ~4.45 min for 2.7M articles. See docs/SCALABILITY_AND_KAGGLE.md.",
         "Zero Memory Leakage: Executor memory stayed bounded under 2.4 GB during full execution."
     ], highlight=True)
 
@@ -485,14 +537,14 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     # =========================================================================
     s15 = prs.slides.add_slide(blank_layout)
     add_header(s15, "Project Conclusion & Technical Defense Handoff", "Summary & Q&A Defense", "Alex Vance")
-    add_card(s15, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "10/10 Evaluation Rubric Summary", [
+    add_card(s15, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "10/10 Evaluation Rubric Summary (self-assessed target; instructor final)", [
         "1. Problem Definition & Scope (1/1): 5Vs, 4 stakeholders, spreadsheet limits.",
         "2. Dataset & Data Sources (1/1): 6K synthetic + 10.7K real Reuters full-text articles, 12 attributes.",
         "3. System Architecture (2/2): End-to-end HDFS -> YARN -> MapReduce/Spark -> Hive/HBase -> MongoDB/Parquet -> Streamlit.",
-        "4. Data Processing Pipeline (2/2): Commented MapReduce + 7-stage PySpark + 9 Hadoop ecosystem services.",
-        "5. Analytical Depth (2/2): Online LDA (k=6), TF-IDF, VADER sentiment, publisher bias.",
-        "6. Visualization (1/1): 6 charts, interactive Streamlit UI, 3 business actions.",
-        "7. Teamwork & Defense (1/1): Equitable 7-member WBS, 17 slides, live demo runbook, 10 Q&A answers."
+        "4. Data Processing Pipeline (2/2): Commented MapReduce + 7-stage PySpark + 9 orchestrated ecosystem modules covering 10 named technologies.",
+        "5. Analytical Depth (2/2): Online LDA (k=6), CountVectorizer/TF-IDF, VADER sentiment, publisher cross-tabs, held-out forecast eval.",
+        "6. Visualization (1/1): 14 charts, 8-view Streamlit UI with What Next, dual HTML dashboards, 3 business actions.",
+        "7. Teamwork & Defense (1/1): balanced 7-member speaking coverage (lead presents opening/closing), 17 slides, live demo runbook, 12 Q&A answers."
     ])
     add_card(s15, Inches(6.8), Inches(1.6), Inches(5.7), Inches(5.3), "Live Demo & Technical Defense Ready", [
         "Live Demo Order (5 min):",
@@ -503,7 +555,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "  5. Streamlit interactive dashboard exploration.",
         "Technical Q&A Defense Ready:",
         "  • Spark vs MapReduce trade-offs (disk streaming vs DAG).",
-        "  • LDA k=6 mathematical justification & Online Variational Bayes.",
+        "  • LDA k=6 engineering/interpretability choice & Online Variational Bayes (k sweep figure embedded).",
         "  • Why Hive/HBase/Pig over plain MapReduce; ZooKeeper election & locks.",
         "  • YARN memory scheduling & container contention.",
         "  • NoSQL vs Relational document modeling rationale."

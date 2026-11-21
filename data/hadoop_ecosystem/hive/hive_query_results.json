@@ -11,9 +11,11 @@
     "topics": 72
   },
   "top_topic_by_volume": "Clinical Medicine & Genomics",
+  "status": "ok",
+  "warnings": [],
   "partition_pruning": {
-    "pruned_partition": "year=2025/month=11",
-    "rows_in_pruned_partition": 254,
+    "pruned_partition": "year=2025/month=12",
+    "rows_in_pruned_partition": 267,
     "rows_in_full_table": 6000
   },
   "queries": [
@@ -21,6 +23,7 @@
       "query_name": "topic_volume_ranking",
       "business_question": "Topic volume ranking with mean sentiment",
       "sql": "SELECT topic_label, COUNT(*) AS article_count, ROUND(AVG(sentiment_polarity),4) AS mean_sentiment FROM news_articles GROUP BY topic_label ORDER BY article_count DESC;",
+      "status": "ok",
       "rows_scanned": 6000,
       "columns": [
         "topic_label",
@@ -55,13 +58,14 @@
           "mean_sentiment": -0.0282
         }
       ],
-      "elapsed_ms": 2.462,
+      "elapsed_ms": 1.857,
       "result_csv": "data/hadoop_ecosystem/hive/results/topic_volume_ranking.csv"
     },
     {
       "query_name": "publisher_topic_crosstab",
       "business_question": "Publisher x topic cross-tabulation (conditional aggregation)",
       "sql": "SELECT publication, SUM(CASE WHEN topic_label = 'AI Infrastructure & Compute' THEN 1 ELSE 0 END) AS `AI_Infrastructure_Compute`, SUM(CASE WHEN topic_label = 'Antitrust & Regulatory Policy' THEN 1 ELSE 0 END) AS `Antitrust_Regulatory_Policy`, SUM(CASE WHEN topic_label = 'Clinical Medicine & Genomics' THEN 1 ELSE 0 END) AS `Clinical_Medicine_Genomics`, SUM(CASE WHEN topic_label = 'Monetary Policy & Markets' THEN 1 ELSE 0 END) AS `Monetary_Policy_Markets`, SUM(CASE WHEN topic_label = 'Quantum Physics & Advanced Materials' THEN 1 ELSE 0 END) AS `Quantum_Physics_Advanced_Materials` FROM news_articles GROUP BY publication ORDER BY SUM(1) DESC LIMIT 10;",
+      "status": "ok",
       "rows_scanned": 6000,
       "columns": [
         "publication",
@@ -138,13 +142,14 @@
           "Quantum_Physics_Advanced_Materials": 177
         }
       ],
-      "elapsed_ms": 2.577,
+      "elapsed_ms": 2.508,
       "result_csv": "data/hadoop_ecosystem/hive/results/publisher_topic_crosstab.csv"
     },
     {
       "query_name": "mom_volume_change",
       "business_question": "Month-over-month article volume per topic (LAG window function)",
       "sql": "WITH monthly AS (SELECT topic_label, year, month, COUNT(*) AS cnt FROM news_articles GROUP BY topic_label, year, month) SELECT topic_label, year, month, cnt, cnt - LAG(cnt) OVER (PARTITION BY topic_label ORDER BY year, month) AS mom_delta FROM monthly ORDER BY topic_label, year, month;",
+      "status": "ok",
       "rows_scanned": 6000,
       "columns": [
         "topic_label",
@@ -506,13 +511,14 @@
           "mom_delta": 6
         }
       ],
-      "elapsed_ms": 3.369,
+      "elapsed_ms": 2.232,
       "result_csv": "data/hadoop_ecosystem/hive/results/mom_volume_change.csv"
     },
     {
       "query_name": "sentiment_ranking",
       "business_question": "Sentiment ranking of publishers within each topic (RANK window function)",
       "sql": "WITH pub_topic AS (SELECT topic_label, publication, AVG(sentiment_polarity) AS avg_sent FROM news_articles GROUP BY topic_label, publication) SELECT topic_label, publication, ROUND(avg_sent,4) AS avg_sent, RANK() OVER (PARTITION BY topic_label ORDER BY avg_sent DESC) AS rnk FROM pub_topic ORDER BY topic_label, rnk LIMIT 30;",
+      "status": "ok",
       "rows_scanned": 6000,
       "columns": [
         "topic_label",
@@ -703,13 +709,14 @@
           "rnk": 6
         }
       ],
-      "elapsed_ms": 3.039,
+      "elapsed_ms": 2.889,
       "result_csv": "data/hadoop_ecosystem/hive/results/sentiment_ranking.csv"
     },
     {
       "query_name": "topic_term_join",
       "business_question": "Topic keyword importance via JOIN of topics with the MapReduce term counts",
       "sql": "SELECT t.topic_label, COUNT(DISTINCT tc.term) AS matched_terms, SUM(tc.cnt) AS total_keyword_freq FROM topics t JOIN term_counts tc ON (t.term = tc.term) GROUP BY t.topic_label ORDER BY total_keyword_freq DESC;",
+      "status": "ok",
       "rows_scanned": 2327,
       "columns": [
         "topic_label",
@@ -749,14 +756,15 @@
           "total_keyword_freq": 10027
         }
       ],
-      "elapsed_ms": 1.066,
+      "elapsed_ms": 0.815,
       "result_csv": "data/hadoop_ecosystem/hive/results/topic_term_join.csv"
     },
     {
       "query_name": "partition_pruned_month",
-      "business_question": "Partition-pruned single-month query (reads only year=2025/month=11)",
-      "sql": "SELECT COUNT(*) AS article_count, ROUND(AVG(sentiment_polarity),4) AS mean_sentiment FROM news_articles WHERE year = 2025 AND month = 11;",
-      "rows_scanned": 254,
+      "business_question": "Partition-pruned single-month query (reads only year=2025/month=12)",
+      "sql": "SELECT COUNT(*) AS article_count, ROUND(AVG(sentiment_polarity),4) AS mean_sentiment FROM news_articles WHERE year = 2025 AND month = 12;",
+      "status": "ok",
+      "rows_scanned": 267,
       "columns": [
         "article_count",
         "mean_sentiment"
@@ -764,11 +772,11 @@
       "row_count": 1,
       "sample_rows": [
         {
-          "article_count": 254,
-          "mean_sentiment": 0.4554
+          "article_count": 267,
+          "mean_sentiment": 0.4689
         }
       ],
-      "elapsed_ms": 0.513,
+      "elapsed_ms": 0.401,
       "result_csv": "data/hadoop_ecosystem/hive/results/partition_pruned_month.csv"
     }
   ]

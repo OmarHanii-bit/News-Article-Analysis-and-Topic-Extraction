@@ -164,11 +164,11 @@ class LocalHDFS:
         parts = [p for p in path.split("/") if p]
         # Ensure every ancestor directory exists in the metadata image.
         for i in range(1, len(parts) + 1):
-            ancestor = "/" + "/".join(parts[:i])
+            ancestor = "/" + "/".join(parts[:i])  # e.g. /user, /user/news, ...
             if ancestor not in self.fsimage["directories"]:
-                self.fsimage["directories"].append(ancestor)
-        self._save_fsimage()
-        self._record_cli(f"hdfs dfs -mkdir -p hdfs://{path}")
+                self.fsimage["directories"].append(ancestor)  # de-dup inode list
+        self._save_fsimage()  # persist metadata so the tree survives restarts
+        self._record_cli(f"hdfs dfs -mkdir -p hdfs://{path}")  # authentic CLI twin
 
     def exists(self, hdfs_path: str) -> bool:
         """`hdfs dfs -test -e <path>` — returns True if file or directory exists."""
@@ -201,23 +201,23 @@ class LocalHDFS:
         blocks = []
 
         for index in range(num_blocks):
-            start = index * self.block_size_bytes
-            chunk = payload[start:start + self.block_size_bytes]
+            start = index * self.block_size_bytes                    # byte offset of this chunk
+            chunk = payload[start:start + self.block_size_bytes]    # physical DFS block bytes
             # Deterministic block id: file name + block index + content hash.
             block_id = f"blk_{hashlib.md5(path.encode()).hexdigest()[:8]}_{index}_{hashlib.md5(chunk).hexdigest()[:8]}"
             # Round-robin DataNode placement (real HDFS uses rack-aware placement).
             replicas = []
             for j in range(self.replication):
-                dn_index = (index + j) % self.num_datanodes
+                dn_index = (index + j) % self.num_datanodes          # spread copies across nodes
                 dn_path = os.path.join(self.datanode_dirs[dn_index], f"{block_id}.blk")
                 with open(dn_path, "wb") as bh:
-                    bh.write(chunk)
+                    bh.write(chunk)                                  # same bytes on every replica
                 replicas.append({
                     "datanode": f"datanode_{dn_index + 1}",
-                    "path": os.path.relpath(dn_path, self.root),
+                    "path": os.path.relpath(dn_path, self.root),    # store path relative to cluster root
                     "size": len(chunk),
                 })
-            blocks.append({
+            blocks.append({  # one metadata entry per physical block + its replica list
                 "block_id": block_id,
                 "block_index": index,
                 "size": len(chunk),
@@ -259,9 +259,9 @@ class LocalHDFS:
             # secondary replica automatically if the primary DataNode is down).
             replica_path = os.path.join(self.root, block["replicas"][0]["path"])
             with open(replica_path, "rb") as bh:
-                chunks.append(bh.read())
+                chunks.append(bh.read())  # append bytes in block_index order
         self._record_cli(f"hdfs dfs -cat hdfs://{path}")
-        return b"".join(chunks)
+        return b"".join(chunks)  # reassembled file = concatenation of all blocks
 
     def get(self, hdfs_path: str, local_path: str) -> str:
         """`hdfs dfs -get <hdfs> <local>` — downloads a file out of HDFS."""
@@ -282,8 +282,8 @@ class LocalHDFS:
         entries = []
         # --- Immediate child FILES -----------------------------------------
         for f, meta in self.fsimage["files"].items():
-            if (os.path.dirname(f) or "/") == path:
-                entries.append({
+            if (os.path.dirname(f) or "/") == path:  # only direct children, no recursion
+                entries.append({  # report size/replication/block count from NameNode metadata
                     "path": f,
                     "type": "file",
                     "size": meta["size"],
@@ -293,7 +293,7 @@ class LocalHDFS:
         # --- Immediate child DIRECTORIES ------------------------------------
         for d in self.fsimage["directories"]:
             if d != "/" and (os.path.dirname(d) or "/") == path:
-                entries.append({"path": d, "type": "directory"})
+                entries.append({"path": d, "type": "directory"})  # directories have no block map
         self._record_cli(f"hdfs dfs -ls -h hdfs://{path}")
         return sorted(entries, key=lambda e: e["path"])
 
@@ -302,8 +302,8 @@ class LocalHDFS:
         path = self._norm(hdfs_path)
         total = 0
         for f, meta in self.fsimage["files"].items():
-            if f.startswith(path):
-                total += meta["size"]
+            if f.startswith(path):  # prefix match = all descendants of the path
+                total += meta["size"]  # logical bytes only (replication is reported separately)
         self._record_cli(f"hdfs dfs -du -s -h hdfs://{path}")
         return total
 
@@ -318,13 +318,13 @@ class LocalHDFS:
                     for rep in b["replicas"]:
                         p = os.path.join(self.root, rep["path"])
                         if os.path.exists(p):
-                            os.remove(p)
-                del self.fsimage["files"][f]
+                            os.remove(p)  # remove the physical copy, not just metadata
+                del self.fsimage["files"][f]  # then drop the NameNode entry
                 removed += 1
         if recursive:
             self.fsimage["directories"] = [
                 d for d in self.fsimage["directories"]
-                if d != path and not d.startswith(path + "/")
+                if d != path and not d.startswith(path + "/")  # prune the whole subtree
             ]
         self._save_fsimage()
         self._record_cli(f"hdfs dfs -rm {'-r ' if recursive else ''}hdfs://{path}")
@@ -338,14 +338,14 @@ class LocalHDFS:
         `hdfs dfsadmin -report` — returns simulated cluster capacity, block
         counts, replication health and per-DataNode usage statistics.
         """
-        total_bytes = sum(m["size"] for m in self.fsimage["files"].values())
-        total_blocks = sum(m["num_blocks"] for m in self.fsimage["files"].values())
+        total_bytes = sum(m["size"] for m in self.fsimage["files"].values())       # logical total
+        total_blocks = sum(m["num_blocks"] for m in self.fsimage["files"].values())  # block count
         # Physical consumption = logical size x replication factor.
         physical_bytes = total_bytes * self.replication
 
         datanodes = []
         for i, dn in enumerate(self.datanode_dirs, start=1):
-            used = sum(
+            used = sum(  # walk the real block directory to measure disk usage
                 os.path.getsize(os.path.join(dp, f))
                 for dp, _, files in os.walk(dn)
                 for f in files
@@ -355,7 +355,7 @@ class LocalHDFS:
                 "role": "DataNode",
                 "capacity_bytes": 500 * 1024 * 1024,  # simulated 500 MB volume
                 "used_bytes": used,
-                "blocks_stored": len([f for f in os.listdir(dn)]),
+                "blocks_stored": len([f for f in os.listdir(dn)]),  # physical replica files
                 "status": "LIVE",
             })
 

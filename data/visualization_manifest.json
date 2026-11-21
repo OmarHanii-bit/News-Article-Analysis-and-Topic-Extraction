@@ -1,0 +1,98 @@
+{
+  "manifest_version": 1,
+  "description": "Canonical inventory of the 14 publication-quality static visualization assets used by PROJECT_REPORT.md, the presentation deck and the dashboard galleries. Every asset is rendered at 300 DPI.",
+  "dpi": 300,
+  "artifact_count": 14,
+  "regeneration": {
+    "pipeline_charts": "python src/visualize_analytics.py",
+    "k_sweep": "python src/lda_topic_selection.py",
+    "forecast_evaluation": "python src/temporal_forecast_eval.py",
+    "notebook_charts": "python scripts/reexecute_notebook.py (nbconvert --execute --inplace)"
+  },
+  "artifacts": [
+    {
+      "file": "visualizations/topic_volume_distribution.png",
+      "dpi": 300,
+      "source": "src/visualize_analytics.py :: plot_topic_volume",
+      "content": "Article volume per PySpark LDA dominant topic with percentage shares; footnote: 5 labels for 6 components."
+    },
+    {
+      "file": "visualizations/lda_topic_top_terms.png",
+      "dpi": 300,
+      "source": "src/visualize_analytics.py :: plot_lda_top_terms",
+      "content": "6-panel Dirichlet beta keyword weights per topic."
+    },
+    {
+      "file": "visualizations/publisher_topic_heatmap.png",
+      "dpi": 300,
+      "source": "src/visualize_analytics.py :: plot_publisher_heatmap",
+      "content": "Row-normalized publisher x topic editorial-share heatmap (synthetic corpus)."
+    },
+    {
+      "file": "visualizations/temporal_topic_trends.png",
+      "dpi": 300,
+      "source": "src/visualize_analytics.py :: plot_temporal_trends",
+      "content": "Monthly topic volume trajectories, 2024-2025 (24 months)."
+    },
+    {
+      "file": "visualizations/topic_sentiment_distribution.png",
+      "dpi": 300,
+      "source": "src/visualize_analytics.py :: plot_sentiment_distribution",
+      "content": "VADER compound sentiment boxplots by topic."
+    },
+    {
+      "file": "visualizations/topic_wordclouds_grid.png",
+      "dpi": 300,
+      "source": "src/visualize_analytics.py :: plot_wordclouds_grid",
+      "content": "Dynamically sized beta-weighted keyword clouds (not raw term frequency)."
+    },
+    {
+      "file": "visualizations/eda_overview.png",
+      "dpi": 300,
+      "source": "notebooks/News_Article_Analysis_Pipeline.ipynb :: Cell 7 (EDA 2x2 panel)",
+      "content": "Category mix, publisher pie, word-count histogram and monthly volume."
+    },
+    {
+      "file": "visualizations/mapreduce_term_analysis.png",
+      "dpi": 300,
+      "source": "notebooks/News_Article_Analysis_Pipeline.ipynb :: Cell 10 (MapReduce output analysis)",
+      "content": "Top unigrams and bigrams from the Hadoop MapReduce reducer TSV."
+    },
+    {
+      "file": "visualizations/sentiment_analysis.png",
+      "dpi": 300,
+      "source": "notebooks/News_Article_Analysis_Pipeline.ipynb :: Cell 13 (VADER sentiment)",
+      "content": "Notebook sentiment boxplot plus overall sentiment-class pie."
+    },
+    {
+      "file": "visualizations/notebook_wordclouds.png",
+      "dpi": 300,
+      "source": "notebooks/News_Article_Analysis_Pipeline.ipynb :: Cell 18 (interactive word clouds)",
+      "content": "In-notebook per-topic keyword cloud panel."
+    },
+    {
+      "file": "visualizations/notebook_publisher_heatmap.png",
+      "dpi": 300,
+      "source": "notebooks/News_Article_Analysis_Pipeline.ipynb :: Cell 19 (publisher editorial bias)",
+      "content": "Notebook publisher x topic editorial-share heatmap."
+    },
+    {
+      "file": "visualizations/notebook_temporal_trends.png",
+      "dpi": 300,
+      "source": "notebooks/News_Article_Analysis_Pipeline.ipynb :: Cell 20 (temporal evolution)",
+      "content": "Notebook monthly topic-trajectory line chart."
+    },
+    {
+      "file": "visualizations/lda_k_sweep.png",
+      "dpi": 300,
+      "source": "src/lda_topic_selection.py :: k sweep evidence chart",
+      "content": "Perplexity, UMass coherence and topic overlap across k = 3-12. The statistical knee rule selects k = 3 on a 438-term sweep; production retains k = 6 for interpretability and cross-corpus comparability (see data/lda_selection_note.md)."
+    },
+    {
+      "file": "visualizations/temporal_forecast_evaluation.png",
+      "dpi": 300,
+      "source": "src/temporal_forecast_eval.py :: held-out 2024->2025 topic-volume forecast",
+      "content": "Actual vs persistence baseline vs fitted linear trend for the top topics in both corpora; naive persistence was the stronger baseline on these short series."
+    }
+  ]
+}

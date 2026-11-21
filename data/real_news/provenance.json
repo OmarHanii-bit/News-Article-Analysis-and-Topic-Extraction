@@ -2,12 +2,13 @@
   "source_name": "NLTK Reuters-21578 (Reuters news wire)",
   "repository": "NLTK Data \u2014 https://www.nltk.org/nltk_data/",
   "access_method": "nltk.download('reuters') then nltk.corpus.reuters.raw()",
-  "licence": "Reuters-21578 is distributed with NLTK for research use",
+  "licence": "NLTK data distribution, see https://www.nltk.org/nltk_data/ and Reuters-21578 terms of use",
   "documents_available": 10788,
   "documents_ingested": 10712,
   "documents_skipped_too_short": 76,
   "categories": 90,
-  "true_category_labels": [
+  "categories_listed": 25,
+  "sample_of_category_labels": [
     "acq",
     "alum",
     "barley",

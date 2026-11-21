@@ -1,11 +1,11 @@
-# Real Cluster Commands — Apache Hive
+# Production-Equivalent Cluster Command Templates — Apache Hive
 
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Hive (SQL data warehouse over HDFS/Parquet)
-Owner   : Member 3 — Marcus Chen (Distributed Warehouse Engineer)
+Owner   : Member 2 — Priya Sharma (Hadoop Ecosystem & MapReduce Specialist)
 
-These are the **authentic** commands to reproduce this component's workload
-on a real Hive cluster.
+These are **production-equivalent command templates**; the workload was executed
+locally via the Python simulation in `src/hadoop/`.
 
 ## 0. Warehouse location configuration
 ```properties
@@ -14,7 +14,7 @@ hive.metastore.warehouse.dir=hdfs:///user/hive/warehouse
 ```
 By default a **managed** table's data lives under the warehouse directory;
 our `news_articles` table is **EXTERNAL**, so its data stays in the Spark
-output path `/user/news/processed/processed_parquet`.
+output path `/user/news/lakehouse` (partitioned year=/month=).
 
 ## 1. Run the DDL to register the external Parquet table
 ```bash
@@ -51,6 +51,6 @@ hive -f data/hadoop_ecosystem/hive/topic_term_hive.hql
 
 ## 7. Explain a partition-pruned query (proves pruning in the plan)
 ```bash
-hive -e "EXPLAIN SELECT COUNT(*) FROM news_articles WHERE year=2025 AND month=11;"
+hive -e "EXPLAIN SELECT COUNT(*) FROM news_articles WHERE year=2025 AND month=12;"
 ```
 

@@ -164,6 +164,9 @@ def fetch_20newsgroups(max_docs: int = None) -> tuple:
     print("[RealData] Acquiring 20 Newsgroups corpus (real Usenet articles with real dates)...")
     from sklearn.datasets import fetch_20newsgroups
     import email
+    # Import parsedate explicitly: depending on a transitive sklearn/NLTK import
+    # of email.utils makes this call fail in a clean interpreter.
+    from email.utils import parsedate
 
     # remove=() keeps headers AND quoted text so the corpus stays 'messy real data'.
     dataset = fetch_20newsgroups(subset="all", shuffle=False, remove=())
@@ -186,7 +189,7 @@ def fetch_20newsgroups(max_docs: int = None) -> tuple:
         try:
             with open(path, "r", encoding="latin-1") as fh:
                 msg = email.message_from_file(fh)
-            parsed = email.utils.parsedate(msg.get("Date"))
+            parsed = parsedate(msg.get("Date") or "")
             if parsed:
                 year, month = parsed[0], parsed[1]
                 date_str = f"{parsed[0]:04d}-{parsed[1]:02d}-{parsed[2]:02d}"

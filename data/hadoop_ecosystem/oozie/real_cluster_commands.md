@@ -1,7 +1,9 @@
-# Apache Oozie — Real Production Cluster Commands
+# Apache Oozie — Production-Equivalent Cluster Command Templates
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 3 — Marcus Chen (Distributed Warehouse Engineer)
+Owner   : Member 2 — Priya Sharma (Hadoop Ecosystem & MapReduce Specialist)
+
+These are **production-equivalent command templates**; the workload was executed locally via the Python simulation in `src/hadoop/`.
 
 ## 1. Validate the workflow XML before submitting
 
