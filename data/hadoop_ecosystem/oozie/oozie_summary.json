@@ -1,0 +1,14 @@
+{
+  "workflow_actions": [
+    "sqoop_import",
+    "pig_transform",
+    "hive_analytics",
+    "spark_topics",
+    "shell_verify"
+  ],
+  "actions_executed": 5,
+  "actions_skipped": 0,
+  "final_status": "SUCCEEDED",
+  "journal_path": "data/hadoop_ecosystem/oozie/oozie_execution_journal.json",
+  "out_dir": "data/hadoop_ecosystem/oozie"
+}

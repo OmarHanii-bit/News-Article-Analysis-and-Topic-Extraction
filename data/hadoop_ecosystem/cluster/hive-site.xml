@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+    <property>
+        <name>javax.jdo.option.ConnectionURL</name>
+        <value>jdbc:mysql://rdbms-host:3306/hive_metastore?createDatabaseIfNotExist=true</value>
+        <description>The Hive metastore is an RDBMS holding table/partition metadata.</description>
+    </property>
+    <property>
+        <name>hive.metastore.warehouse.dir</name>
+        <value>hdfs://news-namenode-01:8020/user/hive/warehouse</value>
+        <description>Default HDFS location for Hive managed tables.</description>
+    </property>
+    <property>
+        <name>hive.exec.dynamic.partition</name>
+        <value>true</value>
+        <description>Allow dynamic partition inserts (needed for the year/month rollups).</description>
+    </property>
+    <property>
+        <name>hive.exec.dynamic.partition.mode</name>
+        <value>nonstrict</value>
+        <description>Permit dynamic partitioning without requiring a static partition.</description>
+    </property>
+    <property>
+        <name>hive.execution.engine</name>
+        <value>tez</value>
+        <description>Tez DAG engine — materially faster than MapReduce for HiveQL.</description>
+    </property>
+    <property>
+        <name>hive.stats.autogather</name>
+        <value>true</value>
+        <description>Collect column statistics automatically for the cost-based optimiser.</description>
+    </property>
+</configuration>

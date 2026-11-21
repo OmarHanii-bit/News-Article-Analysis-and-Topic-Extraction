@@ -1,0 +1,9 @@
+{
+  "znodes_created": 11,
+  "ephemeral_nodes": 6,
+  "sessions": 4,
+  "leader_elected": "/news-pipeline/election/worker-0000000001",
+  "watches_fired": 3,
+  "config_version": 1,
+  "out_dir": "data/hadoop_ecosystem/zookeeper"
+}

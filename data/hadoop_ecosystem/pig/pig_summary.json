@@ -1,0 +1,24 @@
+{
+  "component": "pig_transform",
+  "scripts_generated": [
+    "data/hadoop_ecosystem/pig/01_clean_and_count.pig",
+    "data/hadoop_ecosystem/pig/02_topic_publisher_join.pig",
+    "data/hadoop_ecosystem/pig/03_sentiment_filter.pig"
+  ],
+  "scripts_executed": 3,
+  "relations_created": 24,
+  "output_files": [
+    "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000",
+    "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000",
+    "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
+  ],
+  "staged_input": "data/hadoop_ecosystem/pig/staging/enriched_articles.csv",
+  "staged_rows": 6000,
+  "execution_log": "data/hadoop_ecosystem/pig/pig_execution_log.json",
+  "real_cluster_commands": "data/hadoop_ecosystem/pig/real_cluster_commands.md",
+  "hdfs_commands": [
+    "hdfs dfs -mkdir -p hdfs:///user/news/pig",
+    "hdfs dfs -put 01_clean_and_count.pig hdfs:///user/news/pig/"
+  ],
+  "out_dir": "data/hadoop_ecosystem/pig"
+}
