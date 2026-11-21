@@ -36,6 +36,10 @@ def map_kaggle_row_chunk(chunk, chunk_idx, default_category="General"):
     """
     Transforms a heterogeneous Kaggle chunk into the canonical 12-attribute schema.
     """
+    # pandas' chunked reader keeps a CONTINUOUS index across chunks (0-4, 5-9, ...).
+    # Re-basing to 0..n-1 keeps every Series assignment below row-aligned; without
+    # this, chunks after the first union their index and inject NaN rows.
+    chunk = chunk.reset_index(drop=True)
     df_mapped = pd.DataFrame()
     n_rows = len(chunk)
 
@@ -153,7 +157,7 @@ def ingest_kaggle_file(
     first_chunk = True
 
     try:
-        reader = pd.read_csv(input_file_path, chunksize=chunk_size, encoding="utf-8", errors="replace")
+        reader = pd.read_csv(input_file_path, chunksize=chunk_size, encoding="utf-8", encoding_errors="replace")
         for chunk_idx, chunk in enumerate(reader):
             df_clean = map_kaggle_row_chunk(chunk, chunk_idx)
             if df_clean.empty:
@@ -189,8 +193,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ingest and adapt Kaggle 'All the News' CSV into pipeline schema.")
     parser.add_argument("--input", "-i", type=str, default="data/all-the-news.csv", help="Path to raw Kaggle CSV file")
     parser.add_argument("--output", "-o", type=str, default="data/raw_news_articles.csv", help="Target output CSV path")
-    parser.add_argument("--limit", "-l", type=int, default=None, help="Maximum number of articles to ingest")
-    parser.add_argument("--chunksize", "-c", type=int, default=10000, help="Chunk size for streaming processing")
+    # "--max-rows" / "--chunk-size" are the flag spellings documented in README Method 7.
+    parser.add_argument("--limit", "-l", "--max-rows", dest="limit", type=int, default=None, help="Maximum number of articles to ingest")
+    parser.add_argument("--chunksize", "-c", "--chunk-size", dest="chunksize", type=int, default=10000, help="Chunk size for streaming processing")
 
     args = parser.parse_args()
     ingest_kaggle_file(args.input, args.output, args.chunksize, args.limit)

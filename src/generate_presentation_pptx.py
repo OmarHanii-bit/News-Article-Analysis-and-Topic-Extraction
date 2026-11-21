@@ -347,7 +347,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "Real Corpus: 10,712 articles, auto-derived labels from learned top terms (Mln/Tonnes, Pct/Bank/Rate, Trade/Japan/Market).",
         "Corpus-Agnostic Design: python src/spark_pipeline.py --input-csv <corpus> --auto-labels.",
         "Outputs: data/real_news/processed_parquet/ and data/real_news/pipeline_analytics_summary.json.",
-        "Validation: 39 automated tests pass (incl. 11 Hadoop-ecosystem assertions); both lakehouses verified coherent."
+        "Validation: 53 automated tests pass (incl. 11 Hadoop-ecosystem assertions); both lakehouses verified coherent."
     ], highlight=True)
 
     # =========================================================================

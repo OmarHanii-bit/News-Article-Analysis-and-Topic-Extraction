@@ -9,7 +9,7 @@
 
 ## 📋 Project Summary
 
-This directory represents the **single, unified, and complete Big Data project deliverable**. It integrates all foundational baseline implementations (data synthesis, Hadoop MapReduce, PySpark distributed engine, MongoDB NoSQL, Snappy Parquet lakehouse) together with all advanced production capabilities: a **full 9-service Hadoop ecosystem layer** (HDFS, YARN, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), a **dual-corpus design** (6,000-article synthetic benchmark + 10,712-article real Reuters wire corpus), one-click orchestrators, an automated **39-test** suite, a 17-slide PowerPoint deck, streaming Kaggle ingestion, and Docker multi-container deployment.
+This directory represents the **single, unified, and complete Big Data project deliverable**. It integrates all foundational baseline implementations (data synthesis, Hadoop MapReduce, PySpark distributed engine, MongoDB NoSQL, Snappy Parquet lakehouse) together with all advanced production capabilities: a **full 9-service Hadoop ecosystem layer** (HDFS, YARN, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), a **dual-corpus design** (6,000-article synthetic benchmark + 10,712-article real Reuters wire corpus), one-click orchestrators, an automated **53-test** suite, a 17-slide PowerPoint deck, streaming Kaggle ingestion, and Docker multi-container deployment.
 
 ---
 
@@ -23,7 +23,7 @@ This directory represents the **single, unified, and complete Big Data project d
 | **4** | **Elena Rostova** | **NLP & Machine Learning Scientist** | Distributed TF-IDF vectorization, PySpark MLlib Latent Dirichlet Allocation (Online LDA), VADER sentiment scoring UDF |
 | **5** | **Tariq Al-Mansoor** | **NoSQL & MongoDB Specialist** | MongoDB polymorphic document modeling, BSON schema design, compound B-tree & text search indexes, aggregation pipelines (`src/mongo_loader.py`) |
 | **6** | **Sophia Taylor** | **Visualization & Dashboard Lead** | Publication-quality chart generator ($300\text{ DPI}$), semantic word cloud grids, interactive Streamlit executive dashboard (`src/dashboard.py`) |
-| **7** | **David Kim** | **QA, Benchmarking & Presentation Lead** | Automated 39-test suite (`tests/`), cluster benchmarking, 17-slide PowerPoint deck (`presentation/`), technical Q&A defense |
+| **7** | **David Kim** | **QA, Benchmarking & Presentation Lead** | Automated 53-test suite (`tests/`), cluster benchmarking, 17-slide PowerPoint deck (`presentation/`), technical Q&A defense |
 
 ---
 
@@ -103,14 +103,15 @@ c:\News Article Analysis and Topic Extraction\
 │   ├── interactive_dashboard.html     # Self-contained offline Plotly dashboard, synthetic corpus (5.0 MB)
 │   └── interactive_dashboard_real.html # Same dashboard for the real Reuters corpus (5.1 MB)
 │
-├── tests/                             # Automated Test Suite (39/39 Passing)
+├── tests/                             # Automated Test Suite (53/53 Passing)
 │   ├── run_tests.py                   # Unified test runner
 │   ├── test_mapreduce.py              # MapReduce regex, stopwords & bigram unit tests
 │   ├── test_spark_schema.py           # StructType schema & VADER sentiment UDF tests
 │   ├── test_mongo_schema.py           # BSON document integrity & indexing tests
 │   ├── test_hadoop_ecosystem.py       # HDFS/YARN/Hive/HBase/Pig/Sqoop/Flume/Oozie/ZooKeeper tests
 │   ├── test_dashboard.py              # Streamlit app + offline Plotly HTML dashboard regression tests
-│   └── test_data_integrity.py         # Dataset, Parquet, and asset integrity tests (data-driven)
+│   ├── test_data_integrity.py         # Dataset, Parquet, and asset integrity tests (data-driven)
+│   └── test_ingest_kaggle.py          # Kaggle adapter: column mapping, chunked streaming, CLI contract
 │
 ├── visualizations/                    # 12 Publication-Quality Visual Assets (300 DPI PNG)
 │   ├── topic_volume_distribution.png  # Baseline chart 1
@@ -130,6 +131,26 @@ c:\News Article Analysis and Topic Extraction\
     ├── News_Article_Analysis_Presentation.pptx # Widescreen 16:9 17-slide PowerPoint deck
     └── slide_deck_outline.md          # 17-slide speaking notes, demo runbook & 12 Q&A defense answers
 ```
+
+---
+
+## 📊 Visual Analytics Gallery
+
+Three of the twelve 300 DPI charts rendered by `src/visualize_analytics.py` (the complete set is in [`visualizations/`](visualizations/)). These are static PNGs; the interactive, filterable versions of the same views are in the Streamlit dashboard (Method 2).
+
+**Topic Volume Distribution — 6,000-article synthetic benchmark**
+
+![Topic volume distribution across the LDA topics](visualizations/topic_volume_distribution.png)
+
+**Temporal Topic Trajectories — monthly share per topic**
+
+![Monthly topic share trajectories](visualizations/temporal_topic_trends.png)
+
+**Publisher × Topic Heatmap — editorial concentration**
+
+![Publisher by topic heatmap](visualizations/publisher_topic_heatmap.png)
+
+> Run `streamlit run src/dashboard.py` (or open the self-contained `dashboard/interactive_dashboard.html`) for the interactive versions: drag-to-zoom sentiment box plots, semantic topic treemaps, the corpus switcher, and the Hadoop ecosystem evidence panel.
 
 ---
 
@@ -169,7 +190,7 @@ Double-click `run_all.bat`.
 | **6** | **MongoDB NoSQL Ingestion** | `src/mongo_loader.py` | Ingests 3 collections & builds B-tree/text indexes (with offline JSON fallback) |
 | **7** | **Visual Analytics Suite** | `src/visualize_analytics.py` | Renders 12 publication-grade 300 DPI charts and word clouds (`visualizations/`) |
 | **8** | **PowerPoint Presentation Deck** | `src/generate_presentation_pptx.py` | Generates 16:9 widescreen 17-slide deck (`presentation/News_Article_Analysis_Presentation.pptx`) |
-| **9** | **Automated Test Suite** | `tests/run_tests.py` | Executes 39 unit & integration tests with 0 failures |
+| **9** | **Automated Test Suite** | `tests/run_tests.py` | Executes 53 unit & integration tests with 0 failures |
 
 > **Interactive Dashboard:** launch separately with `streamlit run src/dashboard.py` (see Method 2).
 
@@ -235,7 +256,7 @@ Each component of the architecture can be run standalone from the project root:
 | **6** | **MongoDB NoSQL Load** | `python src/mongo_loader.py` | `data/mongodb_offline_collections/` |
 | **7** | **Generate Charts (300 DPI)** | `python src/visualize_analytics.py` | `visualizations/*.png` (12 charts) |
 | **8** | **Build Slide Deck** | `python src/generate_presentation_pptx.py` | `presentation/News_Article_Analysis_Presentation.pptx` (17 slides) |
-| **9** | **Run Test Suite** | `python tests/run_tests.py` | 39 unit & regression test reports |
+| **9** | **Run Test Suite** | `python tests/run_tests.py` | 53 unit & regression test reports |
 | **10** | **Build Offline HTML Dashboards** | `python src/build_interactive_dashboard.py` | `dashboard/interactive_dashboard.html` + `interactive_dashboard_real.html` (self-contained Plotly) |
 | **11** | **Export Report to Word** | `python src/export_report_docx.py` | `PROJECT_REPORT.docx` (Markdown source left intact) |
 
@@ -249,13 +270,14 @@ To independently verify all data contracts, schemas, and processing algorithms:
 python tests/run_tests.py
 ```
 
-The test runner validates 39 assertions across 6 specialized test modules:
+The test runner validates 53 assertions across 7 specialized test modules:
 - `test_mapreduce.py`: Verifies HTML tag stripping, URL removal, entity decoding (`&amp;`), stopword purging, and bigram generation.
 - `test_spark_schema.py`: Verifies PySpark `StructType` schema enforcement, null handling, VADER sentiment bounds $[-1.0, +1.0]$, and dominant topic indexing.
 - `test_mongo_schema.py`: Verifies BSON document schema validity, field completeness, and index specifications.
 - `test_data_integrity.py`: Data-driven verification of raw CSV row counts, Parquet partition structures (`year=*/month=*`), summary JSON invariants (`total_articles_processed` matches the lakehouse row count, `num_topics` matches the emitted topic list), slide-deck validity, and the real-corpus artifacts (`label_mode == "auto"`) when present.
 - `test_hadoop_ecosystem.py`: Verifies all 9 ecosystem services executed without failure, HDFS block integrity ($\text{logical} \times 3 = \text{physical}$, $3\times$ replication, 3 live DataNodes, 0 missing blocks), cluster config files, ZooKeeper coordination, the Sqoop transfer, Flume ingestion, the HBase column-family store ($\ge 3$ families), Hive queries + result CSVs, Pig Latin ETL, and the Oozie workflow terminating `SUCCEEDED`.
 - `test_dashboard.py`: Regression-tests the interactive layer — the dual-corpus registry, the seven-figure Plotly builder for both corpora, the HDFS-invariant ecosystem panel, the self-contained and corpus-specific HTML artifacts (the real dashboard must not fall back to synthetic data), and a headless `AppTest` smoke run of the Streamlit application.
+- `test_ingest_kaggle.py`: Exercises the external-dataset adapter (`src/ingest_kaggle_real.py`) — polymorphic column mapping onto the canonical 12-attribute schema, temporal decomposition, id namespacing and fallback, the mandatory full-text column contract, the $\ge 15$-word hygiene filter, chunked streaming across multiple chunks (index re-basing), the `--max-rows` cap, and the documented CLI flags end to end.
 
 ---
 
