@@ -1,6 +1,10 @@
 # 📰 News Article Analysis and Topic Extraction
 ## Complete Big Data Architecture & Machine Learning Pipeline
 
+[![Big Data Pipeline CI](https://github.com/OmarHanii-bit/News-Article-Analysis-and-Topic-Extraction/actions/workflows/ci.yml/badge.svg)](https://github.com/OmarHanii-bit/News-Article-Analysis-and-Topic-Extraction/actions/workflows/ci.yml)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 **Course:** Big Data Analytics & Distributed Systems  
 **Ecosystem:** Hadoop Ecosystem (HDFS · YARN · MapReduce · Hive · HBase · Pig · Sqoop · Flume · Oozie · ZooKeeper) — 9 orchestrated ecosystem modules covering 10 named technologies · Apache Spark (PySpark MLlib) · MongoDB NoSQL · Parquet · Streamlit  
 **Status:** Unified Master Deliverable (Baseline Core + Advanced Production Extensions Consolidated)
