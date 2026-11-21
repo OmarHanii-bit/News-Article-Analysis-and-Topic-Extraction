@@ -117,7 +117,7 @@
 - **Speaker:** Alex Vance (Project Lead)
 - **Core Headings:**
   - **Authentic Dataset:** NLTK Reuters-21578 news wire corpus — genuine article text (not just headlines).
-  - **Scale:** 10,712 full-text articles ingested (1,377,941 words; mean 128.6 words/article) across 90 authentic Reuters categories.
+  - **Scale:** 10,712 full-text articles ingested (1,377,941 words; mean 128.6 words/article) across the 90-category Reuters taxonomy (25 sampled labels recorded in `provenance.json`).
   - **Honest Provenance:** Reuters-21578 carries no timestamps, so dates are derived deterministically across 2024–2025 for `year`/`month` partitioning.
   - **Schema-Faithful:** mapped to the identical 12-column canonical contract, so zero pipeline code changes were required.
   - **One Pipeline, Two Corpora:** `python src/spark_pipeline.py --input-csv <corpus> --auto-labels` — synthetic (6,000) and real (10,712) lakehouses both produced and verified.

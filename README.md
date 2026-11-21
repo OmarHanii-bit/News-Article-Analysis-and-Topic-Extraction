@@ -37,7 +37,11 @@ c:\News Article Analysis and Topic Extraction\
 ├── PROJECT_REPORT.md                  # Comprehensive academic capstone report (target rubric alignment; instructor final)
 ├── PROJECT_REPORT.docx                # Word export of the report with embedded figure gallery (generated)
 ├── README.md                          # Master documentation & architectural reference
-├── requirements.txt                   # Complete Python dependencies
+├── LICENSE                            # MIT for code; dataset licences noted separately
+├── requirements.txt                   # Flexible runtime dependencies (lower bounds)
+├── requirements.lock.txt              # Pinned exact versions for reproducibility
+├── requirements-dev.txt               # Runtime deps + test tooling (pytest)
+├── .env.example                       # Optional env overrides (Mongo, Spark, Kaggle)
 ├── Dockerfile                         # Multi-stage image (Python 3.11 + OpenJDK 17 + Streamlit)
 ├── docker-compose.yml                 # Multi-container orchestration (MongoDB + Pipeline + Jupyter)
 ├── .dockerignore                      # Docker build ignore rules
@@ -206,6 +210,9 @@ Regenerate all evidence: `python src/lda_topic_selection.py`, `python src/tempor
   ```powershell
   pip install -r requirements.txt
   ```
+  For byte-for-byte reproducibility, install the pinned lock file instead: `pip install -r requirements.lock.txt`. Optional environment overrides (Mongo URI, Spark master/memory, Kaggle credentials) are documented in `.env.example`; every variable has a safe default.
+
+> **Fresh clone note:** the canonical raw datasets (`data/raw_news_articles.csv`, `data/real_news/raw_news_articles_real.csv`), the Word report and both offline HTML dashboards are **committed**, so the project is inspectable immediately. Large *regenerable* intermediates — the Parquet lakehouses, MongoDB offline collections and simulated HDFS block files — are intentionally git-ignored; materialize them with `python run_all.py` (or the individual stages below) before running the full test suite. Tests that depend on absent artifacts report as **skipped**, and the runner fails if fewer than the 53-test baseline actually *execute*.
 
 ---
 

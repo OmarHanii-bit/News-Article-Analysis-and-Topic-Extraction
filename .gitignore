@@ -10,20 +10,15 @@ env/
 # Notebooks
 .ipynb_checkpoints/
 
-# Large generated datasets & build artifacts
-data/raw_news_articles.csv
-data/real_news/raw_news_articles_real.csv
+# Regenerable intermediate build artifacts (produced by run_all.py)
+# The canonical raw datasets ARE committed so a fresh clone is self-contained;
+# only large regenerable intermediates and simulation block files are ignored.
 data/processed_parquet/
 data/real_news/processed_parquet/
 data/mongodb_offline_collections/
 data/hadoop_ecosystem/hdfs/
 data/hadoop_ecosystem/*.log
 *.log
-
-# Self-contained dashboard exports & report renders (regenerable from source)
-dashboard/interactive_dashboard.html
-dashboard/interactive_dashboard_real.html
-PROJECT_REPORT.docx
 
 # OS / editor
 .DS_Store

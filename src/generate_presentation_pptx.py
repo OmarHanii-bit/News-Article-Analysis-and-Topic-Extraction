@@ -385,7 +385,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     add_header(s_real, "Real-World Corpus Validation: Reuters-21578 Wire Archive",
                "Dataset & Generalisation", "Alex Vance")
     add_card(s_real, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Authentic Full-Text Dataset", [
-        "Source: NLTK Reuters-21578 news wire corpus (10,788 documents) — genuine article text, not just headlines.",
+        "Source: NLTK Reuters-21578 news wire corpus (10,788 available -> 10,712 ingested; 76 too short) - genuine article text, not just headlines.",
         "Ingested: 10,712 full-text articles (1,377,941 words; mean 128.6 words/article).",
         "Ground Truth: 90 Reuters topic categories in the source taxonomy (25 sampled labels recorded in provenance.json; acq, crude, earn, trade, cpu...).",
         "Honest Provenance: Reuters-21578 carries no timestamps, so dates are derived deterministically across 2024-2025 for year/month partitioning.",

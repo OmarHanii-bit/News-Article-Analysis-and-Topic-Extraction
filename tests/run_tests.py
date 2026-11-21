@@ -30,19 +30,30 @@ def run_all_tests():
     result = runner.run(suite)
     
     elapsed = time.time() - start_time
+    # `testsRun` counts discovered tests INCLUDING ones that skipped, so a run
+    # where most artifact-dependent tests silently skipped would still look
+    # healthy. We therefore guard on the number actually EXECUTED.
+    executed = result.testsRun - len(result.skipped)
     print("\n" + "=" * 80)
     print("Test Run Summary:")
-    print(f"  - Tests Executed: {result.testsRun}")
-    print(f"  - Failures:       {len(result.failures)}")
-    print(f"  - Errors:         {len(result.errors)}")
-    print(f"  - Time Elapsed:   {elapsed:.2f} seconds")
+    print(f"  - Tests Discovered: {result.testsRun}")
+    print(f"  - Tests Executed:   {executed}")
+    print(f"  - Skipped:          {len(result.skipped)}")
+    print(f"  - Failures:         {len(result.failures)}")
+    print(f"  - Errors:           {len(result.errors)}")
+    print(f"  - Time Elapsed:     {elapsed:.2f} seconds")
     print("=" * 80)
+    if result.skipped:
+        print(f"[NOTE] {len(result.skipped)} test(s) skipped (usually because generated "
+              f"artifacts are absent). Run `python run_all.py` to materialize them.")
 
-    # Guard against discovery regressions on Windows / CI: never accept a run
-    # with fewer tests than the established baseline (53).
-    if result.testsRun < MIN_EXPECTED_TESTS:
-        print(f"[FAIL] Only {result.testsRun} tests ran; expected at least "
-              f"{MIN_EXPECTED_TESTS}. Discovery may have dropped a module.")
+    # Guard against discovery regressions AND against mass-skipping: require the
+    # historical baseline (53) of tests to actually EXECUTE, not merely be found.
+    if executed < MIN_EXPECTED_TESTS:
+        print(f"[FAIL] Only {executed} tests executed (discovered {result.testsRun}, "
+              f"skipped {len(result.skipped)}); expected at least {MIN_EXPECTED_TESTS} "
+              f"executed. Discovery may have dropped a module, or required artifacts "
+              f"are missing -- run `python run_all.py` first.")
         return 1
 
     if result.wasSuccessful():
