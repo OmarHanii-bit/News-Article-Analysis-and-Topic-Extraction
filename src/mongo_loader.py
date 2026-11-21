@@ -28,7 +28,7 @@ import os
 import sys
 import json
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Import PyMongo
 try:
@@ -98,7 +98,7 @@ class NewsMongoManager:
                 "terms": topic_info["terms"],
                 "weights": topic_info["weights"],
                 "label_summary": topic_info["label_summary"],
-                "created_at": datetime.utcnow()
+                "created_at": datetime.now(timezone.utc)
             }
             topic_docs.append(doc)
 

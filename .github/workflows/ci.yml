@@ -1,0 +1,69 @@
+# ============================================================================
+# Continuous Integration: News Article Analysis and Topic Extraction
+# ============================================================================
+# Verifies every push / pull request by:
+#   1. Statically compiling all pipeline source and test modules.
+#   2. Regenerating the full pipeline artifacts (Hadoop ecosystem, PySpark
+#      lakehouse, MongoDB collections, visualizations, offline dashboards).
+#   3. Running the authoritative 39-test suite and failing the build on error.
+#
+# Note: the integration tests read generated lakehouse artifacts (raw CSV,
+# Snappy Parquet, offline MongoDB collections) which are intentionally
+# .gitignore'd, so the pipeline is regenerated inside the runner first.
+# ============================================================================
+
+name: Big Data Pipeline CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pipeline-verification:
+    name: Pipeline Build & 39-Test Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      SPARK_LOCAL_IP: 127.0.0.1
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Set up Java 17 (PySpark / Hadoop runtime)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Pre-download NLTK corpora (VADER, stopwords, Reuters wire)
+        run: python -m nltk.downloader -q vader_lexicon stopwords punkt reuters
+
+      - name: Static compile check (all source & tests)
+        run: python -m compileall -q src tests run_all.py
+
+      - name: Generate pipeline artifacts (Hadoop, PySpark, MongoDB, viz)
+        run: python run_all.py --non-interactive
+
+      - name: Run automated test suite (39 tests)
+        run: python tests/run_tests.py
