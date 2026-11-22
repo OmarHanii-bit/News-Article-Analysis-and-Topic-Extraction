@@ -163,7 +163,7 @@
       "output_files": [
         "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000"
       ],
-      "elapsed_ms": 2049.571,
+      "elapsed_ms": 1860.541,
       "status": "SUCCESS"
     },
     {
@@ -173,7 +173,7 @@
       "output_files": [
         "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000"
       ],
-      "elapsed_ms": 688.073,
+      "elapsed_ms": 518.706,
       "status": "SUCCESS"
     },
     {
@@ -183,7 +183,7 @@
       "output_files": [
         "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
       ],
-      "elapsed_ms": 185.148,
+      "elapsed_ms": 179.275,
       "status": "SUCCESS"
     }
   ]

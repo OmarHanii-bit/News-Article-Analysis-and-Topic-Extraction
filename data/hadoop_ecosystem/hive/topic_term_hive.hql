@@ -2,7 +2,7 @@
 --  topic_term_hive.hql
 --  Project: News Article Analysis and Topic Extraction (Big Data Architecture)
 --  Component: Apache Hive data warehouse
---  Owner  : Member 3 — Marcus Chen (Distributed Warehouse Engineer)
+--  Owner  : Member 3 — Yasmine Mohamed (Distributed Warehouse Engineer)
 --  Purpose: Register the MapReduce term-frequency TSV as an external table
 --           and join it with the LDA topic->term dimension.
 --  Run    : hive -f topic_term_hive.hql

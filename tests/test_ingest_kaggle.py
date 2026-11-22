@@ -2,8 +2,8 @@
 Unit Tests: Kaggle 'All the News' Ingestion Adapter
 ===================================================
 Component: External Dataset Ingestion & Schema Adaptation Suite
-Author: Alex Vance (Project Lead & Solutions Architect)
-        David Kim (QA, Benchmarking & Presentation Lead)
+Author: Omar Hani (Project Lead & Solutions Architect)
+        Mazen Salem (QA, Benchmarking & Presentation Lead)
 
 Covers src/ingest_kaggle_real.py, the chunked adapter that normalizes
 heterogeneous Kaggle news CSV schema variants into the canonical 12-attribute

@@ -3,7 +3,7 @@ Apache ZooKeeper Coordination Layer (Distributed Coordination Services)
 =======================================================================
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache ZooKeeper — leader election, distributed config & locks
-Owner   : Member 2 — Priya Sharma (Hadoop & Cluster Specialist)
+Owner   : Member 2 — Mohammed Hossam (Hadoop & Cluster Specialist)
 
 WHAT THIS MODULE DOES
 ---------------------
@@ -404,7 +404,7 @@ def _write_zoo_cfg(path: str, data_dir: str) -> None:
     text = f"""# =============================================================================
 # zoo.cfg — Apache ZooKeeper ensemble configuration
 # Project : News Article Analysis and Topic Extraction (Big Data Architecture)
-# Owner   : Member 2 — Priya Sharma (Hadoop & Cluster Specialist)
+# Owner   : Member 2 — Mohammed Hossam (Hadoop & Cluster Specialist)
 #
 # A ZooKeeper ensemble must have an ODD number of nodes (2n+1) so that it can form
 # a quorum and tolerate the loss of n nodes. This cluster runs a 3-node ensemble.
@@ -441,7 +441,7 @@ def _write_real_cluster_commands(path: str, stats: dict) -> None:
     md = f"""# Apache ZooKeeper — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 2 — Priya Sharma (Hadoop & Cluster Specialist)
+Owner   : Member 2 — Mohammed Hossam (Hadoop & Cluster Specialist)
 
 ## 1. Start / stop a ZooKeeper node
 

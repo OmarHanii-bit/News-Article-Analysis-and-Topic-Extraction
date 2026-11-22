@@ -55,9 +55,9 @@ def generate_realistic_news_dataset(
     ]
     
     authors = [
-        "Sarah Jenkins", "Michael Chang", "Elena Rostova", "David Vance",
+        "Sarah Jenkins", "Michael Chang", "Shehab Osama", "David Vance",
         "Amara Okafor", "Julian Sterling", "Hana Tanaka", "Carlos Mendez",
-        "Rachel Green", "Liam O'Connor", "Priya Sharma", "Staff Correspondent"
+        "Rachel Green", "Liam O'Connor", "Mohammed Hossam", "Staff Correspondent"
     ]
 
     domains = {

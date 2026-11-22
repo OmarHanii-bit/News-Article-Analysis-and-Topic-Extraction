@@ -1,13 +1,15 @@
 {
   "manifest_version": 1,
-  "description": "Canonical inventory of the 14 publication-quality static visualization assets used by PROJECT_REPORT.md, the presentation deck and the dashboard galleries. Every asset is rendered at 300 DPI.",
+  "description": "Canonical inventory of the 17 publication-quality static visualization assets used by PROJECT_REPORT.md, the presentation deck and the dashboard galleries. Every asset is rendered at 300 DPI.",
   "dpi": 300,
-  "artifact_count": 14,
+  "artifact_count": 17,
   "regeneration": {
     "pipeline_charts": "python src/visualize_analytics.py",
     "k_sweep": "python src/lda_topic_selection.py",
     "forecast_evaluation": "python src/temporal_forecast_eval.py",
-    "notebook_charts": "python scripts/reexecute_notebook.py (nbconvert --execute --inplace)"
+    "notebook_charts": "python scripts/reexecute_notebook.py (nbconvert --execute --inplace)",
+    "supervised_classification": "python src/supervised_classifier.py",
+    "topic_drift": "python src/topic_drift_monitor.py"
   },
   "artifacts": [
     {
@@ -93,6 +95,24 @@
       "dpi": 300,
       "source": "src/temporal_forecast_eval.py :: held-out 2024->2025 topic-volume forecast",
       "content": "Actual vs persistence baseline vs fitted linear trend for the top topics in both corpora; naive persistence was the stronger baseline on these short series."
+    },
+    {
+      "file": "visualizations/supervised_model_comparison.png",
+      "dpi": 300,
+      "source": "src/supervised_classifier.py :: model benchmark",
+      "content": "Held-out accuracy and macro-F1 across benchmarked classifiers on Reuters-21578; Linear SVM (SGD) selected."
+    },
+    {
+      "file": "visualizations/supervised_confusion_matrix.png",
+      "dpi": 300,
+      "source": "src/supervised_classifier.py :: confusion matrix",
+      "content": "Row-normalised confusion matrix for the selected classifier across the evaluated editorial categories."
+    },
+    {
+      "file": "visualizations/topic_drift_monitoring.png",
+      "dpi": 300,
+      "source": "src/topic_drift_monitor.py :: quarterly JSD/PSI",
+      "content": "Quarterly Jensen-Shannon divergence and Population Stability Index against alert thresholds; all windows remained within stable bounds."
     }
   ]
 }

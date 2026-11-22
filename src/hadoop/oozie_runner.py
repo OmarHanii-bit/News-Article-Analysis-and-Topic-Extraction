@@ -3,7 +3,7 @@ Apache Oozie Workflow / Coordinator Orchestration Layer
 =======================================================
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Oozie — DAG orchestration of the whole news pipeline
-Owner   : Member 3 — Marcus Chen (Distributed Warehouse Engineer)
+Owner   : Member 3 — Yasmine Mohamed (Distributed Warehouse Engineer)
 
 WHAT THIS MODULE DOES
 ---------------------
@@ -204,7 +204,7 @@ def _write_job_properties(path: str, workflow_dir: str) -> str:
     """Write the real `job.properties` consumed by `oozie job -config`."""
     text = f"""# job.properties — Oozie job configuration
 # Project : News Article Analysis and Topic Extraction (Big Data Architecture)
-# Owner   : Member 3 — Marcus Chen (Distributed Warehouse Engineer)
+# Owner   : Member 3 — Yasmine Mohamed (Distributed Warehouse Engineer)
 
 nameNode=hdfs://news-namenode-01:8020
 jobTracker=news-rm-01:8032
@@ -225,7 +225,7 @@ def _write_real_cluster_commands(path: str, stats: dict) -> None:
     md = f"""# Apache Oozie — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 3 — Marcus Chen (Distributed Warehouse Engineer)
+Owner   : Member 3 — Yasmine Mohamed (Distributed Warehouse Engineer)
 
 ## 1. Validate the workflow XML before submitting
 

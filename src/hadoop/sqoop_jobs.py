@@ -3,7 +3,7 @@ Apache Sqoop Bulk Transfer Layer (RDBMS <-> HDFS/Hive)
 ======================================================
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Sqoop — bulk data movement between a relational database and HDFS/Hive
-Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & Data Integration Specialist)
+Owner   : Member 5 — Mohamed Ibrahim (NoSQL & Data Integration Specialist)
 
 WHAT THIS MODULE DOES
 ---------------------
@@ -241,7 +241,7 @@ def _write_real_cluster_commands(path: str, stats: dict) -> None:
     md = f"""# Apache Sqoop — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & Data Integration Specialist)
+Owner   : Member 5 — Mohamed Ibrahim (NoSQL & Data Integration Specialist)
 
 These are the genuine Sqoop command lines used to perform the very same
 RDBMS <-> HDFS/Hive transfers that this module simulates locally.

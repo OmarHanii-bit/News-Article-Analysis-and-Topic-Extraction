@@ -2,7 +2,7 @@
 Integration Tests: Hadoop Ecosystem Component Verification
 ==========================================================
 Component: QA, Storage & Benchmarking Suite
-Author: David Kim (QA, Benchmarking & Presentation Lead)
+Author: Mazen Salem (QA, Benchmarking & Presentation Lead)
 
 Verifies that the full Hadoop Ecosystem execution produced coherent evidence:
 HDFS storage integrity, YARN/cluster configuration, and the analytical services

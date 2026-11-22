@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this pipeline or its evaluation artifacts, please cite it as below."
+title: "News Article Analysis and Topic Extraction: A Big Data Architecture & NLP Pipeline"
+abstract: >-
+  An end-to-end big data pipeline over news text: Hadoop ecosystem simulation
+  (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper),
+  PySpark LDA topic modeling and VADER sentiment scoring, a Snappy Parquet
+  lakehouse, MongoDB document storage, supervised Reuters-21578 classification,
+  live RSS ingestion, Structured Streaming, topic-drift monitoring, Streamlit
+  and offline Plotly dashboards.
+authors:
+  - family-names: "Hanii"
+    given-names: "Omar"
+    alias: "OmarHanii-bit"
+version: "2.1.0"
+date-released: "2026-11-21"
+license: MIT
+repository-code: "https://github.com/OmarHanii-bit/News-Article-Analysis-and-Topic-Extraction"
+keywords:
+  - big data
+  - hadoop
+  - pyspark
+  - latent dirichlet allocation
+  - topic modeling
+  - sentiment analysis
+  - parquet
+  - mongodb
+  - news analytics

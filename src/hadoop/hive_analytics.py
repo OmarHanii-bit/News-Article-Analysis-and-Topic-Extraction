@@ -3,7 +3,7 @@ Apache Hive Data-Warehouse Analytics (Local SQL Simulation + Real HiveQL Generat
 ===================================================================================
 Project  : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Hive - SQL data warehouse over the HDFS / Parquet lakehouse.
-Owner    : Member 3 - Marcus Chen (Distributed Warehouse Engineer)
+Owner    : Member 3 - Yasmine Mohamed (Distributed Warehouse Engineer)
 
 WHAT THIS MODULE DOES
 ---------------------
@@ -169,7 +169,7 @@ def generate_hive_ddl(parquet_dir: str = DEFAULT_PARQUET_DIR,
         "--  news_analytics.hql",
         "--  Project: News Article Analysis and Topic Extraction (Big Data Architecture)",
         "--  Component: Apache Hive data warehouse",
-        "--  Owner  : Member 3 — Marcus Chen (Distributed Warehouse Engineer)",
+        "--  Owner  : Member 3 — Yasmine Mohamed (Distributed Warehouse Engineer)",
         "--  Run    : hive -f news_analytics.hql",
         "-- ==========================================================================",
         "",
@@ -279,7 +279,7 @@ def generate_hive_ddl(parquet_dir: str = DEFAULT_PARQUET_DIR,
         "--  topic_term_hive.hql",
         "--  Project: News Article Analysis and Topic Extraction (Big Data Architecture)",
         "--  Component: Apache Hive data warehouse",
-        "--  Owner  : Member 3 — Marcus Chen (Distributed Warehouse Engineer)",
+        "--  Owner  : Member 3 — Yasmine Mohamed (Distributed Warehouse Engineer)",
         "--  Purpose: Register the MapReduce term-frequency TSV as an external table",
         "--           and join it with the LDA topic->term dimension.",
         "--  Run    : hive -f topic_term_hive.hql",
@@ -336,7 +336,7 @@ def _build_real_cluster_commands(out_dir: str,
         "",
         "Project : News Article Analysis and Topic Extraction (Big Data Architecture)",
         "Component: Apache Hive (SQL data warehouse over HDFS/Parquet)",
-        "Owner   : Member 3 — Marcus Chen (Distributed Warehouse Engineer)",
+        "Owner   : Member 3 — Yasmine Mohamed (Distributed Warehouse Engineer)",
         "",
         "These are the **authentic** commands to reproduce this component's workload",
         "on a real Hive cluster.",

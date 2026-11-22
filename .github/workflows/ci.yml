@@ -5,7 +5,7 @@
 #   1. Statically compiling all pipeline source and test modules.
 #   2. Regenerating the full pipeline artifacts (Hadoop ecosystem, PySpark
 #      lakehouse, MongoDB collections, visualizations, offline dashboards).
-#   3. Running the authoritative full test suite (106+ tests) and failing the build on error.
+#   3. Running the authoritative full test suite (113+ tests) and failing the build on error.
 #
 # Note: the integration tests read generated lakehouse artifacts (raw CSV,
 # Snappy Parquet, offline MongoDB collections) which are intentionally
@@ -71,7 +71,7 @@ jobs:
         # integration tests never run against a missing lakehouse.
         run: python run_all.py --non-interactive --force
 
-      - name: Run automated test suite (106+ tests)
+      - name: Run automated test suite (113+ tests)
         # PYTHONIOENCODING=utf-8 is set job-wide so Unicode output (e.g. chart
         # labels) never raises UnicodeEncodeError on a C-locale runner.
         run: python tests/run_tests.py

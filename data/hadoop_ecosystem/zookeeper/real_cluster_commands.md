@@ -1,7 +1,7 @@
 # Apache ZooKeeper — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 2 — Priya Sharma (Hadoop & Cluster Specialist)
+Owner   : Member 2 — Mohammed Hossam (Hadoop & Cluster Specialist)
 
 ## 1. Start / stop a ZooKeeper node
 

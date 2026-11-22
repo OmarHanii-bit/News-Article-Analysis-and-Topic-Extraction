@@ -1,7 +1,7 @@
 # Apache Sqoop — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & Data Integration Specialist)
+Owner   : Member 5 — Mohamed Ibrahim (NoSQL & Data Integration Specialist)
 
 These are the genuine Sqoop command lines used to perform the very same
 RDBMS <-> HDFS/Hive transfers that this module simulates locally.

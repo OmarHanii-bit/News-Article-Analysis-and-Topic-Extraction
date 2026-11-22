@@ -3,7 +3,7 @@ Real-World News Corpus Acquisition & Schema Normalization
 =========================================================
 Project: News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Dataset & Data Sources — external open-repository ingestion
-Owner: Member 1 — Alex Vance (Project Lead & Solutions Architect)
+Owner: Member 1 — Omar Hani (Project Lead & Solutions Architect)
 
 WHY THIS MODULE EXISTS
 ----------------------

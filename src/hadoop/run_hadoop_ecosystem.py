@@ -3,7 +3,7 @@ Hadoop Ecosystem Master Orchestrator
 ====================================
 Project: News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: End-to-end Hadoop Ecosystem execution harness
-Owner: Member 1 — Alex Vance (Project Lead & Solutions Architect)
+Owner: Member 1 — Omar Hani (Project Lead & Solutions Architect)
 
 WHAT THIS MODULE DOES
 ---------------------

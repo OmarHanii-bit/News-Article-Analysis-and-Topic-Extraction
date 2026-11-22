@@ -2,7 +2,7 @@
 --  03_sentiment_filter.pig
 --  Project: News Article Analysis and Topic Extraction (Big Data Architecture)
 --  Component: Apache Pig (Pig Latin ETL)
---  Owner  : Member 2 — Priya Sharma (Hadoop & MapReduce Specialist)
+--  Owner  : Member 2 — Mohammed Hossam (Hadoop & MapReduce Specialist)
 --  Run    : pig -x mapreduce 03_sentiment_filter.pig
 -- ==========================================================================
 --  GOAL: isolate positive-sentiment coverage and rank topics by mean sentiment.

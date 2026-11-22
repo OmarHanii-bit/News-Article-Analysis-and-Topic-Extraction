@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-11-21T20:42:54.700813",
+  "total_documents_monitored": 6000,
+  "monitoring_metric": "Jensen-Shannon Divergence (JSD) & Population Stability Index (PSI)",
+  "num_topics": 6,
+  "global_baseline_distribution": {
+    "0": 0.1585,
+    "1": 0.1205,
+    "2": 0.0783,
+    "3": 0.3977,
+    "4": 0.0,
+    "5": 0.245
+  },
+  "quarterly_drift_history": [
+    {
+      "quarter": "2024-Q1",
+      "article_count": 731,
+      "jsd_vs_baseline": 0.0284,
+      "psi_vs_baseline": 0.0064,
+      "jsd_vs_previous_quarter": 0.0,
+      "drift_status": "STABLE",
+      "topic_proportions": {
+        "0": 0.1696,
+        "1": 0.1218,
+        "2": 0.0834,
+        "3": 0.4131,
+        "4": 0.0,
+        "5": 0.212
+      }
+    },
+    {
+      "quarter": "2024-Q2",
+      "article_count": 713,
+      "jsd_vs_baseline": 0.0177,
+      "psi_vs_baseline": 0.0025,
+      "jsd_vs_previous_quarter": 0.0109,
+      "drift_status": "STABLE",
+      "topic_proportions": {
+        "0": 0.1655,
+        "1": 0.122,
+        "2": 0.0827,
+        "3": 0.4053,
+        "4": 0.0,
+        "5": 0.2244
+      }
+    },
+    {
+      "quarter": "2024-Q3",
+      "article_count": 716,
+      "jsd_vs_baseline": 0.0363,
+      "psi_vs_baseline": 0.0106,
+      "jsd_vs_previous_quarter": 0.0481,
+      "drift_status": "STABLE",
+      "topic_proportions": {
+        "0": 0.1453,
+        "1": 0.1299,
+        "2": 0.0559,
+        "3": 0.4106,
+        "4": 0.0,
+        "5": 0.2584
+      }
+    },
+    {
+      "quarter": "2024-Q4",
+      "article_count": 731,
+      "jsd_vs_baseline": 0.0375,
+      "psi_vs_baseline": 0.0113,
+      "jsd_vs_previous_quarter": 0.065,
+      "drift_status": "STABLE",
+      "topic_proportions": {
+        "0": 0.145,
+        "1": 0.1053,
+        "2": 0.1012,
+        "3": 0.383,
+        "4": 0.0,
+        "5": 0.2654
+      }
+    },
+    {
+      "quarter": "2025-Q1",
+      "article_count": 768,
+      "jsd_vs_baseline": 0.0248,
+      "psi_vs_baseline": 0.0049,
+      "jsd_vs_previous_quarter": 0.0325,
+      "drift_status": "STABLE",
+      "topic_proportions": {
+        "0": 0.1484,
+        "1": 0.1107,
+        "2": 0.0911,
+        "3": 0.4167,
+        "4": 0.0,
+        "5": 0.2331
+      }
+    },
+    {
+      "quarter": "2025-Q2",
+      "article_count": 804,
+      "jsd_vs_baseline": 0.0272,
+      "psi_vs_baseline": 0.0059,
+      "jsd_vs_previous_quarter": 0.047,
+      "drift_status": "STABLE",
+      "topic_proportions": {
+        "0": 0.1592,
+        "1": 0.1144,
+        "2": 0.0634,
+        "3": 0.393,
+        "4": 0.0,
+        "5": 0.2699
+      }
+    },
+    {
+      "quarter": "2025-Q3",
+      "article_count": 762,
+      "jsd_vs_baseline": 0.008,
+      "psi_vs_baseline": 0.0005,
+      "jsd_vs_previous_quarter": 0.0297,
+      "drift_status": "STABLE",
+      "topic_proportions": {
+        "0": 0.1601,
+        "1": 0.1234,
+        "2": 0.0814,
+        "3": 0.3871,
+        "4": 0.0,
+        "5": 0.248
+      }
+    },
+    {
+      "quarter": "2025-Q4",
+      "article_count": 775,
+      "jsd_vs_baseline": 0.0281,
+      "psi_vs_baseline": 0.0063,
+      "jsd_vs_previous_quarter": 0.0257,
+      "drift_status": "STABLE",
+      "topic_proportions": {
+        "0": 0.1742,
+        "1": 0.1368,
+        "2": 0.0684,
+        "3": 0.3742,
+        "4": 0.0,
+        "5": 0.2465
+      }
+    }
+  ],
+  "total_alerts_fired": 0,
+  "alerts": []
+}

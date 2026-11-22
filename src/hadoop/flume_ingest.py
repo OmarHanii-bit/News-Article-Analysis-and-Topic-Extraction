@@ -3,7 +3,7 @@ Apache Flume Streaming Ingestion Layer (Streaming -> HDFS)
 ==========================================================
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Flume — reliable streaming ingestion of news events into HDFS
-Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & Data Integration Specialist)
+Owner   : Member 5 — Mohamed Ibrahim (NoSQL & Data Integration Specialist)
 
 WHAT THIS MODULE DOES
 ---------------------
@@ -174,7 +174,7 @@ def _build_agent_config(config_path: str, spool_dir: str, hdfs_path: str,
     text = f"""# =============================================================================
 # agent_news.properties — Apache Flume agent: news event stream -> HDFS
 # Project : News Article Analysis and Topic Extraction (Big Data Architecture)
-# Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & Data Integration Specialist)
+# Owner   : Member 5 — Mohamed Ibrahim (NoSQL & Data Integration Specialist)
 #
 # Topology:  spooldir source  ==>  memory channel  ==>  hdfs sink
 # Start this agent on the edge node with:
@@ -251,7 +251,7 @@ def _write_real_cluster_commands(path: str, stats: dict) -> None:
     md = f"""# Apache Flume — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & Data Integration Specialist)
+Owner   : Member 5 — Mohamed Ibrahim (NoSQL & Data Integration Specialist)
 
 ## 1. Start the agent on an edge node
 

@@ -2,7 +2,7 @@
 Unit Tests: Hadoop MapReduce Tokenization & Reduction Logic
 ===========================================================
 Component: Hadoop Ecosystem Testing Suite
-Author: Priya Sharma (Hadoop & MapReduce Specialist)
+Author: Mohammed Hossam (Hadoop & MapReduce Specialist)
 """
 
 import unittest

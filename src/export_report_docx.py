@@ -12,7 +12,7 @@ Design notes
 - A focused Markdown parser handles exactly the constructs used in the report:
   ATX headings, pipe tables, fenced code blocks, bullet/numbered lists,
   blockquotes, horizontal rules and inline **bold** / *italic* / `code`.
-- All 14 publication charts plus the architecture diagram are appended as an embedded "Visualization Gallery".
+- All 17 publication charts plus the architecture diagram are appended as an embedded "Visualization Gallery".
 
 Run:
     python src/export_report_docx.py
@@ -47,8 +47,11 @@ GALLERY_CHARTS = [
     ("notebook_temporal_trends.png", "Figure 11 — Notebook Temporal Trend Analysis"),
     ("notebook_wordclouds.png", "Figure 12 — Notebook Semantic Word Clouds"),
     ("lda_k_sweep.png", "Figure 13 — LDA k Sweep: Perplexity / Coherence / Overlap"),
-    ("temporal_forecast_evaluation.png", "Figure 14 — Held-Out Topic-Volume Forecast Evaluation"),
-    ("presentation/architecture.png", "Figure 15 — End-to-End System Architecture"),
+    ("temporal_forecast_evaluation.png", "Figure 14 - Held-Out Topic-Volume Forecast Evaluation"),
+    ("supervised_model_comparison.png", "Figure 15 - Supervised Classifier Comparison (Reuters-21578)"),
+    ("supervised_confusion_matrix.png", "Figure 16 - Supervised Confusion Matrix"),
+    ("topic_drift_monitoring.png", "Figure 17 - Quarterly Topic Drift (JSD / PSI)"),
+    ("presentation/architecture.png", "Figure 18 - End-to-End System Architecture"),
 ]
 
 INLINE_PATTERN = re.compile(r"(\*\*.+?\*\*|`[^`]+`|\*[^*]+?\*|\[[^\]]+\]\([^)]+\))")
@@ -244,7 +247,7 @@ def convert(md_path, docx_path):
     doc.add_heading("Appendix: Visualization Gallery", level=1)
     add_inline(
         doc.add_paragraph(),
-        "All fourteen 300-DPI analysis charts plus the system architecture diagram "
+        "All seventeen 300-DPI analysis charts plus the system architecture diagram "
         "are embedded below. The *interactive* versions (hover, zoom, filter) are "
         "available as self-contained HTML files for both corpora "
         "(`dashboard/interactive_dashboard.html` and "

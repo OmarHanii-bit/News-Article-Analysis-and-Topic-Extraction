@@ -6,14 +6,14 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 **Course:** Big Data Analytics & Distributed Systems  
-**Ecosystem:** Hadoop Ecosystem (HDFS · YARN · MapReduce · Hive · HBase · Pig · Sqoop · Flume · Oozie · ZooKeeper) — 9 orchestrated ecosystem modules covering 10 named technologies · Apache Spark (PySpark MLlib) · MongoDB NoSQL · Parquet · Streamlit  
+**Ecosystem:** Hadoop Ecosystem — 9 orchestrated modules covering 10 named technologies (HDFS · YARN · MapReduce · Hive · HBase · Pig · Sqoop · Flume · Oozie · ZooKeeper) · Apache Spark (PySpark MLlib) · MongoDB NoSQL · Parquet · Streamlit  
 **Status:** Unified Master Deliverable (Baseline Core + Advanced Production Extensions Consolidated)
 
 ---
 
 ## 📋 Project Summary
 
-This directory represents the **single, unified, and complete Big Data project deliverable**. It integrates all foundational baseline implementations (data synthesis, Hadoop MapReduce, PySpark distributed engine, MongoDB NoSQL, Snappy Parquet lakehouse) together with all advanced production capabilities: **9 orchestrated ecosystem modules covering 10 named technologies** (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), a **dual-corpus design** (6,000-article synthetic benchmark + 10,712-article real Reuters wire corpus), one-click orchestrators, an automated **106-test** suite, a 17-slide PowerPoint deck, a held-out temporal forecast evaluation (`src/temporal_forecast_eval.py`), a measured 50,000-article scale benchmark (`src/scale_benchmark.py`), streaming Kaggle ingestion, and Docker multi-container deployment.
+This directory represents the **single, unified, and complete Big Data project deliverable**. It integrates all foundational baseline implementations (data synthesis, Hadoop MapReduce, PySpark distributed engine, MongoDB NoSQL, Snappy Parquet lakehouse) together with all advanced production capabilities: **the 9-module Hadoop ecosystem stack** (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), a **dual-corpus design** (6,000-article synthetic benchmark + 10,712-article real Reuters wire corpus), one-click orchestrators, an automated **113-test** suite, a 17-slide PowerPoint deck, a held-out temporal forecast evaluation (`src/temporal_forecast_eval.py`), a measured 50,000-article scale benchmark (`src/scale_benchmark.py`), streaming Kaggle ingestion, and Docker multi-container deployment.
 
 ---
 
@@ -21,13 +21,13 @@ This directory represents the **single, unified, and complete Big Data project d
 
 | Member | Name | Role | Primary Responsibility & File Ownership |
 | :---: | :--- | :--- | :--- |
-| **1** | **Alex Vance** | **Project Lead & Solutions Architect** | End-to-end architecture blueprint, 5Vs scoping, Kaggle ingestion adapter (`src/ingest_kaggle_real.py`), `README.md`, `PROJECT_REPORT.md` |
-| **2** | **Priya Sharma** | **Hadoop Ecosystem & MapReduce Specialist** | HDFS storage design ($128\text{ MB}$ blocks, $3\times$ replication), full Hadoop ecosystem layer (`src/hadoop/`), Hadoop Streaming mapper & reducer (`src/mapreduce/`) |
-| **3** | **Marcus Chen** | **PySpark Distributed Engineer** | PySpark 7-stage pipeline, YARN cluster configuration, explicit `StructType` schema enforcement, Parquet lakehouse (`src/spark_pipeline.py`) |
-| **4** | **Elena Rostova** | **NLP & Machine Learning Scientist** | Distributed TF-IDF vectorization, PySpark MLlib Latent Dirichlet Allocation (Online LDA), VADER sentiment scoring UDF |
-| **5** | **Tariq Al-Mansoor** | **NoSQL & MongoDB Specialist** | MongoDB polymorphic document modeling, BSON schema design, compound B-tree & text search indexes, aggregation pipelines (`src/mongo_loader.py`) |
-| **6** | **Sophia Taylor** | **Visualization & Dashboard Lead** | Publication-quality chart generator ($300\text{ DPI}$), semantic word cloud grids, interactive Streamlit executive dashboard (`src/dashboard.py`) |
-| **7** | **David Kim** | **QA, Benchmarking & Presentation Lead** | Automated 106-test suite (`tests/`), scale benchmark, temporal forecast evaluation, 17-slide PowerPoint deck (`presentation/`), technical Q&A defense |
+| **1** | **Omar Hani** | **Project Lead & Solutions Architect** | End-to-end architecture blueprint, 5Vs scoping, Kaggle ingestion adapter (`src/ingest_kaggle_real.py`), `README.md`, `PROJECT_REPORT.md` |
+| **2** | **Mohammed Hossam** | **Hadoop Ecosystem & MapReduce Specialist** | HDFS storage design ($128\text{ MB}$ blocks, $3\times$ replication), full Hadoop ecosystem layer (`src/hadoop/`), Hadoop Streaming mapper & reducer (`src/mapreduce/`) |
+| **3** | **Yasmine Mohamed** | **PySpark Distributed Engineer** | PySpark 7-stage pipeline, YARN cluster configuration, explicit `StructType` schema enforcement, Parquet lakehouse (`src/spark_pipeline.py`) |
+| **4** | **Shehab Osama** | **NLP & Machine Learning Scientist** | Distributed TF-IDF vectorization, PySpark MLlib Latent Dirichlet Allocation (Online LDA), VADER sentiment scoring UDF |
+| **5** | **Mohamed Ibrahim** | **NoSQL & MongoDB Specialist** | MongoDB polymorphic document modeling, BSON schema design, compound B-tree & text search indexes, aggregation pipelines (`src/mongo_loader.py`) |
+| **6** | **Mohamed Magdi** | **Visualization & Dashboard Lead** | Publication-quality chart generator ($300\text{ DPI}$), semantic word cloud grids, interactive Streamlit executive dashboard (`src/dashboard.py`) |
+| **7** | **Mazen Salem** | **QA, Benchmarking & Presentation Lead** | Automated 113-test suite (`tests/`), scale benchmark, temporal forecast evaluation, 17-slide PowerPoint deck (`presentation/`), technical Q&A defense |
 
 ---
 
@@ -36,18 +36,26 @@ This directory represents the **single, unified, and complete Big Data project d
 ```
 c:\News Article Analysis and Topic Extraction\
 │
-├── run_all.py                         # One-Click Master Pipeline Orchestrator (Steps 0 to 11)
+├── run_all.py                         # One-Click Master Pipeline Orchestrator (Steps 0-15; optional k sweep = 16)
 ├── run_all.bat                        # Windows batch launcher for double-click execution
 ├── PROJECT_REPORT.md                  # Comprehensive academic capstone report (target rubric alignment; instructor final)
 ├── PROJECT_REPORT.docx                # Word export of the report with embedded figure gallery (generated)
 ├── README.md                          # Master documentation & architectural reference
+├── CONTRIBUTING.md                    # Setup, test protocol, data policy & PR checklist
+├── CHANGELOG.md                       # Version history of features and fixes
+├── CITATION.cff                       # Machine-readable citation metadata
 ├── LICENSE                            # MIT for code; dataset licences noted separately
+├── .editorconfig                      # Cross-editor formatting rules
+├── .gitattributes                     # LF/CRLF normalisation and binary asset rules
+├── .gitignore                         # Excludes regenerable intermediates & secrets
+├── .github/workflows/ci.yml           # GitHub Actions: compile, regenerate, run 113 tests
 ├── requirements.txt                   # Flexible runtime dependencies (lower bounds)
 ├── requirements.lock.txt              # Pinned exact versions for reproducibility
 ├── requirements-dev.txt               # Runtime deps + test tooling (pytest)
 ├── .env.example                       # Optional env overrides (Mongo, Spark, Kaggle)
 ├── Dockerfile                         # Multi-stage image (Python 3.11 + OpenJDK 17 + Streamlit)
 ├── docker-compose.yml                 # Multi-container orchestration (MongoDB + Pipeline + Jupyter)
+├── docker-compose-cluster.yml         # Physical 10-container distributed cluster (NameNode, 3 DataNodes, YARN, Spark, Mongo)
 ├── .dockerignore                      # Docker build ignore rules
 │
 ├── data/
@@ -60,7 +68,7 @@ c:\News Article Analysis and Topic Extraction\
 │   │   ├── processed_parquet/         # Real-corpus lakehouse (/year=YYYY/month=MM/)
 │   │   ├── pipeline_analytics_summary.json # Real-corpus LDA results (auto-derived labels)
 │   │   └── provenance.json            # Full provenance: source, licence, counts, sha256
-│   ├── hadoop_ecosystem/              # FULL HADOOP ECOSYSTEM EVIDENCE (9 orchestrated ecosystem modules covering 10 named technologies)
+│   ├── hadoop_ecosystem/              # FULL HADOOP ECOSYSTEM EVIDENCE (the 9-module Hadoop ecosystem stack)
 │   │   ├── hdfs/                      # Simulated HDFS: 3 DataNodes, blocks, NameNode fsimage
 │   │   ├── cluster/                   # core-site/hdfs-site/yarn-site/mapred-site XML + capacity plan
 │   │   ├── zookeeper/                 # zoocfg, znode_tree, leader election, watches
@@ -71,7 +79,7 @@ c:\News Article Analysis and Topic Extraction\
 │   │   ├── pig/                       # 3 Pig Latin scripts + output part-files
 │   │   ├── oozie/                     # workflow.xml, coordinator.xml, execution journal
 │   │   ├── hadoop_cli_commands.md     # 80 production-equivalent `hdfs dfs` commands emitted by the local simulation (evidence)
-│   │   └── hadoop_ecosystem_summary.json # Aggregated summary for 9 orchestrated ecosystem modules covering 10 named technologies
+│   │   └── hadoop_ecosystem_summary.json # Aggregated summary for the 9-module Hadoop ecosystem stack
 │   ├── mongodb_offline_collections/   # Offline BSON JSON collections (3 collections)
 │   │   ├── articles_sample.json       # 500 enriched sample article documents
 │   │   ├── publisher_analytics.json   # Publisher cross-tabulations
@@ -80,7 +88,7 @@ c:\News Article Analysis and Topic Extraction\
 │   ├── lda_selection_note.md          # Honest reconciliation of the k sweep vs production k=6
 │   ├── scale_benchmark.json           # Measured 50,000-article throughput + labelled 143k/2.7M projection
 │   ├── temporal_forecast_evaluation.json # Held-out 2024->2025 MAE/RMSE/MAPE for both corpora
-│   ├── visualization_manifest.json    # Canonical inventory of the 14 static charts (DPI + source)
+│   ├── visualization_manifest.json    # Canonical inventory of the 17 static charts (DPI + source)
 │   └── date_imputation_report.json    # Sidecar: count of imputed dates on Kaggle ingestion
 │
 
@@ -91,7 +99,11 @@ c:\News Article Analysis and Topic Extraction\
 │   ├── generate_sample_data.py        # Baseline dataset synthesizer (6,000 full-text articles)
 │   ├── ingest_kaggle_real.py          # Kaggle streaming chunked ingestion adapter
 │   ├── ingest_real_news.py            # Real-corpus ingestion (NLTK Reuters / 20 Newsgroups)
+│   ├── ingest_live_rss.py             # Live multi-publisher RSS ingestion (NYT, BBC, CBS, NPR)
 │   ├── spark_pipeline.py              # 7-stage PySpark distributed pipeline (corpus-agnostic CLI)
+│   ├── streaming_news_pipeline.py     # PySpark Structured Streaming engine & breaking news alerting
+│   ├── supervised_classifier.py       # Supervised learning on Reuters ground truth (92.57% Acc, 0.8423 Macro-F1)
+│   ├── topic_drift_monitor.py         # MLOps concept drift monitoring (Jensen-Shannon & PSI)
 │   ├── lda_topic_selection.py         # Reproducible k sweep (data/lda_k_sweep.json; knee selects k=3, production keeps k=6)
 │   ├── temporal_forecast_eval.py      # Held-out 2024->2025 topic-volume forecast (baseline vs trend)
 │   ├── scale_benchmark.py             # Chunked 50k-article throughput benchmark + labelled projection
@@ -120,7 +132,8 @@ c:\News Article Analysis and Topic Extraction\
 │       └── run_mapreduce_local.py     # Local streaming simulation & HDFS command generator
 │
 ├── notebooks/
-│   └── News_Article_Analysis_Pipeline.ipynb # Executed Jupyter Notebook (29 cells, all outputs embedded)
+│   ├── News_Article_Analysis_Pipeline.ipynb # Executed Jupyter Notebook (29 cells, all outputs embedded)
+│   └── News_Article_Analysis_Pipeline.html  # Rendered HTML export for readers without Jupyter
 │
 ├── dashboard/
 │   ├── index.html                     # Landing page linking both corpus dashboards
@@ -131,9 +144,10 @@ c:\News Article Analysis and Topic Extraction\
 │   └── reexecute_notebook.py          # Re-execute the notebook in place (nbconvert --execute --inplace)
 │
 ├── docs/
+│   ├── README.md                      # Documentation index and evidence map
 │   └── SCALABILITY_AND_KAGGLE.md      # Proof-of-concept vs production scale; Kaggle ingest commands
 │
-├── tests/                             # Automated Test Suite (106/106 Passing)
+├── tests/                             # Automated Test Suite (113/113 Passing)
 │   ├── run_tests.py                   # Unified test runner
 │   ├── test_mapreduce.py              # MapReduce regex, stopwords & bigram unit tests
 │   ├── test_spark_schema.py           # StructType schema & VADER sentiment UDF tests
@@ -144,10 +158,13 @@ c:\News Article Analysis and Topic Extraction\
 │   ├── test_ingest_kaggle.py          # Kaggle adapter: column mapping, chunked streaming, CLI contract
 │   ├── test_lda_topic_selection.py    # Held-out split determinism & k-selection/validation logic (Spark-free)
 │   ├── test_scale_benchmark.py        # Projection math, byte formatting & JSON schema (offline)
-│   └── test_temporal_forecast_eval.py # Series construction, MAE/RMSE/MAPE & time-split tests (offline)
+│   ├── test_temporal_forecast_eval.py # Series construction, MAE/RMSE/MAPE & time-split tests (offline)
+│   ├── test_supervised_classifier.py  # Reuters ground-truth split, metric bounds & artifact contract
+│   ├── test_live_rss_and_streaming.py # RSS parsing, provenance and streaming alert/schema tests
+│   └── test_topic_drift_monitor.py    # JSD/PSI maths, quarterly windows & alert thresholds
 │
 
-├── visualizations/                    # 14 Publication-Quality Visual Assets (300 DPI PNG; inventory in data/visualization_manifest.json)
+├── visualizations/                    # 17 Publication-Quality Visual Assets (300 DPI PNG; inventory in data/visualization_manifest.json)
 │   ├── topic_volume_distribution.png  # Baseline chart 1
 │   ├── lda_topic_top_terms.png        # Baseline chart 2
 │   ├── publisher_topic_heatmap.png    # Baseline chart 3
@@ -168,14 +185,14 @@ c:\News Article Analysis and Topic Extraction\
     ├── architecture.png               # 300-DPI rendering of report §3.1 architecture blueprint
     ├── dashboard_screenshot.png       # 1600x1050 capture of the Streamlit executive dashboard
     ├── dashboard_screenshot.md        # Provenance & regeneration steps for the screenshot
-    └── slide_deck_outline.md          # 17-slide speaking notes, demo runbook & 12 Q&A defense answers
+    └── slide_deck_outline.md          # 17-slide speaking notes, demo runbook & 16 Q&A defense answers
 ```
 
 ---
 
 ## 📊 Visual Analytics Gallery
 
-Three of the fourteen 300 DPI charts rendered by `src/visualize_analytics.py` (the complete set is in [`visualizations/`](visualizations/), with the canonical inventory in `data/visualization_manifest.json`). These are static PNGs; the interactive, filterable versions of the same views are in the Streamlit dashboard (Method 2).
+Three of the seventeen 300 DPI charts in the gallery (`src/visualize_analytics.py` renders the six core charts) (the complete set is in [`visualizations/`](visualizations/), with the canonical inventory in `data/visualization_manifest.json`). These are static PNGs; the interactive, filterable versions of the same views are in the Streamlit dashboard (Method 2).
 
 **Topic Volume Distribution — 6,000-article synthetic benchmark**
 
@@ -205,6 +222,20 @@ Regenerate all evidence: `python src/lda_topic_selection.py`, `python src/tempor
 
 ---
 
+## 🚀 Production Extensions (Implemented)
+
+Report §9.1 discloses the project's initial boundaries; §9.2 shows how five of them were closed with working, tested code:
+
+- **Supervised ground truth (`src/supervised_classifier.py`):** 9,549 Reuters-21578 articles across 17 editorial categories → **92.57% test accuracy**, **0.8423 macro-F1**, **0.8515 5-fold CV macro-F1** (Linear SVM/SGD). Evidence: `data/supervised_classification_metrics.json`, `visualizations/supervised_model_comparison.png`, `visualizations/supervised_confusion_matrix.png`.
+- **Live multi-publisher RSS (`src/ingest_live_rss.py`):** 272 genuine articles from NYT, BBC, CBS and NPR with real RFC-822 timestamps and URLs. Evidence: `data/real_news/live_rss_articles.csv`, `data/real_news/live_rss_provenance.json`.
+- **Structured Streaming (`src/streaming_news_pipeline.py`):** drop-folder micro-batches, schema validation, VADER scoring, breaking-news alerts at sentiment ≤ −0.35 and a checkpointed Parquet sink (`data/streaming_parquet/`).
+- **Topic-drift monitoring (`src/topic_drift_monitor.py`):** quarterly Jensen-Shannon divergence and PSI over eight windows (max JSD 0.038, max PSI 0.011). Evidence: `data/topic_drift_analysis.json`, `visualizations/topic_drift_monitoring.png`.
+- **Cluster IaC (`docker-compose-cluster.yml`):** 10 containers — NameNode, 3 DataNodes, YARN ResourceManager, 2 NodeManagers, Spark master, 2 workers and MongoDB.
+
+Reproduce them with `python src/supervised_classifier.py`, `python src/ingest_live_rss.py`, `python src/streaming_news_pipeline.py` and `python src/topic_drift_monitor.py`.
+
+---
+
 ## 🚀 Comprehensive Execution Guide
 
 ### Prerequisites & System Requirements
@@ -216,7 +247,7 @@ Regenerate all evidence: `python src/lda_topic_selection.py`, `python src/tempor
   ```
   For byte-for-byte reproducibility, install the pinned lock file instead: `pip install -r requirements.lock.txt`. Optional environment overrides (Mongo URI, Spark master/memory, Kaggle credentials) are documented in `.env.example`; every variable has a safe default.
 
-> **Fresh clone note:** the canonical raw datasets (`data/raw_news_articles.csv`, `data/real_news/raw_news_articles_real.csv`), the Word report and both offline HTML dashboards are **committed**, so the project is inspectable immediately. Large *regenerable* intermediates — the Parquet lakehouses, MongoDB offline collections and simulated HDFS block files — are intentionally git-ignored; materialize them with `python run_all.py` (or the individual stages below) before running the full test suite. Tests that depend on absent artifacts report as **skipped**, and the runner fails if fewer than the 53-test historical floor actually *execute* (the suite currently contains 106 tests).
+> **Fresh clone note:** the canonical raw datasets (`data/raw_news_articles.csv`, `data/real_news/raw_news_articles_real.csv`), the Word report and both offline HTML dashboards are **committed**, so the project is inspectable immediately. Large *regenerable* intermediates — the Parquet lakehouses, MongoDB offline collections and simulated HDFS block files — are intentionally git-ignored; materialize them with `python run_all.py` (or the individual stages below) before running the full test suite. Tests that depend on absent artifacts report as **skipped**, and the runner fails if fewer than the 53-test historical floor actually *execute* (the suite currently contains 113 tests).
 
 ---
 
@@ -239,12 +270,12 @@ Double-click `run_all.bat`.
 | **1** | **Dataset Generation & Verification** | `src/generate_sample_data.py` | Validates 6,000 full-text articles in `data/raw_news_articles.csv` |
 | **2** | **Hadoop Streaming MapReduce** | `src/mapreduce/run_mapreduce_local.py` | Extracts 2,255 terms & bigrams into `data/mapreduce_term_counts.tsv` |
 | **3** | **PySpark Distributed Processing** | `src/spark_pipeline.py` | Cleaning, VADER sentiment, MLlib LDA, Parquet lakehouse (`data/processed_parquet/`) |
-| **4** | **Hadoop Ecosystem Stack** | `src/hadoop/run_hadoop_ecosystem.py` | Runs 9 orchestrated ecosystem modules covering 10 named technologies (HDFS/YARN/MapReduce/Hive/HBase/Pig/Sqoop/Flume/Oozie/ZooKeeper) → `data/hadoop_ecosystem/` |
+| **4** | **Hadoop Ecosystem Stack** | `src/hadoop/run_hadoop_ecosystem.py` | Runs the 9-module Hadoop ecosystem stack (HDFS/YARN/MapReduce/Hive/HBase/Pig/Sqoop/Flume/Oozie/ZooKeeper) → `data/hadoop_ecosystem/` |
 | **5** | **Real-World Corpus Re-Run** | `src/ingest_real_news.py` + `src/spark_pipeline.py` | Ingests 10,712 real Reuters articles → `data/real_news/` lakehouse + summary |
 | **6** | **MongoDB NoSQL Ingestion** | `src/mongo_loader.py` | Ingests 3 collections & builds B-tree/text indexes (with offline JSON fallback) |
-| **7** | **Visual Analytics Suite** | `src/visualize_analytics.py` | Renders 14 publication-grade 300 DPI charts and word clouds (`visualizations/`) |
+| **7** | **Visual Analytics Suite** | `src/visualize_analytics.py` | Renders the six-chart publication suite and word clouds (17-asset gallery in `visualizations/`) |
 | **8** | **PowerPoint Presentation Deck** | `src/generate_presentation_pptx.py` | Generates 16:9 widescreen 17-slide deck (`presentation/News_Article_Analysis_Presentation.pptx`) |
-| **9** | **Automated Test Suite** | `tests/run_tests.py` | Executes 106 unit & integration tests with 0 failures |
+| **9** | **Automated Test Suite** | `tests/run_tests.py` | Executes 113 unit & integration tests with 0 failures |
 | **10** | **Offline Plotly HTML Dashboards** | `src/build_interactive_dashboard.py` | Self-contained corpus-specific dashboards (`dashboard/interactive_dashboard*.html`) |
 | **11** | **Report Export to Word** | `src/export_report_docx.py` | `PROJECT_REPORT.docx` regenerated from the Markdown source |
 
@@ -266,7 +297,7 @@ streamlit run src/dashboard.py
   - Dynamic topic volume filter and publisher distribution breakdown.
   - Interactive Plotly visuals throughout: sentiment box plots, semantic topic term treemaps, publisher × topic heatmaps, editorial-share bars and monthly trajectories (drag-to-zoom, hover tooltips, legend toggling).
   - Cross-publisher sentiment distributions and per-topic top TF-IDF keyword rankings.
-  - **Hadoop Ecosystem Stack tab**: live execution evidence for 9 orchestrated ecosystem modules covering 10 named technologies — HDFS block/replication stats and the logical × replication invariant, YARN capacity plan, and Hive/HBase/Pig/Sqoop/Flume/Oozie/ZooKeeper metrics.
+  - **Hadoop Ecosystem Stack tab**: live execution evidence for the 9-module Hadoop ecosystem stack — HDFS block/replication stats and the logical × replication invariant, YARN capacity plan, and Hive/HBase/Pig/Sqoop/Flume/Oozie/ZooKeeper metrics.
   - Interactive full-text article search engine with sentiment badges.
   - Sidebar one-click download of the self-contained Plotly HTML dashboard **for whichever corpus is currently selected**.
 
@@ -310,9 +341,9 @@ Each component of the architecture can be run standalone from the project root:
 | **4** | **Hadoop Ecosystem Stack** | `python src/hadoop/run_hadoop_ecosystem.py` | `data/hadoop_ecosystem/` (HDFS · YARN · Hive · HBase · Pig · Sqoop · Flume · Oozie · ZooKeeper) |
 | **5** | **Real-World Corpus Re-Run** | `python src/ingest_real_news.py --source reuters --output data/real_news/raw_news_articles_real.csv` then `python src/spark_pipeline.py --input-csv data/real_news/raw_news_articles_real.csv --output-parquet data/real_news/processed_parquet --output-json data/real_news/pipeline_analytics_summary.json --auto-labels` | `data/real_news/` (10,712-article lakehouse + summary) |
 | **6** | **MongoDB NoSQL Load** | `python src/mongo_loader.py` | `data/mongodb_offline_collections/` |
-| **7** | **Generate Charts (300 DPI)** | `python src/visualize_analytics.py` | `visualizations/*.png` (14 charts) |
+| **7** | **Generate Charts (300 DPI)** | `python src/visualize_analytics.py` | `visualizations/*.png` (6 core charts; 17 assets total) |
 | **8** | **Build Slide Deck** | `python src/generate_presentation_pptx.py` | `presentation/News_Article_Analysis_Presentation.pptx` (17 slides) |
-| **9** | **Run Test Suite** | `python tests/run_tests.py` | 106 unit & regression test reports |
+| **9** | **Run Test Suite** | `python tests/run_tests.py` | 113 unit & regression test reports |
 | **10** | **Build Offline HTML Dashboards** | `python src/build_interactive_dashboard.py` | `dashboard/interactive_dashboard.html` + `interactive_dashboard_real.html` (self-contained Plotly) |
 | **11** | **Export Report to Word** | `python src/export_report_docx.py` | `PROJECT_REPORT.docx` (Markdown source left intact) |
 

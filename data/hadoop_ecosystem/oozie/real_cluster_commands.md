@@ -1,7 +1,7 @@
 # Apache Oozie — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 3 — Marcus Chen (Distributed Warehouse Engineer)
+Owner   : Member 3 — Yasmine Mohamed (Distributed Warehouse Engineer)
 
 ## 1. Validate the workflow XML before submitting
 

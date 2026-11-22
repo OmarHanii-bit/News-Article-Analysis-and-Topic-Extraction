@@ -15,6 +15,8 @@ env/
 # only large regenerable intermediates and simulation block files are ignored.
 data/processed_parquet/
 data/real_news/processed_parquet/
+data/streaming_parquet/
+data/streaming_input/
 data/mongodb_offline_collections/
 data/hadoop_ecosystem/hdfs/
 data/hadoop_ecosystem/*.log

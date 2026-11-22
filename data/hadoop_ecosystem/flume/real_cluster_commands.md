@@ -1,7 +1,7 @@
 # Apache Flume — Real Production Cluster Commands
 
 Project : News Article Analysis and Topic Extraction
-Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & Data Integration Specialist)
+Owner   : Member 5 — Mohamed Ibrahim (NoSQL & Data Integration Specialist)
 
 ## 1. Start the agent on an edge node
 

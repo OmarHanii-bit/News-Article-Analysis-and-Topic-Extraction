@@ -71,7 +71,7 @@
   - **Oozie:** Workflow + coordinator DAG (`sqoop` $\rightarrow$ `pig` $\rightarrow$ `hive` $\rightarrow$ `spark` $\rightarrow$ `shell`); final status SUCCEEDED, 5/5 actions.
   - **ZooKeeper:** 11 znodes (6 ephemeral) for leader election, distributed config and locks; 3 watches fired.
   - **Cluster Computing (YARN):** CapacityScheduler queues sized from measured on-disk volume; `core-site`/`hdfs-site`/`yarn-site`/`mapred-site` XML emitted.
-- **Verification:** 9 orchestrated ecosystem modules covering 10 named technologies, 0 failures in the verified 7.21 s run (the notebook records a separate 11.13 s run); 80 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/`.
+- **Verification:** the 9-module Hadoop ecosystem stack, 0 failures in the verified 7.21 s run (the notebook records a separate 11.13 s run); 80 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/`.
 
 ### Slide 6: Distributed In-Memory Processing: Apache Spark Engine
 - **Speaker:** Yasmine Mohamed (PySpark Engineer)
@@ -159,7 +159,7 @@
 - **Speaker:** Mazen Salem (Benchmarking Lead)
 - **Core Headings:**
   - Comparative execution profiling:
-    - Hadoop ecosystem stack (9 orchestrated ecosystem modules covering 10 named technologies): 7.21 s in the verified run (the notebook records a separate 11.13 s run)
+    - Hadoop ecosystem stack (9 modules): 7.21 s in the verified run (the notebook records a separate 11.13 s run)
     - MapReduce Tokenization: 3.8 seconds
     - PySpark Pipeline (6,000 documents, LDA 20 iterations, TF-IDF): ~50 seconds
     - PySpark Pipeline (10,712 real Reuters documents): ~72 seconds
@@ -178,9 +178,9 @@
 - **Speaker:** Omar Hani (Project Lead)
 - **Core Headings:**
   - Summary of accomplishments: full rubric coverage (10/10 self-assessed target; instructor final).
-  - Verified integration across 9 orchestrated ecosystem modules covering 10 named technologies (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), PySpark, MongoDB, and Streamlit.
+  - Verified integration across the 9-module Hadoop ecosystem stack (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), PySpark, MongoDB, and Streamlit.
   - Dual-corpus validation: 6,000-article synthetic benchmark + 10,712-article real Reuters wire corpus.
-  - Evidence depth: 106 passing tests, held-out 2024→2025 forecast evaluation (naive baseline wins), measured 50k-article scale benchmark (10,108 rows/s), honest k-selection reconciliation.
+  - Evidence depth: 113 passing tests, held-out 2024→2025 forecast evaluation (naive baseline wins), measured 50k-article scale benchmark (10,108 rows/s), honest k-selection reconciliation.
   - Seamless handoff to Live Interactive Demonstration and technical Q&A session.
 
 ---
@@ -189,7 +189,7 @@
 
 ### Step 0: Hadoop Ecosystem Stack Execution (1 min) - Member 2 (Mohammed Hossam)
 - Command: `python src/hadoop/run_hadoop_ecosystem.py`
-- Highlight: Watch 9 orchestrated ecosystem modules covering 10 named technologies run in order (HDFS format & corpus landing, YARN capacity plan, ZooKeeper election, Sqoop import/export, Flume streaming, HBase load, Hive HiveQL rollups, Pig Latin ETL, Oozie DAG). Point to the 80 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/hadoop_cli_commands.md`.
+- Highlight: Watch the 9-module Hadoop ecosystem stack run in order (HDFS format & corpus landing, YARN capacity plan, ZooKeeper election, Sqoop import/export, Flume streaming, HBase load, Hive HiveQL rollups, Pig Latin ETL, Oozie DAG). Point to the 80 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/hadoop_cli_commands.md`.
 
 ### Step 1: Terminal MapReduce Execution (1 min) - Member 2 (Mohammed Hossam)
 - Command: `python src/mapreduce/run_mapreduce_local.py`
@@ -266,3 +266,19 @@ In Spark MLlib, this is solved via the Online Variational Bayes algorithm (Hoffm
 ### Q12: What is the primary business value of this Big Data architecture to an enterprise?
 **Answer (Member 1 - Omar Hani):**  
 "The platform transforms millions of noisy, uncurated global news articles into real-time competitive intelligence. Rather than relying on human analysts reading individual articles, executives can monitor automated topic velocity, detect emerging regulatory threats or technology shifts weeks before they reach mainstream awareness, and evaluate sentiment divergence across global competitors with sub-second operational dashboard queries."
+
+### Q13: How do you evaluate predictive accuracy when LDA topic modeling is unsupervised?
+**Answer (Member 4 - Shehab Osama):**  
+"While LDA is unsupervised for exploratory topic discovery, we directly validated predictive capability on genuine ground truth by implementing a supervised classification benchmark (`src/supervised_classifier.py`) on 9,549 real Reuters-21578 articles across 17 editorial categories. On a held-out 80/20 test split ($N = 1,910$), our Linear Support Vector model achieved **92.57% test accuracy**, **0.8423 Macro-F1**, and **0.8515 5-fold cross-validation Macro-F1**."
+
+### Q14: How does the system detect Concept Drift when news cycles evolve over time?
+**Answer (Member 4 - Shehab Osama):**  
+"We implemented an automated MLOps monitoring layer (`src/topic_drift_monitor.py`) tracking quarterly Jensen-Shannon Divergence (JSD) and Population Stability Index (PSI). Across all 8 quarters (2024-Q1 through 2025-Q4), JSD remained $\le 0.038$ and PSI $\le 0.011$ against global baseline. If JSD exceeds $0.15$ or PSI exceeds $0.25$, an automated alert fires recommending model retraining."
+
+### Q15: How does this architecture handle high-velocity streaming data versus batch runs?
+**Answer (Member 3 - Yasmine Mohamed):**  
+"We engineered a PySpark Structured Streaming micro-batch pipeline (`src/streaming_news_pipeline.py`) that watches an ingestion directory, executes real-time cleaning and VADER sentiment scoring, fires critical alerts on breaking volatility spikes ($\text{sentiment} \le -0.35$), and appends to a streaming Parquet sink with full checkpointing."
+
+### Q16: How does the deployment scale to a true physical cluster?
+**Answer (Member 2 - Mohammed Hossam):**  
+"We authored a complete multi-node Docker deployment (`docker-compose-cluster.yml`) specifying 10 distributed containers: 1 HDFS NameNode, 3 DataNodes ($3\times$ replication), 1 YARN ResourceManager, 2 NodeManagers, 1 Spark Master, 2 Spark Workers, and MongoDB. This enables one-command physical cluster provisioning."

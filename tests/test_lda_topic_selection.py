@@ -2,7 +2,7 @@
 Unit Tests: LDA Topic-Selection Diagnostics (pure math, no Spark session)
 =========================================================================
 Component: Model Selection / Statistical Verification
-Author: Elena Rostova (AI, ML & NLP Lead)
+Author: Shehab Osama (AI, ML & NLP Lead)
 
 These tests exercise only the deterministic, driver-side helpers in
 src/lda_topic_selection.py. They intentionally do NOT create a SparkSession

@@ -58,7 +58,7 @@
           "mean_sentiment": -0.0282
         }
       ],
-      "elapsed_ms": 1.929,
+      "elapsed_ms": 2.195,
       "result_csv": "data/hadoop_ecosystem/hive/results/topic_volume_ranking.csv"
     },
     {
@@ -142,7 +142,7 @@
           "Quantum_Physics_Advanced_Materials": 177
         }
       ],
-      "elapsed_ms": 2.71,
+      "elapsed_ms": 3.41,
       "result_csv": "data/hadoop_ecosystem/hive/results/publisher_topic_crosstab.csv"
     },
     {
@@ -511,7 +511,7 @@
           "mom_delta": 6
         }
       ],
-      "elapsed_ms": 2.588,
+      "elapsed_ms": 3.785,
       "result_csv": "data/hadoop_ecosystem/hive/results/mom_volume_change.csv"
     },
     {
@@ -709,7 +709,7 @@
           "rnk": 6
         }
       ],
-      "elapsed_ms": 3.566,
+      "elapsed_ms": 3.558,
       "result_csv": "data/hadoop_ecosystem/hive/results/sentiment_ranking.csv"
     },
     {
@@ -756,7 +756,7 @@
           "total_keyword_freq": 10027
         }
       ],
-      "elapsed_ms": 1.042,
+      "elapsed_ms": 2.233,
       "result_csv": "data/hadoop_ecosystem/hive/results/topic_term_join.csv"
     },
     {
@@ -776,7 +776,7 @@
           "mean_sentiment": 0.4689
         }
       ],
-      "elapsed_ms": 0.848,
+      "elapsed_ms": 0.863,
       "result_csv": "data/hadoop_ecosystem/hive/results/partition_pruned_month.csv"
     }
   ]

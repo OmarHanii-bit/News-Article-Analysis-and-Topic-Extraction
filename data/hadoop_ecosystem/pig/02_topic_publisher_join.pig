@@ -2,7 +2,7 @@
 --  02_topic_publisher_join.pig
 --  Project: News Article Analysis and Topic Extraction (Big Data Architecture)
 --  Component: Apache Pig (Pig Latin ETL)
---  Owner  : Member 2 — Priya Sharma (Hadoop & MapReduce Specialist)
+--  Owner  : Member 2 — Mohammed Hossam (Hadoop & MapReduce Specialist)
 --  Run    : pig -x mapreduce 02_topic_publisher_join.pig
 -- ==========================================================================
 --  GOAL: join publisher-level statistics with topic-level statistics to build

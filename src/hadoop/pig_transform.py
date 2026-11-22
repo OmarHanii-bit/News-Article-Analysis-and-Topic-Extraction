@@ -3,7 +3,7 @@ Apache Pig Transformation Layer (Local Pig Latin Engine + Real Cluster Artifacts
 =================================================================================
 Project  : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Pig - high-level data-flow (Pig Latin) ETL over HDFS.
-Owner    : Member 2 - Priya Sharma (Hadoop & MapReduce Specialist)
+Owner    : Member 2 - Mohammed Hossam (Hadoop & MapReduce Specialist)
 
 WHAT THIS MODULE DOES
 ---------------------
@@ -763,7 +763,7 @@ def _script_01(input_csv: str, output_dir: str) -> str:
         "--  01_clean_and_count.pig",
         "--  Project: News Article Analysis and Topic Extraction (Big Data Architecture)",
         "--  Component: Apache Pig (Pig Latin ETL)",
-        "--  Owner  : Member 2 — Priya Sharma (Hadoop & MapReduce Specialist)",
+        "--  Owner  : Member 2 — Mohammed Hossam (Hadoop & MapReduce Specialist)",
         "--  Run    : pig -x mapreduce 01_clean_and_count.pig",
         "-- ==========================================================================",
         "--  GOAL: load the raw news CSV, clean + tokenize the article body, count",
@@ -810,7 +810,7 @@ def _script_02(staging_csv: str, output_dir: str) -> str:
         "--  02_topic_publisher_join.pig",
         "--  Project: News Article Analysis and Topic Extraction (Big Data Architecture)",
         "--  Component: Apache Pig (Pig Latin ETL)",
-        "--  Owner  : Member 2 — Priya Sharma (Hadoop & MapReduce Specialist)",
+        "--  Owner  : Member 2 — Mohammed Hossam (Hadoop & MapReduce Specialist)",
         "--  Run    : pig -x mapreduce 02_topic_publisher_join.pig",
         "-- ==========================================================================",
         "--  GOAL: join publisher-level statistics with topic-level statistics to build",
@@ -865,7 +865,7 @@ def _script_03(staging_csv: str, output_dir: str) -> str:
         "--  03_sentiment_filter.pig",
         "--  Project: News Article Analysis and Topic Extraction (Big Data Architecture)",
         "--  Component: Apache Pig (Pig Latin ETL)",
-        "--  Owner  : Member 2 — Priya Sharma (Hadoop & MapReduce Specialist)",
+        "--  Owner  : Member 2 — Mohammed Hossam (Hadoop & MapReduce Specialist)",
         "--  Run    : pig -x mapreduce 03_sentiment_filter.pig",
         "-- ==========================================================================",
         "--  GOAL: isolate positive-sentiment coverage and rank topics by mean sentiment.",
@@ -931,7 +931,7 @@ def _build_real_cluster_commands(out_dir: str, scripts: list) -> str:
         "",
         "Project : News Article Analysis and Topic Extraction (Big Data Architecture)",
         "Component: Apache Pig (Pig Latin ETL compiled to MapReduce/Tez)",
-        "Owner   : Member 2 — Priya Sharma (Hadoop & MapReduce Specialist)",
+        "Owner   : Member 2 — Mohammed Hossam (Hadoop & MapReduce Specialist)",
         "",
         "These are the **authentic** commands to reproduce this component's workload",
         "on a real Hadoop cluster. The local `PigLatinEngine` produces identical",

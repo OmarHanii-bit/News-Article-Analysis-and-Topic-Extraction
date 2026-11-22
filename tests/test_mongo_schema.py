@@ -2,7 +2,7 @@
 Unit Tests: MongoDB NoSQL Document Modeling & BSON Schema
 =========================================================
 Component: MongoDB NoSQL Database Testing Suite
-Author: Tariq Al-Mansoor (NoSQL & MongoDB Specialist)
+Author: Mohamed Ibrahim (NoSQL & MongoDB Specialist)
 """
 
 import unittest

@@ -3,7 +3,7 @@ Hadoop Cluster & YARN Resource Management Configuration
 =======================================================
 Project: News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Cluster Computing — HDFS / YARN / MapReduce site configuration
-Owner: Member 2 — Priya Sharma (Hadoop & Cluster Specialist)
+Owner: Member 2 — Mohammed Hossam (Hadoop & Cluster Specialist)
 
 WHAT THIS MODULE DOES
 ---------------------
@@ -499,7 +499,7 @@ def run_cluster_planning(input_csv: str = "data/raw_news_articles.csv",
 
     summary = {
         "component": "Cluster Computing (HDFS + YARN + MapReduce)",
-        "owner": "Member 2 — Priya Sharma",
+        "owner": "Member 2 — Mohammed Hossam",
         "cluster_name": CLUSTER_TOPOLOGY["cluster_name"],
         "topology": CLUSTER_TOPOLOGY,
         "capacity_plan": plan,

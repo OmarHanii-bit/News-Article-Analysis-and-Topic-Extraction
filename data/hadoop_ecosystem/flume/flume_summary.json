@@ -9,7 +9,7 @@
     "/user/news/stream/20261121/FlumeData.20261121.00003.json",
     "/user/news/stream/20261121/FlumeData.20261121.00004.json"
   ],
-  "events_per_second": 3430.23,
+  "events_per_second": 2522.48,
   "channel_capacity": 1000,
   "out_dir": "data/hadoop_ecosystem/flume"
 }

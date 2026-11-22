@@ -2,7 +2,7 @@
 Unit Tests: PySpark Schema Enforcement & Sentiment UDF
 ======================================================
 Component: PySpark Distributed Pipeline Testing Suite
-Author: Marcus Chen (PySpark Distributed Engineer)
+Author: Yasmine Mohamed (PySpark Distributed Engineer)
 """
 
 import unittest

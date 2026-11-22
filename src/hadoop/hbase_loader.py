@@ -4,7 +4,7 @@ Apache HBase Column-Family NoSQL Loader (Local Simulation + Real Cluster Artifac
 Project  : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache HBase - the column-family NoSQL store that serves the enriched
            news articles for fast random (point) reads and short range scans.
-Owner    : Member 5 - Tariq Al-Mansoor (NoSQL & MongoDB Specialist)
+Owner    : Member 5 - Mohamed Ibrahim (NoSQL & MongoDB Specialist)
 
 WHAT THIS MODULE DOES
 ---------------------
@@ -401,7 +401,7 @@ def _build_real_cluster_commands(row_key_example: str, title_example: str) -> st
         "",
         "Project : News Article Analysis and Topic Extraction (Big Data Architecture)",
         "Component: Apache HBase (column-family NoSQL store)",
-        "Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & MongoDB Specialist)",
+        "Owner   : Member 5 — Mohamed Ibrahim (NoSQL & MongoDB Specialist)",
         "",
         "These are the **authentic** commands to reproduce this component's workload",
         "on a real HBase cluster. The local `HBaseSimulator` produces identical",

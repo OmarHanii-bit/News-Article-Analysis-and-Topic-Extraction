@@ -2,7 +2,7 @@
 
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Pig (Pig Latin ETL compiled to MapReduce/Tez)
-Owner   : Member 2 — Priya Sharma (Hadoop & MapReduce Specialist)
+Owner   : Member 2 — Mohammed Hossam (Hadoop & MapReduce Specialist)
 
 These are the **authentic** commands to reproduce this component's workload
 on a real Hadoop cluster. The local `PigLatinEngine` produces identical

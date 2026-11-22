@@ -2,7 +2,7 @@
 Unit Tests: Local Scalability / Volume Benchmark
 ================================================
 Component: Quality Assurance & Engineering Verification
-Author: David Kim (QA, Benchmarking & Presentation Lead)
+Author: Mazen Salem (QA, Benchmarking & Presentation Lead)
 
 Fast OFFLINE tests for the pure helpers in `src/scale_benchmark.py`. These
 tests deliberately never call generate_chunk_csvs()/clean_and_write_parquet():

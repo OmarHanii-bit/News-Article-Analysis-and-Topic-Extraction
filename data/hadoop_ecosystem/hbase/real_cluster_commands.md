@@ -2,7 +2,7 @@
 
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache HBase (column-family NoSQL store)
-Owner   : Member 5 — Tariq Al-Mansoor (NoSQL & MongoDB Specialist)
+Owner   : Member 5 — Mohamed Ibrahim (NoSQL & MongoDB Specialist)
 
 These are the **authentic** commands to reproduce this component's workload
 on a real HBase cluster. The local `HBaseSimulator` produces identical

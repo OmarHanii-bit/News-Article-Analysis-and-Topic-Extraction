@@ -2,8 +2,8 @@
 Verification Tests: Interactive Dashboards
 ==========================================
 Component: Visualization & UI Regression Suite
-Author: David Kim (QA, Benchmarking & Presentation Lead)
-         Sophia Taylor (Visualization, Streamlit & Offline HTML Lead)
+Author: Mazen Salem (QA, Benchmarking & Presentation Lead)
+         Mohamed Magdi (Visualization, Streamlit & Offline HTML Lead)
 
 Covers the live Streamlit application (src/dashboard.py) and the corpus-aware
 offline Plotly HTML dashboard builder (src/build_interactive_dashboard.py).

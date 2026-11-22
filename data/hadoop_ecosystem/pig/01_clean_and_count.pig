@@ -2,7 +2,7 @@
 --  01_clean_and_count.pig
 --  Project: News Article Analysis and Topic Extraction (Big Data Architecture)
 --  Component: Apache Pig (Pig Latin ETL)
---  Owner  : Member 2 — Priya Sharma (Hadoop & MapReduce Specialist)
+--  Owner  : Member 2 — Mohammed Hossam (Hadoop & MapReduce Specialist)
 --  Run    : pig -x mapreduce 01_clean_and_count.pig
 -- ==========================================================================
 --  GOAL: load the raw news CSV, clean + tokenize the article body, count

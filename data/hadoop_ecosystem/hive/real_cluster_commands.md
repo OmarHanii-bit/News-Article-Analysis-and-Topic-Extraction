@@ -2,7 +2,7 @@
 
 Project : News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Apache Hive (SQL data warehouse over HDFS/Parquet)
-Owner   : Member 3 — Marcus Chen (Distributed Warehouse Engineer)
+Owner   : Member 3 — Yasmine Mohamed (Distributed Warehouse Engineer)
 
 These are the **authentic** commands to reproduce this component's workload
 on a real Hive cluster.

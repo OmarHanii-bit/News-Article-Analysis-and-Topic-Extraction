@@ -2,7 +2,7 @@
 Integration Tests: Pipeline Data Integrity & Storage Layer
 ==========================================================
 Component: QA, Storage & Benchmarking Suite
-Author: David Kim (QA, Benchmarking & Presentation Lead)
+Author: Mazen Salem (QA, Benchmarking & Presentation Lead)
 """
 
 import unittest

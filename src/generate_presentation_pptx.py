@@ -142,7 +142,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         p_cap.alignment = PP_ALIGN.CENTER
 
     # =========================================================================
-    # SLIDE 1: Title Slide (Alex Vance)
+    # SLIDE 1: Title Slide (Omar Hani)
     # =========================================================================
     s1 = prs.slides.add_slide(blank_layout)
     bg1 = s1.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0), Inches(0), Inches(13.333), Inches(7.5))
@@ -184,13 +184,13 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     p_th.space_after = Pt(8)
 
     members = [
-        "1. Alex Vance — Project Lead & Architect",
-        "2. Priya Sharma — Hadoop & MapReduce Specialist",
-        "3. Marcus Chen — PySpark Distributed Engineer",
-        "4. Elena Rostova — NLP & ML Scientist",
-        "5. Tariq Al-Mansoor — MongoDB NoSQL Specialist",
-        "6. Sophia Taylor — Visualization & UI Lead",
-        "7. David Kim — QA, Benchmarking & Defense Lead"
+        "1. Omar Hani — Project Lead & Architect",
+        "2. Mohammed Hossam — Hadoop & MapReduce Specialist",
+        "3. Yasmine Mohamed — PySpark Distributed Engineer",
+        "4. Shehab Osama — NLP & ML Scientist",
+        "5. Mohamed Ibrahim — MongoDB NoSQL Specialist",
+        "6. Mohamed Magdi — Visualization & UI Lead",
+        "7. Mazen Salem — QA, Benchmarking & Defense Lead"
     ]
     for m in members:
         pm = tf_team.add_paragraph()
@@ -200,10 +200,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         pm.space_after = Pt(2)
 
     # =========================================================================
-    # SLIDE 2: Problem Definition & 5Vs (Alex Vance)
+    # SLIDE 2: Problem Definition & 5Vs (Omar Hani)
     # =========================================================================
     s2 = prs.slides.add_slide(blank_layout)
-    add_header(s2, "Problem Definition & The 5Vs of Big News Data", "Domain & Scale Scoping", "Alex Vance")
+    add_header(s2, "Problem Definition & The 5Vs of Big News Data", "Domain & Scale Scoping", "Omar Hani")
     add_card(s2, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "The Real-World Business Challenge", [
         "Global news wires publish millions of full-text articles daily.",
         "Manual human synthesis is impossible at high dissemination velocity.",
@@ -220,10 +220,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 3: Ingestion & Storage: HDFS & YARN (Priya Sharma)
+    # SLIDE 3: Ingestion & Storage: HDFS & YARN (Mohammed Hossam)
     # =========================================================================
     s3 = prs.slides.add_slide(blank_layout)
-    add_header(s3, "Distributed Storage Layer: Hadoop HDFS & YARN", "Cluster Infrastructure", "Priya Sharma")
+    add_header(s3, "Distributed Storage Layer: Hadoop HDFS & YARN", "Cluster Infrastructure", "Mohammed Hossam")
     add_card(s3, Inches(0.8), Inches(1.6), Inches(5.6), Inches(3.15), "Hadoop Distributed File System (HDFS)", [
         "Block Architecture: Files are automatically split into 128 MB blocks distributed across DataNodes.",
         "3x Replication Factor: Guarantees zero data loss even if two storage nodes fail simultaneously.",
@@ -247,10 +247,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     )
 
     # =========================================================================
-    # SLIDE 4: First-Pass Processing: MapReduce (Priya Sharma)
+    # SLIDE 4: First-Pass Processing: MapReduce (Mohammed Hossam)
     # =========================================================================
     s4 = prs.slides.add_slide(blank_layout)
-    add_header(s4, "Batch Processing: Hadoop MapReduce Tokenization", "Distributed Batch Layer", "Priya Sharma")
+    add_header(s4, "Batch Processing: Hadoop MapReduce Tokenization", "Distributed Batch Layer", "Mohammed Hossam")
     add_card(s4, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "MapReduce Architecture & Execution", [
         "Hadoop Streaming Integration: Executes standard POSIX stream pipes connecting Python mapper and reducer.",
         "Mapper (mapper.py): Streams raw CSV; applies compiled regex stripping HTML, URLs, and entities; purges English stopwords; emits (term, 1) and bigrams.",
@@ -267,11 +267,11 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 5: Hadoop Ecosystem Services (Priya Sharma)
+    # SLIDE 5: Hadoop Ecosystem Services (Mohammed Hossam)
     # =========================================================================
     s_eco = prs.slides.add_slide(blank_layout)
     add_header(s_eco, "The Wider Hadoop Ecosystem: Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper",
-               "Cluster Infrastructure", "Priya Sharma")
+               "Cluster Infrastructure", "Mohammed Hossam")
     add_card(s_eco, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Analytical & Storage Services", [
         "Hive: External Parquet warehouse tables; 6 HiveQL analytical rollups (topic volume, sentiment ranking, MoM change) with partition pruning.",
         "HBase: Column-family NoSQL store (cf_meta/cf_nlp/cf_raw) with salted row keys across 16 regions; 2,000 enriched articles loaded.",
@@ -288,10 +288,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 6: Distributed Engine: Spark & PySpark (Marcus Chen)
+    # SLIDE 6: Distributed Engine: Spark & PySpark (Yasmine Mohamed)
     # =========================================================================
     s5 = prs.slides.add_slide(blank_layout)
-    add_header(s5, "In-Memory Compute Engine: Apache Spark & PySpark", "In-Memory Distributed Core", "Marcus Chen")
+    add_header(s5, "In-Memory Compute Engine: Apache Spark & PySpark", "In-Memory Distributed Core", "Yasmine Mohamed")
     add_card(s5, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "PySpark Architectural Advantages", [
         "In-Memory DAG Execution: 10x to 100x faster than disk-bound MapReduce for iterative machine learning.",
         "Catalyst SQL Optimizer: Compiles query expressions into optimized JVM bytecode, minimizing Py4J overhead.",
@@ -310,10 +310,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 6: Lakehouse Parquet Storage (Marcus Chen)
+    # SLIDE 6: Lakehouse Parquet Storage (Yasmine Mohamed)
     # =========================================================================
     s6 = prs.slides.add_slide(blank_layout)
-    add_header(s6, "Enterprise Lakehouse: Snappy Partitioned Parquet", "Columnar Storage Architecture", "Marcus Chen")
+    add_header(s6, "Enterprise Lakehouse: Snappy Partitioned Parquet", "Columnar Storage Architecture", "Yasmine Mohamed")
     add_card(s6, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Parquet Storage Optimizations", [
         "Columnar Layout: Organizes values by column rather than row, maximizing compression ratios.",
         "Snappy Compression: Yields ~92% storage size reduction over raw CSV (92.5% in the artifacts) while maintaining fast decompression speed.",
@@ -330,10 +330,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 7: Feature Engineering & TF-IDF (Elena Rostova)
+    # SLIDE 7: Feature Engineering & TF-IDF (Shehab Osama)
     # =========================================================================
     s7 = prs.slides.add_slide(blank_layout)
-    add_header(s7, "Distributed Feature Engineering & TF-IDF", "NLP Pipeline", "Elena Rostova")
+    add_header(s7, "Distributed Feature Engineering & TF-IDF", "NLP Pipeline", "Shehab Osama")
     add_card(s7, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Distributed Text Transformation Pipeline", [
         "RegexTokenizer: Splits cleaned prose into token arrays on whitespace with minTokenLength=3.",
         "Domain Stopwords Removal: Combines standard NLTK English stopwords with custom journalistic tokens ('said', 'bloomberg', 'reuters').",
@@ -350,10 +350,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 8: LDA Topic Modeling (Elena Rostova)
+    # SLIDE 8: LDA Topic Modeling (Shehab Osama)
     # =========================================================================
     s8 = prs.slides.add_slide(blank_layout)
-    add_header(s8, "Machine Learning: PySpark MLlib Latent Dirichlet Allocation", "Unsupervised Topic Discovery", "Elena Rostova")
+    add_header(s8, "Machine Learning: PySpark MLlib Latent Dirichlet Allocation", "Unsupervised Topic Discovery", "Shehab Osama")
     add_card(s8, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "LDA Mathematical Foundation", [
         "Hierarchical Bayesian Model: Documents are mixtures of K topics; topics are distributions over vocabulary V.",
         "Dirichlet Priors: theta_d ~ Dir(alpha) governs document-topic mix; beta_k ~ Dir(eta) governs topic-word mix.",
@@ -379,11 +379,11 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     )
 
     # =========================================================================
-    # SLIDE 10: Real-World Corpus Validation (Alex Vance)
+    # SLIDE 10: Real-World Corpus Validation (Omar Hani)
     # =========================================================================
     s_real = prs.slides.add_slide(blank_layout)
     add_header(s_real, "Real-World Corpus Validation: Reuters-21578 Wire Archive",
-               "Dataset & Generalisation", "Alex Vance")
+               "Dataset & Generalisation", "Omar Hani")
     add_card(s_real, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Authentic Full-Text Dataset", [
         "Source: NLTK Reuters-21578 news wire corpus (10,788 available -> 10,712 ingested; 76 too short) - genuine article text, not just headlines.",
         "Ingested: 10,712 full-text articles (1,377,941 words; mean 128.6 words/article).",
@@ -391,19 +391,19 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "Honest Provenance: Reuters-21578 carries no timestamps, so dates are derived deterministically across 2024-2025 for year/month partitioning.",
         "Schema-Faithful: Mapped to the identical 12-column canonical contract, so zero pipeline code changes were required."
     ])
-    add_card(s_real, Inches(6.8), Inches(1.6), Inches(5.7), Inches(5.3), "Same Pipeline, Two Corpora", [
+    add_card(s_real, Inches(6.8), Inches(1.6), Inches(5.7), Inches(5.3), "Same Pipeline, Real News Validated", [
         "Synthetic Benchmark: 6,000 articles, curated LDA labels (stable for grading).",
         "Real Corpus: 10,712 articles, auto-derived labels from learned top terms (Mln/Tonnes, Pct/Bank/Rate, Trade/Japan/Market).",
-        "Corpus-Agnostic Design: python src/spark_pipeline.py --input-csv <corpus> --auto-labels.",
-        "Outputs: data/real_news/processed_parquet/ and data/real_news/pipeline_analytics_summary.json.",
-        "Validation: 106 automated tests pass (incl. Hadoop-ecosystem, forecast & scale assertions); both lakehouses verified coherent."
+        "Supervised F1 Metric: 92.57% Test Accuracy & 0.8423 Macro-F1 across 17 categories on held-out 80/20 test split (src/supervised_classifier.py).",
+        "Live RSS Feed: 272 live multi-publisher articles acquired from NYT, BBC, CBS, NPR with authentic RFC-822 timestamps (src/ingest_live_rss.py).",
+        "Validation: 113 automated tests pass; both lakehouses verified coherent."
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 11: NoSQL Serving Layer: MongoDB (Tariq Al-Mansoor)
+    # SLIDE 11: NoSQL Serving Layer: MongoDB (Mohamed Ibrahim)
     # =========================================================================
     s9 = prs.slides.add_slide(blank_layout)
-    add_header(s9, "NoSQL Serving Layer: MongoDB Polymorphic Documents", "Persistence & Query Serving", "Tariq Al-Mansoor")
+    add_header(s9, "NoSQL Serving Layer: MongoDB Polymorphic Documents", "Persistence & Query Serving", "Mohamed Ibrahim")
     add_card(s9, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Why NoSQL Over Relational Databases?", [
         "Polymorphic Schema: News stories carry dynamic metadata (varying author lists, web URLs, categories).",
         "Nested Complex Data: Stores topic distribution probability vectors and token arrays directly in one BSON document.",
@@ -420,10 +420,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 10: Indexing & Aggregations (Tariq Al-Mansoor)
+    # SLIDE 10: Indexing & Aggregations (Mohamed Ibrahim)
     # =========================================================================
     s10 = prs.slides.add_slide(blank_layout)
-    add_header(s10, "MongoDB Performance: Indexing & Aggregation Pipelines", "Query Optimization", "Tariq Al-Mansoor")
+    add_header(s10, "MongoDB Performance: Indexing & Aggregation Pipelines", "Query Optimization", "Mohamed Ibrahim")
     add_card(s10, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "High-Performance Indexing Strategy", [
         "Compound B-tree Index: db.articles.createIndex({ 'dominant_topic': 1, 'date': -1 }).",
         "Index Performance Gain: Reduces temporal filtering within topics from O(N) full table scans to O(log N) index seeks.",
@@ -440,10 +440,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 11: Visual Analytics: Volume & Publisher Bias (Sophia Taylor)
+    # SLIDE 11: Visual Analytics: Volume & Publisher Bias (Mohamed Magdi)
     # =========================================================================
     s11 = prs.slides.add_slide(blank_layout)
-    add_header(s11, "Visual Analytics: Topic Volume & Publisher Editorial Bias", "Descriptive Intelligence", "Sophia Taylor")
+    add_header(s11, "Visual Analytics: Topic Volume & Publisher Editorial Bias", "Descriptive Intelligence", "Mohamed Magdi")
     
     # Left: Explanation card
     add_card(s11, Inches(0.8), Inches(1.6), Inches(5.2), Inches(5.3), "Publisher Editorial Specialization", [
@@ -463,10 +463,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         add_card(s11, Inches(6.3), Inches(1.6), Inches(6.2), Inches(5.3), "Chart: Publisher Topic Heatmap", ["Graphic file visualizations/publisher_topic_heatmap.png"])
 
     # =========================================================================
-    # SLIDE 12: Sentiment & Temporal Trends (Sophia Taylor)
+    # SLIDE 12: Sentiment & Temporal Trends (Mohamed Magdi)
     # =========================================================================
     s12 = prs.slides.add_slide(blank_layout)
-    add_header(s12, "Sentiment Dynamics & Temporal Topic Trajectories", "Advanced Analytics", "Sophia Taylor")
+    add_header(s12, "Sentiment Dynamics & Temporal Topic Trajectories", "Advanced Analytics", "Mohamed Magdi")
     
     # Left: Text card
     add_card(s12, Inches(0.8), Inches(1.6), Inches(5.2), Inches(5.3), "Key Analytical Revelations", [
@@ -486,10 +486,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         add_card(s12, Inches(6.3), Inches(1.6), Inches(6.2), Inches(5.3), "Chart: Sentiment Distribution", ["Graphic file visualizations/topic_sentiment_distribution.png"])
 
     # =========================================================================
-    # SLIDE 13: Scalability Benchmarks (David Kim)
+    # SLIDE 13: Scalability Benchmarks (Mazen Salem)
     # =========================================================================
     s13 = prs.slides.add_slide(blank_layout)
-    add_header(s13, "System Benchmarks & Horizontal Scalability", "Performance Profiling", "David Kim")
+    add_header(s13, "System Benchmarks & Horizontal Scalability", "Performance Profiling", "Mazen Salem")
     add_card(s13, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "Execution Profiling (6,000 Articles)", [
         "Hadoop MapReduce Tokenization: 3.8 seconds (disk-streaming).",
         "PySpark Schema & Ingestion: 2.1 seconds.",
@@ -509,10 +509,10 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ], highlight=True)
 
     # =========================================================================
-    # SLIDE 14: Actionable Insights & "What Next?" (David Kim)
+    # SLIDE 14: Actionable Insights & "What Next?" (Mazen Salem)
     # =========================================================================
     s14 = prs.slides.add_slide(blank_layout)
-    add_header(s14, "Actionable Insights: Managerial 'What Next?' Decisions", "Strategic Impact", "David Kim")
+    add_header(s14, "Actionable Insights: Managerial 'What Next?' Decisions", "Strategic Impact", "Mazen Salem")
     add_card(s14, Inches(0.8), Inches(1.6), Inches(3.7), Inches(5.3), "Action 1: Macro Risk Hedging", [
         "Target: Quantitative Hedge Funds & Risk Officers.",
         "Mechanism: Connect Spark LDA topic distributions directly to algorithmic trading models.",
@@ -533,17 +533,17 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
     ])
 
     # =========================================================================
-    # SLIDE 15: Conclusion & Technical Defense (Alex Vance)
+    # SLIDE 15: Conclusion & Technical Defense (Omar Hani)
     # =========================================================================
     s15 = prs.slides.add_slide(blank_layout)
-    add_header(s15, "Project Conclusion & Technical Defense Handoff", "Summary & Q&A Defense", "Alex Vance")
+    add_header(s15, "Project Conclusion & Technical Defense Handoff", "Summary & Q&A Defense", "Omar Hani")
     add_card(s15, Inches(0.8), Inches(1.6), Inches(5.6), Inches(5.3), "10/10 Evaluation Rubric Summary (self-assessed target; instructor final)", [
         "1. Problem Definition & Scope (1/1): 5Vs, 4 stakeholders, spreadsheet limits.",
         "2. Dataset & Data Sources (1/1): 6K synthetic + 10.7K real Reuters full-text articles, 12 attributes.",
         "3. System Architecture (2/2): End-to-end HDFS -> YARN -> MapReduce/Spark -> Hive/HBase -> MongoDB/Parquet -> Streamlit.",
         "4. Data Processing Pipeline (2/2): Commented MapReduce + 7-stage PySpark + 9 orchestrated ecosystem modules covering 10 named technologies.",
         "5. Analytical Depth (2/2): Online LDA (k=6), CountVectorizer/TF-IDF, VADER sentiment, publisher cross-tabs, held-out forecast eval.",
-        "6. Visualization (1/1): 14 charts, 8-view Streamlit UI with What Next, dual HTML dashboards, 3 business actions.",
+        "6. Visualization (1/1): 17 charts, 8-view Streamlit UI with What Next, dual HTML dashboards, 3 business actions.",
         "7. Teamwork & Defense (1/1): balanced 7-member speaking coverage (lead presents opening/closing), 17 slides, live demo runbook, 12 Q&A answers."
     ])
     add_card(s15, Inches(6.8), Inches(1.6), Inches(5.7), Inches(5.3), "Live Demo & Technical Defense Ready", [
@@ -561,8 +561,14 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "  • NoSQL vs Relational document modeling rationale."
     ], highlight=True)
 
-    prs.save(output_pptx)
-    print(f"[+] PowerPoint presentation successfully created: {output_pptx}")
+    try:
+        prs.save(output_pptx)
+        print(f"[+] PowerPoint presentation successfully created: {output_pptx}")
+    except PermissionError:
+        alt_path = "presentation/News_Article_Analysis_Presentation_Updated.pptx"
+        prs.save(alt_path)
+        print(f"[!] Warning: {output_pptx} is currently locked (e.g. open in PowerPoint).")
+        print(f"[+] Saved updated deck to: {alt_path}")
     print(f"[+] Total slides: {len(prs.slides)}")
     return output_pptx
 

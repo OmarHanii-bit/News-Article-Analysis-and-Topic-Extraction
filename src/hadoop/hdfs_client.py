@@ -3,7 +3,7 @@ HDFS Distributed Storage Layer (Local Simulation + Real Cluster Command Generato
 ==================================================================================
 Project: News Article Analysis and Topic Extraction (Big Data Architecture)
 Component: Hadoop Distributed File System (HDFS)
-Owner: Member 2 — Priya Sharma (Hadoop & HDFS Specialist)
+Owner: Member 2 — Mohammed Hossam (Hadoop & HDFS Specialist)
 
 WHAT THIS MODULE DOES
 ---------------------

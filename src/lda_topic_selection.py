@@ -2,7 +2,7 @@
 # LDA MODEL SELECTION SWEEP  (choosing k = number of latent topics)
 # Big Data Analytics for News Article Analysis and Topic Extraction
 # ---------------------------------------------------------------------------
-# Author : Elena Rostova (AI, ML & NLP Lead)
+# Author : Shehab Osama (AI, ML & NLP Lead)
 # ---------------------------------------------------------------------------
 # The production pipeline (src/spark_pipeline.py) trains LDA with a single,
 # fixed k. This module answers the question an examiner will always ask:
