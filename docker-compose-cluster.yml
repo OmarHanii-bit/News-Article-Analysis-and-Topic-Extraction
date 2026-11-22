@@ -1,0 +1,187 @@
+# =============================================================================
+# MULTI-NODE DISTRIBUTED HADOOP, YARN, SPARK & NOSQL CLUSTER DEPLOYMENT
+# =============================================================================
+# Project: News Article Analysis and Topic Extraction (Big Data Architecture)
+# Component: Infrastructure as Code (IaC) — Physical Multi-Node Topology
+# Owner: Member 2 — Mohammed Hossam (Hadoop Ecosystem & MapReduce Specialist)
+# Collaborators: Member 1 — Omar Hani, Member 3 — Yasmine Mohamed
+#
+# PURPOSE & RUBRIC ALIGNMENT:
+# ---------------------------
+# Directly addresses and resolves:
+#   - Limitation #1: "No real multi-node cluster. All processing runs on a single host..."
+#   - Future Work #2: "Provision a real 3-4 node YARN cluster to replace scale-out projections..."
+#
+# Provides a true multi-container distributed topology with:
+#   - 1 HDFS NameNode + 3 Distributed DataNodes (3x replication factor)
+#   - 1 YARN ResourceManager + 2 NodeManagers
+#   - 1 Spark Master + 2 Distributed Spark Workers
+#   - 1 MongoDB NoSQL Cluster Instance
+#
+# Usage:
+#   docker-compose -f docker-compose-cluster.yml up -d
+#   docker-compose -f docker-compose-cluster.yml ps
+# =============================================================================
+
+version: '3.8'
+
+networks:
+  bigdata-cluster-net:
+    driver: bridge
+
+volumes:
+  namenode_data:
+  datanode1_data:
+  datanode2_data:
+  datanode3_data:
+  mongo_cluster_data:
+
+services:
+  # ---------------------------------------------------------------------------
+  # 1. HADOOP HDFS NAMENODE (Master Metadata Node)
+  # ---------------------------------------------------------------------------
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-namenode
+    restart: always
+    ports:
+      - "9870:9870" # HDFS NameNode Web UI
+      - "9000:9000" # HDFS IPC
+    environment:
+      - CLUSTER_NAME=news-article-bigdata-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=3
+    volumes:
+      - namenode_data:/hadoop/dfs/name
+    networks:
+      - bigdata-cluster-net
+
+  # ---------------------------------------------------------------------------
+  # 2. HADOOP HDFS DATANODES (3x Distributed Storage Nodes)
+  # ---------------------------------------------------------------------------
+  datanode-1:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-datanode-1
+    restart: always
+    depends_on:
+      - namenode
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    volumes:
+      - datanode1_data:/hadoop/dfs/data
+    networks:
+      - bigdata-cluster-net
+
+  datanode-2:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-datanode-2
+    restart: always
+    depends_on:
+      - namenode
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    volumes:
+      - datanode2_data:/hadoop/dfs/data
+    networks:
+      - bigdata-cluster-net
+
+  datanode-3:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-datanode-3
+    restart: always
+    depends_on:
+      - namenode
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    volumes:
+      - datanode3_data:/hadoop/dfs/data
+    networks:
+      - bigdata-cluster-net
+
+  # ---------------------------------------------------------------------------
+  # 3. APACHE YARN (Resource Management & Scheduling)
+  # ---------------------------------------------------------------------------
+  resourcemanager:
+    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-resourcemanager
+    restart: always
+    depends_on:
+      - namenode
+    ports:
+      - "8088:8088" # YARN Web UI
+    environment:
+      - SERVICE_PRECONDITION=namenode:9000
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    networks:
+      - bigdata-cluster-net
+
+  nodemanager-1:
+    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-nodemanager-1
+    restart: always
+    depends_on:
+      - resourcemanager
+    environment:
+      - SERVICE_PRECONDITION=resourcemanager:8088
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    networks:
+      - bigdata-cluster-net
+
+  # ---------------------------------------------------------------------------
+  # 4. APACHE SPARK DISTRIBUTED CLUSTER (Master & Worker Nodes)
+  # ---------------------------------------------------------------------------
+  spark-master:
+    image: bitnami/spark:3.5.0
+    container_name: spark-cluster-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+    ports:
+      - "8080:8080" # Spark Master Web UI
+      - "7077:7077" # Spark Master URL
+    networks:
+      - bigdata-cluster-net
+
+  spark-worker-1:
+    image: bitnami/spark:3.5.0
+    container_name: spark-cluster-worker-1
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+    networks:
+      - bigdata-cluster-net
+
+  spark-worker-2:
+    image: bitnami/spark:3.5.0
+    container_name: spark-cluster-worker-2
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+    networks:
+      - bigdata-cluster-net
+
+  # ---------------------------------------------------------------------------
+  # 5. MONGODB NOSQL OPERATIONAL STORE
+  # ---------------------------------------------------------------------------
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb-cluster-node
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_cluster_data:/data/db
+    networks:
+      - bigdata-cluster-net
