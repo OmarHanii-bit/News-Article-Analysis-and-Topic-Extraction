@@ -213,9 +213,11 @@ def main():
     else:
         print("[*] Test runner will execute after tests are built.")
 
-    # Step 10: Offline Interactive HTML Dashboards (one per corpus)
-    print_step(10, "Offline Interactive Plotly Dashboards (Self-Contained HTML)")
+    # Step 10: Offline Interactive HTML Dashboards (one per corpus + command center)
+    print_step(10, "Offline Dashboards (Plotly Exports + Intelligence Command Center)")
     success = run_command([sys.executable, "src/build_interactive_dashboard.py"], "HTML Dashboard Build")
+    if not success: return
+    success = run_command([sys.executable, "src/build_command_center.py"], "Command Center Dashboard Build")
     if not success: return
 
     # Step 11: Word Report Export (Markdown original left intact)

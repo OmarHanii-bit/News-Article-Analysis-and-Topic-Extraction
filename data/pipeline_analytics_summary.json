@@ -1,12 +1,12 @@
 {
   "metadata": {
-    "execution_timestamp": "2026-11-21 19:29:33",
+    "execution_timestamp": "2026-11-23 17:44:51",
     "input_dataset": "data/raw_news_articles.csv",
     "label_mode": "curated",
     "total_articles_processed": 6000,
     "vocabulary_size": 438,
     "num_topics": 6,
-    "elapsed_seconds": 45.23
+    "elapsed_seconds": 150.07
   },
   "topics": {
     "Topic_0": {

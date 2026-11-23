@@ -1,23 +1,23 @@
 {
   "dataset_name": "Live International Multi-Publisher RSS Wire Feed",
-  "acquisition_timestamp": "2026-11-21T18:43:13.496269+00:00",
-  "total_records": 272,
+  "acquisition_timestamp": "2026-11-23T17:50:53.837775+00:00",
+  "total_records": 282,
   "publishers_represented": {
-    "The New York Times": 126,
-    "BBC News": 91,
+    "The New York Times": 134,
+    "BBC News": 92,
     "CBS News": 30,
-    "NPR News": 25
+    "NPR News": 26
   },
   "categories_represented": {
-    "World": 117,
-    "Business": 98,
-    "Technology": 57
+    "World": 122,
+    "Business": 100,
+    "Technology": 60
   },
   "date_derived": false,
   "date_type": "Genuine RFC-822 timestamps from live web syndication endpoints",
   "date_range": [
-    "2026-06-29",
-    "2026-11-21"
+    "2026-06-30",
+    "2026-11-23"
   ],
-  "mean_word_count": 32.74
+  "mean_word_count": 32.19
 }

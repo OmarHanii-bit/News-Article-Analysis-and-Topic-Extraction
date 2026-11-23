@@ -1,12 +1,12 @@
 {
   "metadata": {
-    "execution_timestamp": "2026-11-21 20:41:40",
+    "execution_timestamp": "2026-11-23 17:48:13",
     "input_dataset": "data/real_news/raw_news_articles_real.csv",
     "label_mode": "auto",
     "total_articles_processed": 10712,
     "vocabulary_size": 5000,
     "num_topics": 6,
-    "elapsed_seconds": 106.08
+    "elapsed_seconds": 187.42
   },
   "topics": {
     "Topic_0": {

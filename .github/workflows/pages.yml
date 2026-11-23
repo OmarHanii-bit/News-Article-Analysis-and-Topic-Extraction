@@ -1,0 +1,57 @@
+# Publish the static dashboard suite to GitHub Pages.
+#
+# The three dashboards are self-contained HTML files: no server, database or
+# API key is required at view time. This workflow uploads `dashboard/` as the
+# Pages artifact, so the public URL is:
+#     https://<owner>.github.io/<repository>/
+#
+# Pages must be allowed to use GitHub Actions as its source. The
+# `configure-pages` step with `enablement: true` does that automatically when
+# the workflow token has permission; otherwise set it once under
+# Settings -> Pages -> Build and deployment -> Source: GitHub Actions.
+
+name: Publish Dashboards
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Stage static dashboards
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload dashboard artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
