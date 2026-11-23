@@ -38,44 +38,45 @@ PLUM = TOPIC_PALETTE[5]
 
 # (tier label, accent, [(box title, box subtitle), ...])
 TIERS = [
-    ("1 · DATA SOURCES", TEAL, [
+    ("1 · SOURCES", TEAL, [
         ("Synthetic Benchmark", "6,000 full-text articles\nKaggle 'All the News' schema"),
         ("Reuters-21578 Wire", "10,712 real full-text\ndocuments (NLTK)"),
-        ("Messy Web / Wire Feeds", "HTML tags · XML entities\n· tracking URLs"),
+        ("Live RSS Feeds", "BBC / NYT / CBS / NPR\nsrc/ingest_live_rss.py"),
     ]),
     ("2 · INGESTION", ORANGE, [
         ("Apache Sqoop", "RDBMS ↔ HDFS\nparallel bulk transfer"),
         ("Apache Flume", "Spool source → memory\nchannel → HDFS sink"),
         ("Schema Contract", "12-column StructType\nUTF-8 CSV ingestion"),
+        ("Structured Streaming", "Live RSS micro-batches\ncheckpointed Parquet + alerts"),
     ]),
-    ("3 · DISTRIBUTED STORAGE", SAGE, [
+    ("3 · STORAGE", SAGE, [
         ("Apache HDFS", "128 MB blocks · 3×\nreplication · rack-aware"),
         ("NameNode / DataNodes", "27 objects · 3 live\nDataNodes · 0 missing blocks"),
     ]),
-    ("4 · RESOURCE & COORDINATION", GOLD, [
+    ("4 · RESOURCE &\nCOORDINATION", GOLD, [
         ("Apache YARN", "ResourceManager ·\nCapacityScheduler containers"),
         ("Apache ZooKeeper", "Znodes · watches ·\nleader election"),
     ]),
-    ("5 · PROCESSING ENGINES", TEAL, [
+    ("5 · PROCESSING", TEAL, [
         ("MapReduce", "Streaming mapper/reducer\nregex N-gram counting"),
         ("Apache Pig", "Pig Latin ETL\nLOAD → FILTER → GROUP"),
         ("Apache Hive", "HiveQL external Parquet\ntables · partition pruning"),
         ("PySpark", "TF-IDF · Online LDA k=6\nVADER sentiment UDF"),
     ]),
-    ("6 · PERSISTENCE / SERVING", PLUM, [
+    ("6 · PERSISTENCE /\nSERVING", PLUM, [
         ("Parquet Lakehouse", "Snappy · partitioned\nby year / month"),
         ("Apache HBase", "cf_meta / cf_nlp / cf_raw\n3 families · 16 regions"),
         ("MongoDB", "BSON articles · compound\n+ text indexes"),
     ]),
     ("7 · ANALYTICS & UI", ORANGE, [
-        ("Matplotlib / Seaborn", "13 high-resolution\n300 DPI figures"),
+        ("Matplotlib / Seaborn", "17 high-resolution\n300 DPI figures"),
         ("Streamlit + Plotly HTML", "Executive dashboard +\n2 offline dashboards"),
         ("Jupyter Notebook", "29 cells · executed\nvalidation appendices"),
     ]),
     ("8 · INSIGHTS", NAVY, [
         ("Risk Alerts", "Regulatory volume\n> mean + 2σ"),
         ("Editorial Assignments", "Peer share jump\n> 10 pp MoM"),
-        ("Streaming Upgrade", "Kafka + Structured\nStreaming < 5 s"),
+        ("Breaking-News Alerts", "Streaming severity alerts\nfrom live RSS batches"),
     ]),
 ]
 
@@ -103,13 +104,13 @@ def draw_tier(ax, y, label, accent, components):
         linewidth=0.8, edgecolor="#D7E0E7", facecolor="#F7FAFC", zorder=1,
     )
     ax.add_patch(band)
-    ax.text(3.6, y + height / 2, label, ha="left", va="center", rotation=90,
-            fontsize=8.4, fontweight="bold", color=accent, zorder=2)
+    ax.text(3.2, y + height / 2, label, ha="left", va="center",
+            fontsize=7.2, fontweight="bold", color=accent, zorder=2)
 
     n = len(components)
     box_w = 25 if n <= 3 else 19.2
-    gap = (90 - n * box_w) / max(n - 1, 1)
-    xs = [7 + i * (box_w + gap) for i in range(n)]
+    gap = (82 - n * box_w) / max(n - 1, 1)
+    xs = [14 + i * (box_w + gap) for i in range(n)]
     centers = []
     for x, (title, subtitle) in zip(xs, components):
         draw_box(ax, x, y + 1.0, box_w, 7.6, title, subtitle, accent)
@@ -158,25 +159,28 @@ def build_diagram():
                 # Slight fan-out: draw a straight diagonal from the nearest
                 # upper box centre to this lower box centre.
                 elbow = FancyArrowPatch(
-                    (src, y_from + 0.1), (x, y_to - 0.1),
+                    (src, y_from + 1.0), (x, y_to - 1.0),
                     arrowstyle="-|>", mutation_scale=11, linewidth=0.9,
                     color="#8BA3B5", zorder=2,
                 )
                 ax.add_patch(elbow)
             else:
-                draw_arrow(ax, x, y_from + 0.2, y_to - 0.2)
+                draw_arrow(ax, x, y_from + 1.0, y_to - 1.0)
 
     # ZooKeeper coordinates YARN (dashed lateral link inside tier 4).
     y_coord = tier_top - 3 * tier_step - band_height + 4.8
+    yarn_center, zookeeper_center = all_centers[3]
     ax.annotate(
-        "coordinates", xy=(38, y_coord), xytext=(24, y_coord),
-        arrowprops=dict(arrowstyle="->", linestyle="--", color=GOLD, linewidth=1.2),
-        va="center", ha="center", fontsize=7.6, color=GOLD,
+        "", xy=(yarn_center + 12.5, y_coord),
+        xytext=(zookeeper_center - 12.5, y_coord),
+        arrowprops=dict(arrowstyle="-|>", linestyle="--", color=GOLD, linewidth=1.2),
     )
+    ax.text((yarn_center + zookeeper_center) / 2, y_coord + 1.0, "coordinates",
+            va="bottom", ha="center", fontsize=7.6, color=GOLD)
 
     ax.text(50, 1.4,
             "Verified stack: 9/9 Hadoop services executed · Oozie DAG SUCCEEDED · "
-            "HDFS invariant: logical × 3 = physical · 13 × 300-DPI static artifacts",
+            "HDFS invariant: logical × 3 = physical · 17 × 300-DPI static artifacts",
             ha="center", va="center", fontsize=8.2, color="#505F6E")
 
     os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)

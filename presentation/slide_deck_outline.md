@@ -2,7 +2,7 @@
 ## News Article Analysis and Topic Extraction (Big Data Architecture)
 **Course:** Introduction To Big Data  
 **Date:** Week 12 Final Capstone Delivery  
-**Team Name:** The Distributed Insights Collective (Anthropic Track)
+**Team Name:** The Distributed Insights Collective
 
 ---
 
@@ -180,7 +180,7 @@
   - Summary of accomplishments: full rubric coverage (10/10 self-assessed target; instructor final).
   - Verified integration across the 9-module Hadoop ecosystem stack (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), PySpark, MongoDB, and Streamlit.
   - Dual-corpus validation: 6,000-article synthetic benchmark + 10,712-article real Reuters wire corpus.
-  - Evidence depth: 113 passing tests, held-out 2024→2025 forecast evaluation (naive baseline wins), measured 50k-article scale benchmark (10,108 rows/s), honest k-selection reconciliation.
+  - Evidence depth: 119 passing tests across 13 modules, held-out 2024→2025 forecast evaluation (naive baseline wins), measured 50k-article scale benchmark (10,108 rows/s), honest k-selection reconciliation.
   - Seamless handoff to Live Interactive Demonstration and technical Q&A session.
 
 ---

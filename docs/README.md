@@ -7,6 +7,7 @@ This folder holds focused technical notes that would otherwise bloat the report.
 | Document | Purpose | Related report section |
 |---|---|---|
 | [`SCALABILITY_AND_KAGGLE.md`](SCALABILITY_AND_KAGGLE.md) | Measured 50k-article benchmark, projection method, and Kaggle ingestion commands | §5.5, §8 |
+| [`SHARING.md`](SHARING.md) | Publish the static dashboards on GitHub Pages; optional Streamlit Cloud and Docker deployment | §8 |
 | [`../PROJECT_REPORT.md`](../PROJECT_REPORT.md) | Full capstone report (rubric alignment, architecture, evaluation, limitations, references) | — |
 | [`../README.md`](../README.md) | Quick start, repository map, execution methods, evidence summary | §8 |
 | [`../presentation/slide_deck_outline.md`](../presentation/slide_deck_outline.md) | 17-slide speaker notes, demo runbook and Q&A defense answers | §7 |
@@ -29,6 +30,7 @@ without re-running the pipeline:
 ## Regenerating documentation
 
 ```bash
+python src/build_command_center.py         # rebuilds dashboard/command_center.html
 python src/generate_presentation_pptx.py   # rebuilds the 17-slide deck
 python src/export_report_docx.py           # rebuilds PROJECT_REPORT.docx
 python scripts/reexecute_notebook.py       # re-executes the notebook in place

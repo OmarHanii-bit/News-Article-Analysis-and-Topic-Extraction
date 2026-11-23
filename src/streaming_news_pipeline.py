@@ -8,9 +8,8 @@ Collaborators: Member 1 — Omar Hani, Member 2 — Mohammed Hossam
 
 PURPOSE & RUBRIC ALIGNMENT:
 ---------------------------
-Directly addresses and resolves:
-  - Limitation #8: "No real-time streaming. Kafka/Structured-Streaming ingestion and live news-API feeds are designed but not implemented."
-  - Future Work #3: "Implement Kafka + PySpark Structured Streaming for live breaking-news alerts."
+Accepts the CSV produced by live RSS ingestion via ``--source`` and writes
+checkpointed Parquet output with severity alerts.
 
 This module implements a streaming ingestion engine that monitors an incoming
 news feed drop directory (`data/streaming_input/`), processes streaming micro-batches,

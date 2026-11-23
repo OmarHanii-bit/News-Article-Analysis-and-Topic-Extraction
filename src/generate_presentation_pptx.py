@@ -396,7 +396,7 @@ def create_deck(output_pptx="presentation/News_Article_Analysis_Presentation.ppt
         "Real Corpus: 10,712 articles, auto-derived labels from learned top terms (Mln/Tonnes, Pct/Bank/Rate, Trade/Japan/Market).",
         "Supervised F1 Metric: 92.57% Test Accuracy & 0.8423 Macro-F1 across 17 categories on held-out 80/20 test split (src/supervised_classifier.py).",
         "Live RSS Feed: 272 live multi-publisher articles acquired from NYT, BBC, CBS, NPR with authentic RFC-822 timestamps (src/ingest_live_rss.py).",
-        "Validation: 113 automated tests pass; both lakehouses verified coherent."
+        "Validation: 119 automated tests pass across 13 modules; both lakehouses verified coherent."
     ], highlight=True)
 
     # =========================================================================

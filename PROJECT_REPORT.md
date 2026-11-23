@@ -1,7 +1,7 @@
 # 📰 News Article Analysis and Topic Extraction: A Big Data Architecture & NLP Pipeline
 
 **Course:** INF3101 — Introduction To Big Data 
-**Capstone Track:** Group Big Data Project (2/2) — Anthropic Track  
+**Capstone Track:** Group Big Data Project (2/2)
 **Submission Date:** Fall 2026  
 **Evaluation Standard:** 10-Point Big Data Rubric (Target: 10/10 Points)  
 **Technology Ecosystem:** Hadoop Ecosystem (HDFS, YARN, MapReduce), Apache Spark (PySpark MLlib), MongoDB (NoSQL), Apache Parquet, AI-Enabled Data Ecosystems, Python, Streamlit, Matplotlib/Seaborn  
@@ -18,7 +18,7 @@
 | **Member 4** | **Shehab Osama** | **NLP & Machine Learning Scientist** | Distributed TF-IDF feature engineering, PySpark MLlib Latent Dirichlet Allocation (LDA) tuning, VADER sentiment UDF inference |
 | **Member 5** | **Mohamed Ibrahim** | **NoSQL & MongoDB Specialist** | MongoDB polymorphic document modeling, BSON schema design, compound/text indexing, multi-stage aggregation pipelines (`src/mongo_loader.py`) |
 | **Member 6** | **Mohamed Magdi** | **Visualization & Dashboard Lead** | Publication-quality chart generator (300 DPI), multi-panel semantic word clouds, interactive Streamlit analytics dashboard (`src/dashboard.py`) |
-| **Member 7** | **Mazen Salem** | **QA, Benchmarking & Presentation Lead** | Horizontal scalability testing, 113-test automated suite, cluster performance profiling, 17-slide deck, technical Q&A defense preparation (`tests/`, `presentation/`) |
+| **Member 7** | **Mazen Salem** | **QA, Benchmarking & Presentation Lead** | Horizontal scalability testing, 119-test suite across 13 modules, cluster performance profiling, 17-slide deck, technical Q&A defense preparation (`tests/`, `presentation/`) |
 
 ---
 
@@ -152,14 +152,14 @@ The architecture follows a multi-tier, decoupled Big Data design:
 flowchart TD
     subgraph S1["Tier 1: Data Sources & Ingestion"]
         DS1["Synthetic Benchmark Corpus\n(Team-generated, Kaggle 'All the News' schema)"]
-        DS2["planned live feeds (not implemented): Global News Wire APIs (Reuters/AP)"]
-        DS3["planned live feeds (not implemented): Web Scraping Feeds (Messy HTML/Entities)"]
+        DS2["Live RSS feeds: BBC / NYT / CBS / NPR\n(src/ingest_live_rss.py)"]
+        STREAM["PySpark Structured Streaming\n(src/streaming_news_pipeline.py)"]
         SQOOP["Apache Sqoop\n(RDBMS ↔ HDFS bulk transfer)"]
         FLUME["Apache Flume\n(Spooling Dir → Memory Channel → HDFS Sink)"]
         HDFS["Hadoop HDFS Storage Layer\n(128 MB Block Splits, 3x Replication, Rack-Aware)"]
         DS1 --> HDFS
-        DS2 -.-> HDFS
-        DS3 -.-> HDFS
+        DS2 --> STREAM
+        STREAM --> HDFS
         SQOOP --> HDFS
         FLUME --> HDFS
     end
@@ -501,7 +501,7 @@ Yasmine Mohamed (PySpark)      ─── SparkSession, StructType schema, Text h
 Shehab Osama (ML/NLP)     ─── CountVectorizer term counts → LDA, IDF/TF-IDF analytics, VADER sentiment UDF
 Mohamed Ibrahim (MongoDB) ─── Polymorphic BSON modeling, Indexing, Aggregation pipelines
 Mohamed Magdi (UI/Viz)     ─── 14 Matplotlib/Seaborn charts, WordCloud grids, Streamlit + HTML dashboards
-Mazen Salem (QA/Presentation)─── Scalability benchmarking, 113-test suite, Slide deck, Technical Q&A defense
+Mazen Salem (QA/Presentation)─── Scalability benchmarking, 119 tests across 13 modules, Slide deck, Technical Q&A defense
 ```
 
 ### 7.2 Structured 17-Slide Presentation Deck Outline
@@ -598,7 +598,7 @@ streamlit run src/dashboard.py
 # 10. Open and run the comprehensive Jupyter Notebook
 jupyter notebook notebooks/News_Article_Analysis_Pipeline.ipynb
 
-# 11. Run the automated 113-test verification suite
+# 11. Run the automated 119-test verification suite across 13 modules
 python tests/run_tests.py
 
 # 12. Build the self-contained offline interactive HTML dashboards (one per corpus)
@@ -636,7 +636,7 @@ python src/ingest_live_rss.py
 - [x] **Word Report Export:** `PROJECT_REPORT.docx` with an embedded visualization gallery, generated from the Markdown source without altering it (`src/export_report_docx.py`)
 - [x] **Documented Jupyter Notebook:** 29 cells (16 executed code cells), fully executed with embedded charts and appendices (`notebooks/News_Article_Analysis_Pipeline.ipynb`)
 - [x] **Presentation Deck & Defense:** 17-slide deck, speaking roles, 16 Q&A answers (`presentation/slide_deck_outline.md`)
-- [x] **Automated Test Suite:** 113 tests across 13 modules, 0 failures (`tests/run_tests.py`)
+- [x] **Automated Test Suite:** 119 tests across 13 modules, 0 failures (`tests/run_tests.py`)
 - [x] **Supervised Ground Truth:** 92.57% test accuracy / 0.8423 macro-F1 on 9,549 Reuters articles across 17 categories (`src/supervised_classifier.py`)
 - [x] **Live Multi-Publisher RSS:** 272 articles from NYT, BBC, CBS and NPR with authentic timestamps (`src/ingest_live_rss.py`)
 - [x] **Structured Streaming:** checkpointed micro-batch pipeline with breaking-news alerts (`src/streaming_news_pipeline.py`)

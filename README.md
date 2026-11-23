@@ -13,7 +13,26 @@
 
 ## 📋 Project Summary
 
-This directory represents the **single, unified, and complete Big Data project deliverable**. It integrates all foundational baseline implementations (data synthesis, Hadoop MapReduce, PySpark distributed engine, MongoDB NoSQL, Snappy Parquet lakehouse) together with all advanced production capabilities: **the 9-module Hadoop ecosystem stack** (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), a **dual-corpus design** (6,000-article synthetic benchmark + 10,712-article real Reuters wire corpus), one-click orchestrators, an automated **113-test** suite, a 17-slide PowerPoint deck, a held-out temporal forecast evaluation (`src/temporal_forecast_eval.py`), a measured 50,000-article scale benchmark (`src/scale_benchmark.py`), streaming Kaggle ingestion, and Docker multi-container deployment.
+This directory represents the **single, unified, and complete Big Data project deliverable**. It integrates all foundational baseline implementations (data synthesis, Hadoop MapReduce, PySpark distributed engine, MongoDB NoSQL, Snappy Parquet lakehouse) together with all advanced production capabilities: **the 9-module Hadoop ecosystem stack** (HDFS, YARN, MapReduce, Hive, HBase, Pig, Sqoop, Flume, Oozie, ZooKeeper), a **dual-corpus design** (6,000-article synthetic benchmark + 10,712-article real Reuters wire corpus), one-click orchestrators, an automated **119-test suite across 13 modules**, a 17-slide PowerPoint deck, a held-out temporal forecast evaluation (`src/temporal_forecast_eval.py`), a measured 50,000-article scale benchmark (`src/scale_benchmark.py`), streaming Kaggle ingestion, and Docker multi-container deployment.
+
+---
+
+## 🌐 Public Dashboards (no server required)
+
+The three static dashboards are published from `dashboard/` by the
+**Publish Dashboards** GitHub Actions workflow:
+
+| Dashboard | Public link | What it shows |
+|---|---|---|
+| **Intelligence Command Center** | [command_center.html](https://omarhanii-bit.github.io/News-Article-Analysis-and-Topic-Extraction/command_center.html) | Dark-mode topic clusters, brushable velocity timeline, entity sentiment, cross-filtered feed and slide-over article inspector |
+| **Synthetic benchmark** | [interactive_dashboard.html](https://omarhanii-bit.github.io/News-Article-Analysis-and-Topic-Extraction/interactive_dashboard.html) | Seven offline Plotly figures for the 6,000-article curated corpus |
+| **Reuters wire** | [interactive_dashboard_real.html](https://omarhanii-bit.github.io/News-Article-Analysis-and-Topic-Extraction/interactive_dashboard_real.html) | The same seven figures for the 10,712-article real corpus |
+
+Landing page: **https://omarhanii-bit.github.io/News-Article-Analysis-and-Topic-Extraction/**
+
+If the link is not live yet, set **Settings → Pages → Source: GitHub Actions** once
+and re-run the workflow. Full instructions for Pages, Streamlit Community Cloud,
+Docker and LAN sharing are in [`docs/SHARING.md`](docs/SHARING.md).
 
 ---
 
@@ -27,7 +46,7 @@ This directory represents the **single, unified, and complete Big Data project d
 | **4** | **Shehab Osama** | **NLP & Machine Learning Scientist** | Distributed TF-IDF vectorization, PySpark MLlib Latent Dirichlet Allocation (Online LDA), VADER sentiment scoring UDF |
 | **5** | **Mohamed Ibrahim** | **NoSQL & MongoDB Specialist** | MongoDB polymorphic document modeling, BSON schema design, compound B-tree & text search indexes, aggregation pipelines (`src/mongo_loader.py`) |
 | **6** | **Mohamed Magdi** | **Visualization & Dashboard Lead** | Publication-quality chart generator ($300\text{ DPI}$), semantic word cloud grids, interactive Streamlit executive dashboard (`src/dashboard.py`) |
-| **7** | **Mazen Salem** | **QA, Benchmarking & Presentation Lead** | Automated 113-test suite (`tests/`), scale benchmark, temporal forecast evaluation, 17-slide PowerPoint deck (`presentation/`), technical Q&A defense |
+| **7** | **Mazen Salem** | **QA, Benchmarking & Presentation Lead** | Automated 119-test suite across 13 modules (`tests/`), scale benchmark, temporal forecast evaluation, 17-slide PowerPoint deck (`presentation/`), technical Q&A defense |
 
 ---
 
@@ -48,10 +67,12 @@ c:\News Article Analysis and Topic Extraction\
 ├── .editorconfig                      # Cross-editor formatting rules
 ├── .gitattributes                     # LF/CRLF normalisation and binary asset rules
 ├── .gitignore                         # Excludes regenerable intermediates & secrets
-├── .github/workflows/ci.yml           # GitHub Actions: compile, regenerate, run 113 tests
+├── .github/workflows/ci.yml           # GitHub Actions: compile, regenerate, run 119 tests across 13 modules
+├── .github/workflows/pages.yml        # GitHub Actions: publish dashboard/ to GitHub Pages
 ├── requirements.txt                   # Flexible runtime dependencies (lower bounds)
 ├── requirements.lock.txt              # Pinned exact versions for reproducibility
 ├── requirements-dev.txt               # Runtime deps + test tooling (pytest)
+├── requirements-dashboard.txt         # Slim Streamlit Cloud runtime (no PySpark/Jupyter)
 ├── .env.example                       # Optional env overrides (Mongo, Spark, Kaggle)
 ├── Dockerfile                         # Multi-stage image (Python 3.11 + OpenJDK 17 + Streamlit)
 ├── docker-compose.yml                 # Multi-container orchestration (MongoDB + Pipeline + Jupyter)
@@ -114,6 +135,7 @@ c:\News Article Analysis and Topic Extraction\
 │   ├── generate_presentation_pptx.py  # 17-slide PowerPoint deck generator (python-pptx)
 │   ├── dashboard.py                   # Interactive Streamlit executive web dashboard
 │   ├── build_interactive_dashboard.py # Self-contained offline Plotly HTML dashboard generator
+│   ├── build_command_center.py        # Dark-mode Command Center dashboard builder (JSON payload + HTML)
 │   ├── export_report_docx.py          # Markdown -> Word (.docx) report exporter (python-docx)
 │   ├── hadoop/                        # FULL HADOOP ECOSYSTEM IMPLEMENTATION
 │   │   ├── run_hadoop_ecosystem.py    # Master orchestrator for all 9 ecosystem services
@@ -135,18 +157,22 @@ c:\News Article Analysis and Topic Extraction\
 │   └── News_Article_Analysis_Pipeline.ipynb # Executed Jupyter Notebook (29 cells, all outputs embedded)
 │
 ├── dashboard/
-│   ├── index.html                     # Landing page linking both corpus dashboards
+│   ├── index.html                     # Dark landing page linking all three dashboards
+│   ├── command_center.html            # Intelligence Command Center (self-contained, ~2 MB)
+│   ├── command_center.template.html   # Source template (CSS/JS) for the Command Center builder
 │   ├── interactive_dashboard.html     # Self-contained offline Plotly dashboard, synthetic corpus (5.0 MB)
-│   └── interactive_dashboard_real.html # Same dashboard for the real Reuters corpus (5.1 MB)
+│   ├── interactive_dashboard_real.html # Same dashboard for the real Reuters corpus (5.1 MB)
+│   └── .nojekyll                      # Serve dashboard/ as-is on GitHub Pages
 │
 ├── scripts/
 │   └── reexecute_notebook.py          # Re-execute the notebook in place (nbconvert --execute --inplace)
 │
 ├── docs/
 │   ├── README.md                      # Documentation index and evidence map
+│   ├── SHARING.md                     # GitHub Pages, Streamlit Cloud, Docker and LAN sharing
 │   └── SCALABILITY_AND_KAGGLE.md      # Proof-of-concept vs production scale; Kaggle ingest commands
 │
-├── tests/                             # Automated Test Suite (113/113 Passing)
+├── tests/                             # Automated Test Suite (119/119 across 13 modules)
 │   ├── run_tests.py                   # Unified test runner
 │   ├── test_mapreduce.py              # MapReduce regex, stopwords & bigram unit tests
 │   ├── test_spark_schema.py           # StructType schema & VADER sentiment UDF tests
@@ -205,7 +231,7 @@ Three of the seventeen 300 DPI charts in the gallery (`src/visualize_analytics.p
 
 ![Publisher by topic heatmap](visualizations/publisher_topic_heatmap.png)
 
-> Run `streamlit run src/dashboard.py` for the fully interactive versions: drag-to-zoom sentiment box plots, semantic topic treemaps, the corpus switcher, and the Hadoop ecosystem evidence panel. The self-contained offline HTML files (`dashboard/interactive_dashboard.html`, `dashboard/interactive_dashboard_real.html`) reproduce seven Plotly figures, KPI cards and the evidence panel, but **do not** include the semantic treemaps or the corpus switcher — those exist only in Streamlit. Start from the landing page `dashboard/index.html` when present, and see `presentation/architecture.png` for the rendered end-to-end architecture diagram (report §3.1).
+> Run `streamlit run src/dashboard.py` for the fully interactive versions: drag-to-zoom sentiment box plots, semantic topic treemaps, the corpus switcher, and the Hadoop ecosystem evidence panel. The self-contained offline HTML files (`dashboard/interactive_dashboard.html`, `dashboard/interactive_dashboard_real.html`) reproduce seven Plotly figures, KPI cards and the evidence panel, but **do not** include the semantic treemaps or the corpus switcher — those exist only in Streamlit. The dark-mode [`dashboard/command_center.html`](dashboard/command_center.html) adds a cross-filtered topic map, entity bars and a slide-over article inspector. Start from the landing page `dashboard/index.html`, and see `presentation/architecture.png` for the rendered end-to-end architecture diagram (report §3.1).
 
 ---
 
@@ -246,7 +272,7 @@ Reproduce them with `python src/supervised_classifier.py`, `python src/ingest_li
   ```
   For byte-for-byte reproducibility, install the pinned lock file instead: `pip install -r requirements.lock.txt`. Optional environment overrides (Mongo URI, Spark master/memory, Kaggle credentials) are documented in `.env.example`; every variable has a safe default.
 
-> **Fresh clone note:** the canonical raw datasets (`data/raw_news_articles.csv`, `data/real_news/raw_news_articles_real.csv`), the Word report and both offline HTML dashboards are **committed**, so the project is inspectable immediately. Large *regenerable* intermediates — the Parquet lakehouses, MongoDB offline collections and simulated HDFS block files — are intentionally git-ignored; materialize them with `python run_all.py` (or the individual stages below) before running the full test suite. Tests that depend on absent artifacts report as **skipped**, and the runner fails if fewer than the 53-test historical floor actually *execute* (the suite currently contains 113 tests).
+> **Fresh clone note:** the canonical raw datasets (`data/raw_news_articles.csv`, `data/real_news/raw_news_articles_real.csv`), the Word report and all three offline HTML dashboards (including the Command Center) are **committed**, so the project is inspectable immediately. Large *regenerable* intermediates - the Parquet lakehouses, MongoDB offline collections and simulated HDFS block files - are intentionally git-ignored; materialize them with `python run_all.py` (or the individual stages below) before running the full test suite. Tests that depend on absent artifacts report as **skipped**, and the runner fails if fewer than the 53-test historical floor actually *execute* (the suite currently contains 119 tests).
 
 ---
 
@@ -274,8 +300,8 @@ Double-click `run_all.bat`.
 | **6** | **MongoDB NoSQL Ingestion** | `src/mongo_loader.py` | Ingests 3 collections & builds B-tree/text indexes (with offline JSON fallback) |
 | **7** | **Visual Analytics Suite** | `src/visualize_analytics.py` | Renders the six-chart publication suite and word clouds (17-asset gallery in `visualizations/`) |
 | **8** | **PowerPoint Presentation Deck** | `src/generate_presentation_pptx.py` | Generates 16:9 widescreen 17-slide deck (`presentation/News_Article_Analysis_Presentation.pptx`) |
-| **9** | **Automated Test Suite** | `tests/run_tests.py` | Executes 113 unit & integration tests with 0 failures |
-| **10** | **Offline Plotly HTML Dashboards** | `src/build_interactive_dashboard.py` | Self-contained corpus-specific dashboards (`dashboard/interactive_dashboard*.html`) |
+| **9** | **Automated Test Suite** | `tests/run_tests.py` | Executes 119 unit & integration tests with 0 failures |
+| **10** | **Offline HTML Dashboards** | `src/build_interactive_dashboard.py` + `src/build_command_center.py` | Self-contained corpus-specific Plotly dashboards (`dashboard/interactive_dashboard*.html`) and the dark-mode Intelligence Command Center (`dashboard/command_center.html`) |
 | **11** | **Report Export to Word** | `src/export_report_docx.py` | `PROJECT_REPORT.docx` regenerated from the Markdown source |
 
 > **Interactive Dashboard:** launch separately with `streamlit run src/dashboard.py` (see Method 2).
@@ -310,6 +336,25 @@ python src/build_interactive_dashboard.py --corpus real
 - **Output**: `dashboard/interactive_dashboard.html` (synthetic, ≈5.0 MB) and `dashboard/interactive_dashboard_real.html` (real Reuters, ≈5.1 MB), plotly.js inlined once per file.
 - **Contents**: 7 interactive Plotly figures (topic volume, publisher × topic heatmap, sentiment box plots, monthly trajectory, top-terms with topic selector, category donut, confidence-vs-sentiment scatter), executive KPI cards, a "Most Confident Articles" table, and a **Hadoop ecosystem execution-evidence panel** (service KPIs + per-service metrics table) — all computed live from the Parquet lakehouse.
 
+#### Intelligence Command Center (dark mode, cross-filtered)
+A third static dashboard aimed at executive review and live demoing. It is built
+from the committed PySpark summaries, HBase article records and raw corpora, and
+embeds its JSON payload so the page works offline:
+
+```powershell
+python src/build_command_center.py
+```
+
+- **Output**: `dashboard/command_center.html` (≈2 MB, 11 topics, 3,069 article rows, 16 entities).
+- **Layout**: sticky command bar (search, date range, source multi-select), four KPI cards with sparklines, a zoomable topic cluster map (60%), a brushable topic-velocity timeline with a sentiment ribbon (40%), top-entity sentiment bars, and a live article feed with a slide-over inspector.
+- **Interaction**: every filter cross-filters the KPI cards, map, entity list and feed; clicking a bubble or an entity sets a filter chip; dragging the timeline brushes the date range; the article drawer highlights gazetteer entities inline and shows topic confidence and keywords.
+- **Provenance**: topic volume, sentiment, confidence and monthly series are measured LDA outputs. Reuters article-to-topic assignment and the named-entity gazetteer are documented display heuristics (see the footer and `src/build_command_center.py`).
+
+#### Publishing the dashboards
+The **Publish Dashboards** workflow deploys `dashboard/` to GitHub Pages on every
+push to `main`. See [`docs/SHARING.md`](docs/SHARING.md) for the public URL,
+Streamlit Community Cloud, Docker and LAN options.
+
 ---
 
 ### Method 3: Executing the Interactive Jupyter Notebook
@@ -342,7 +387,7 @@ Each component of the architecture can be run standalone from the project root:
 | **6** | **MongoDB NoSQL Load** | `python src/mongo_loader.py` | `data/mongodb_offline_collections/` |
 | **7** | **Generate Charts (300 DPI)** | `python src/visualize_analytics.py` | `visualizations/*.png` (6 core charts; 17 assets total) |
 | **8** | **Build Slide Deck** | `python src/generate_presentation_pptx.py` | `presentation/News_Article_Analysis_Presentation.pptx` (17 slides) |
-| **9** | **Run Test Suite** | `python tests/run_tests.py` | 113 unit & regression test reports |
+| **9** | **Run Test Suite** | `python tests/run_tests.py` | 119 unit & regression test reports |
 | **10** | **Build Offline HTML Dashboards** | `python src/build_interactive_dashboard.py` | `dashboard/interactive_dashboard.html` + `interactive_dashboard_real.html` (self-contained Plotly) |
 | **11** | **Export Report to Word** | `python src/export_report_docx.py` | `PROJECT_REPORT.docx` (Markdown source left intact) |
 
@@ -401,4 +446,3 @@ python src/ingest_kaggle_real.py --input path/to/all-the-news-2-1.csv --max-rows
 - Performs streaming, chunked reading to prevent memory exhaustion.
 - Standardizes diverse publisher column names into the pipeline's schema.
 - Emits clean CSV ready for immediate ingestion by PySpark and MapReduce.
-
