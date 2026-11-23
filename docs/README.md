@@ -24,7 +24,7 @@ without re-running the pipeline:
 - `data/supervised_classification_metrics.json` — Reuters ground-truth results.
 - `data/topic_drift_analysis.json` — quarterly JSD/PSI monitoring.
 - `data/real_news/live_rss_provenance.json` — live-feed provenance.
-- `data/visualization_manifest.json` — inventory of the 14 static charts.
+- `data/visualization_manifest.json` — inventory of the 17 static charts.
 
 ## Regenerating documentation
 
