@@ -132,8 +132,7 @@ c:\News Article Analysis and Topic Extraction\
 │       └── run_mapreduce_local.py     # Local streaming simulation & HDFS command generator
 │
 ├── notebooks/
-│   ├── News_Article_Analysis_Pipeline.ipynb # Executed Jupyter Notebook (29 cells, all outputs embedded)
-│   └── News_Article_Analysis_Pipeline.html  # Rendered HTML export for readers without Jupyter
+│   └── News_Article_Analysis_Pipeline.ipynb # Executed Jupyter Notebook (29 cells, all outputs embedded)
 │
 ├── dashboard/
 │   ├── index.html                     # Landing page linking both corpus dashboards

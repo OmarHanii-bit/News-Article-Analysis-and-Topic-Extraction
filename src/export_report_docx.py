@@ -13,6 +13,8 @@ Design notes
   ATX headings, pipe tables, fenced code blocks, bullet/numbered lists,
   blockquotes, horizontal rules and inline **bold** / *italic* / `code`.
 - All 17 publication charts plus the architecture diagram are appended as an embedded "Visualization Gallery".
+- Gallery figures are downscaled to 1400 px-wide JPEGs so the .docx stays portable;
+  the full-resolution 300-DPI PNGs remain in `visualizations/`.
 
 Run:
     python src/export_report_docx.py
@@ -20,10 +22,13 @@ Run:
 
 import os
 import re
+import shutil
+import tempfile
 from docx import Document
 from docx.shared import Pt, Inches, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
+from PIL import Image
 
 # --------------------------------------------------------------------------
 # Configuration
@@ -128,6 +133,31 @@ def split_table_row(line):
 def is_separator_row(line):
     """True for markdown table separator rows like | :--- | ---: |."""
     return bool(re.fullmatch(r"\|[\s:|-]+\|", line.strip())) and "-" in line
+
+
+def prepare_image_for_docx(image_path, temp_dir, max_width=1400, quality=80):
+    """Downscale a chart to a print-sized JPEG to keep the .docx portable.
+
+    The source PNGs stay at full 300 DPI in ``visualizations/``; embedding them
+    verbatim produced a ~10 MB document, so the gallery uses a 1400 px-wide JPEG
+    (about 220 DPI at the 6.2 in display width) instead. Transparent pixels are
+    flattened onto white because JPEG has no alpha channel.
+    """
+    with Image.open(image_path) as img:
+        if img.mode in ("RGBA", "LA", "P"):
+            img = img.convert("RGBA")
+            canvas = Image.new("RGB", img.size, "white")
+            canvas.paste(img, mask=img.split()[-1])
+            img = canvas
+        else:
+            img = img.convert("RGB")
+        if img.width > max_width:
+            height = round(img.height * max_width / img.width)
+            img = img.resize((max_width, height), Image.LANCZOS)
+        stem = os.path.splitext(os.path.basename(image_path))[0]
+        out_path = os.path.join(temp_dir, f"{stem}.jpg")
+        img.save(out_path, "JPEG", quality=quality, optimize=True)
+    return out_path
 
 
 # --------------------------------------------------------------------------
@@ -248,12 +278,14 @@ def convert(md_path, docx_path):
     add_inline(
         doc.add_paragraph(),
         "All seventeen 300-DPI analysis charts plus the system architecture diagram "
-        "are embedded below. The *interactive* versions (hover, zoom, filter) are "
-        "available as self-contained HTML files for both corpora "
+        "are embedded below (downscaled to 1400 px for a portable file size; the "
+        "full-resolution PNGs remain in `visualizations/`). The *interactive* versions "
+        "(hover, zoom, filter) are available as self-contained HTML files for both corpora "
         "(`dashboard/interactive_dashboard.html` and "
         "`dashboard/interactive_dashboard_real.html`), with a landing page at "
         "`dashboard/index.html`, and as the live Streamlit app (`src/dashboard.py`).",
     )
+    image_temp_dir = tempfile.mkdtemp(prefix="report_figures_")
     for filename, caption in GALLERY_CHARTS:
         # Most figures live in visualizations/; the architecture diagram is in
         # presentation/. Keep both resolvable from the project root.
@@ -262,11 +294,13 @@ def convert(md_path, docx_path):
         if not os.path.exists(image_path):
             continue
         add_inline(doc.add_paragraph(), f"**{caption}**")
-        doc.add_picture(image_path, width=Inches(6.2))
+        doc.add_picture(prepare_image_for_docx(image_path, image_temp_dir),
+                        width=Inches(6.2))
         doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
         doc.add_paragraph()
 
     doc.save(docx_path)
+    shutil.rmtree(image_temp_dir, ignore_errors=True)
     return docx_path
 
 

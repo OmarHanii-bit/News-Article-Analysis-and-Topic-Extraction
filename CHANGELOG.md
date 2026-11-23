@@ -14,6 +14,14 @@ and the project uses semantic versioning.
 - Removed the repeated "9 orchestrated ecosystem modules covering 10 named
   technologies" phrasing (19 occurrences) in favour of one canonical definition
   per document.
+- `PROJECT_REPORT.docx` now embeds 1400 px JPEGs instead of full-resolution
+  PNGs: 9.9 MB → 1.8 MB with all 18 figures retained. Full-resolution charts
+  remain in `visualizations/`.
+
+### Removed
+- `notebooks/News_Article_Analysis_Pipeline.html` — a derived 4.7 MB export of
+  the notebook. Regenerate with `jupyter nbconvert --to html` when needed; the
+  `.ipynb` with embedded outputs remains the source of truth.
 
 ## [2.1.0] - 2026-11-21
 

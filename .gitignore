@@ -9,6 +9,8 @@ env/
 
 # Notebooks
 .ipynb_checkpoints/
+# Rendered notebook exports are derived from the .ipynb; regenerate on demand
+notebooks/*.html
 
 # Regenerable intermediate build artifacts (produced by run_all.py)
 # The canonical raw datasets ARE committed so a fresh clone is self-contained;
