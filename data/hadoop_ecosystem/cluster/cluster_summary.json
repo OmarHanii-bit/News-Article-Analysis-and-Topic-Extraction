@@ -44,18 +44,18 @@
     }
   },
   "capacity_plan": {
-    "measured_at": "2026-11-21T20:39:48",
-    "raw_csv_bytes": 5721333,
-    "mapreduce_tsv_bytes": 51552,
-    "parquet_bytes": 424298,
+    "measured_at": "2026-11-23T17:44:53",
+    "raw_csv_bytes": 5668366,
+    "mapreduce_tsv_bytes": 49297,
+    "parquet_bytes": 307463,
     "parquet_files": 24,
-    "logical_bytes": 6197183,
-    "logical_mb": 5.91,
+    "logical_bytes": 6025126,
+    "logical_mb": 5.75,
     "block_size_mb": 128,
     "total_blocks": 1,
     "replication_factor": 3,
-    "replicated_bytes": 18591549,
-    "recommended_hdfs_capacity_bytes": 24169013,
+    "replicated_bytes": 18075378,
+    "recommended_hdfs_capacity_bytes": 23497991,
     "recommended_hdfs_capacity_gb": 0.02,
     "worker_memory_gb": 96,
     "yarn_available_memory_gb": 76,
@@ -67,15 +67,15 @@
     "spark_driver_memory_gb": 4
   },
   "config_files": [
-    "data\\hadoop_ecosystem\\cluster\\core-site.xml",
-    "data\\hadoop_ecosystem\\cluster\\hdfs-site.xml",
-    "data\\hadoop_ecosystem\\cluster\\yarn-site.xml",
-    "data\\hadoop_ecosystem\\cluster\\mapred-site.xml",
-    "data\\hadoop_ecosystem\\cluster\\capacity-scheduler.xml",
-    "data\\hadoop_ecosystem\\cluster\\hbase-site.xml",
-    "data\\hadoop_ecosystem\\cluster\\hive-site.xml",
-    "data\\hadoop_ecosystem\\cluster\\spark-defaults.conf"
+    "data/hadoop_ecosystem/cluster/core-site.xml",
+    "data/hadoop_ecosystem/cluster/hdfs-site.xml",
+    "data/hadoop_ecosystem/cluster/yarn-site.xml",
+    "data/hadoop_ecosystem/cluster/mapred-site.xml",
+    "data/hadoop_ecosystem/cluster/capacity-scheduler.xml",
+    "data/hadoop_ecosystem/cluster/hbase-site.xml",
+    "data/hadoop_ecosystem/cluster/hive-site.xml",
+    "data/hadoop_ecosystem/cluster/spark-defaults.conf"
   ],
-  "commands_file": "data\\hadoop_ecosystem\\cluster\\real_cluster_commands.md",
-  "out_dir": "data/hadoop_ecosystem\\cluster"
+  "commands_file": "data/hadoop_ecosystem/cluster/real_cluster_commands.md",
+  "out_dir": "data/hadoop_ecosystem/cluster"
 }

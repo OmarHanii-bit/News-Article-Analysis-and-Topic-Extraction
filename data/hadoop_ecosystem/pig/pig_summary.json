@@ -8,9 +8,9 @@
   "scripts_executed": 3,
   "relations_created": 24,
   "output_files": [
-    "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000",
-    "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000",
-    "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
+    "data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000",
+    "data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000",
+    "data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
   ],
   "staged_input": "data/hadoop_ecosystem/pig/staging/enriched_articles.csv",
   "staged_rows": 6000,

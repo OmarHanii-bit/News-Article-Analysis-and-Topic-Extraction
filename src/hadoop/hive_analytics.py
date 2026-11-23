@@ -52,6 +52,17 @@ import sqlite3                     # the in-memory SQL warehouse engine
 import datetime                    # run timestamps
 import pandas as pd                # read the Parquet lakehouse, write CSV
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+
+def _resolve(path: str) -> str:
+    return path if os.path.isabs(path) else os.path.join(PROJECT_ROOT, path)
+
+
+def _relative_path(path: str) -> str:
+    return os.path.relpath(os.path.abspath(path), PROJECT_ROOT).replace(os.sep, "/")
+
+
 # ---------------------------------------------------------------------------
 # PATHS & CONSTANTS
 # ---------------------------------------------------------------------------
@@ -330,7 +341,7 @@ def _build_real_cluster_commands(out_dir: str,
                                  partition_year: int = DEFAULT_PARTITION_YEAR,
                                  partition_month: int = DEFAULT_PARTITION_MONTH) -> str:
     """Returns the content of `real_cluster_commands.md` (authentic hive/beeline)."""
-    hive_dir = out_dir.replace(os.sep, "/")
+    hive_dir = _relative_path(out_dir)
     return "\n".join([
         "# Real Cluster Commands — Apache Hive",
         "",
@@ -501,6 +512,10 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
     and returns the contract dict.
     """
     started = datetime.datetime.now()
+    parquet_dir = _resolve(parquet_dir)
+    mapreduce_tsv = _resolve(mapreduce_tsv)
+    summary_json = _resolve(summary_json)
+    out_dir = _resolve(out_dir)
     os.makedirs(out_dir, exist_ok=True)
     results_dir = os.path.join(out_dir, "results")
     os.makedirs(results_dir, exist_ok=True)
@@ -615,7 +630,7 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
         result_df = pd.DataFrame(outcome["rows"], columns=outcome["columns"] or None)
         csv_path = os.path.join(results_dir, f"{qid}.csv")
         result_df.to_csv(csv_path, index=False)
-        result_files.append(csv_path.replace(os.sep, "/"))
+        result_files.append(_relative_path(csv_path))
         query_results.append({
             "query_name": qid,
             "business_question": question,
@@ -626,7 +641,7 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
             "row_count": len(outcome["rows"]),
             "sample_rows": outcome["rows"][:50],
             "elapsed_ms": outcome["elapsed_ms"],
-            "result_csv": csv_path.replace(os.sep, "/"),
+            "result_csv": _relative_path(csv_path),
         })
 
     # --- 7) Total scan cost = sum of the rows every query had to read ----------
@@ -688,11 +703,11 @@ def run_hive_analytics(parquet_dir: str = DEFAULT_PARQUET_DIR,
         "total_rows_scanned": int(total_rows_scanned),
         "table_sizes": table_sizes,
         "top_topic_by_volume": top_topic,
-        "hive_ddl": os.path.join(out_dir, "news_analytics.hql").replace(os.sep, "/"),
-        "topic_term_ddl": os.path.join(out_dir, "topic_term_hive.hql").replace(os.sep, "/"),
-        "real_cluster_commands": commands_path.replace(os.sep, "/"),
+        "hive_ddl": _relative_path(os.path.join(out_dir, "news_analytics.hql")),
+        "topic_term_ddl": _relative_path(os.path.join(out_dir, "topic_term_hive.hql")),
+        "real_cluster_commands": _relative_path(commands_path),
         "hdfs_commands": hdfs_commands,
-        "out_dir": out_dir.replace(os.sep, "/"),
+        "out_dir": _relative_path(out_dir),
     }
     summary_path = os.path.join(out_dir, "hive_summary.json")
     with open(summary_path, "w", encoding="utf-8") as fh:

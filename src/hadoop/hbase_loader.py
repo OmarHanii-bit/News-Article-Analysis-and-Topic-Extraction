@@ -81,6 +81,15 @@ DEFAULT_OUT_DIR = os.path.join("data", "hadoop_ecosystem", "hbase")
 
 # Default HDFS staging location used to record authentic `hdfs dfs -put` commands.
 HDFS_RAW_DIR = "/user/news/raw"
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+
+def _relative_path(path: str) -> str:
+    return os.path.relpath(os.path.abspath(path), PROJECT_ROOT).replace(os.sep, "/")
+
+
+def _resolve(path: str) -> str:
+    return path if os.path.isabs(path) else os.path.join(PROJECT_ROOT, path)
 
 
 def _ts() -> str:
@@ -483,6 +492,9 @@ def load_articles_to_hbase(input_csv: str = "data/raw_news_articles.csv",
     few representative scans, writes `real_cluster_commands.md` and the summary
     JSON, and returns the contract dict.
     """
+    input_csv = _resolve(input_csv)
+    parquet_dir = _resolve(parquet_dir)
+    out_dir = _resolve(out_dir)
     # Make sure the output directory exists before touching it.
     os.makedirs(out_dir, exist_ok=True)
 
@@ -580,12 +592,12 @@ def load_articles_to_hbase(input_csv: str = "data/raw_news_articles.csv",
         "single_row": single_row,
         "table_descriptors": hbase.table_descriptors(),
         "storage_files": {
-            "metadata": os.path.join(out_dir, "hbase_metadata.json").replace(os.sep, "/"),
-            "data": os.path.join(out_dir, f"{TABLE_NAME}.json").replace(os.sep, "/"),
+            "metadata": _relative_path(os.path.join(out_dir, "hbase_metadata.json")),
+            "data": _relative_path(os.path.join(out_dir, f"{TABLE_NAME}.json")),
         },
-        "real_cluster_commands": commands_path.replace(os.sep, "/"),
+        "real_cluster_commands": _relative_path(commands_path),
         "hdfs_commands": hdfs_commands,
-        "out_dir": out_dir.replace(os.sep, "/"),
+        "out_dir": _relative_path(out_dir),
     }
     summary_path = os.path.join(out_dir, "hbase_load_summary.json")
     with open(summary_path, "w", encoding="utf-8") as fh:

@@ -1,7 +1,7 @@
 {
   "component": "Hadoop Ecosystem \u2014 full stack execution",
-  "executed_at": "2026-11-21T20:39:53",
-  "elapsed_seconds": 4.39,
+  "executed_at": "2026-11-23T17:45:03",
+  "elapsed_seconds": 9.78,
   "services_executed": [
     "hdfs",
     "cluster",
@@ -23,150 +23,150 @@
       "files": [
         {
           "hdfs_path": "/user/news/raw/raw_news_articles.csv",
-          "bytes": 5721333,
+          "bytes": 5668366,
           "blocks": 6
         },
         {
           "hdfs_path": "/user/news/raw/mapreduce_term_counts.tsv",
-          "bytes": 51552,
+          "bytes": 49297,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=1/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17545,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=1/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12674,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=10/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17403,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=3/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 13192,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=11/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17705,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=4/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12952,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=12/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17414,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=12/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12525,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=2/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 16869,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=11/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12791,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=3/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 18130,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=8/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12552,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=4/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17811,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=5/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12646,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=5/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17480,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=7/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12659,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=6/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17286,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=6/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12438,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=7/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17570,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=2/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12048,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=8/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17413,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=10/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12550,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=9/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17394,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=9/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12563,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=1/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17557,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=1/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12843,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=10/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17809,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=3/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 13753,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=11/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17517,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=4/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 13299,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=12/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17954,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=12/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 13000,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=2/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17253,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=11/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12661,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=3/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 18561,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=8/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 13176,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=4/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 18198,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=5/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 13198,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=5/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 18179,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=7/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12504,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=6/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17872,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=6/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12952,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=7/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17347,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=2/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12475,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=8/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 18116,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=10/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 12937,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=9/9f4c41583b284f628c555547c8970d7b-0.parquet",
-          "bytes": 17915,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=9/part-00000-5fe533a5-5182-4f93-96a0-a6f0150c6660.c000.snappy.parquet",
+          "bytes": 13075,
           "blocks": 1
         },
         {
           "hdfs_path": "/user/news/raw/pipeline_analytics_summary.json",
-          "bytes": 37301,
+          "bytes": 35897,
           "blocks": 1
         }
       ],
       "dfs_report": {
-        "cluster_id": "news-bigdata-CID-c0424c00378e",
+        "cluster_id": "news-bigdata-CID-fd1794e633a5",
         "namenode": "news-namenode-01 (active)",
         "configured_replication": 3,
         "live_datanodes": 3,
         "total_files": 27,
         "total_directories": 33,
         "total_blocks": 32,
-        "logical_bytes": 6234484,
-        "physical_bytes_with_replication": 18703452,
+        "logical_bytes": 6061023,
+        "physical_bytes_with_replication": 18183069,
         "under_replicated_blocks": 0,
         "missing_blocks": 0,
         "datanodes": [
@@ -174,7 +174,7 @@
             "datanode": "datanode_1",
             "role": "DataNode",
             "capacity_bytes": 524288000,
-            "used_bytes": 6234484,
+            "used_bytes": 6061023,
             "blocks_stored": 32,
             "status": "LIVE"
           },
@@ -182,7 +182,7 @@
             "datanode": "datanode_2",
             "role": "DataNode",
             "capacity_bytes": 524288000,
-            "used_bytes": 6234484,
+            "used_bytes": 6061023,
             "blocks_stored": 32,
             "status": "LIVE"
           },
@@ -190,7 +190,7 @@
             "datanode": "datanode_3",
             "role": "DataNode",
             "capacity_bytes": 524288000,
-            "used_bytes": 6234484,
+            "used_bytes": 6061023,
             "blocks_stored": 32,
             "status": "LIVE"
           }
@@ -243,18 +243,18 @@
         }
       },
       "capacity_plan": {
-        "measured_at": "2026-11-21T20:39:48",
-        "raw_csv_bytes": 5721333,
-        "mapreduce_tsv_bytes": 51552,
-        "parquet_bytes": 424298,
+        "measured_at": "2026-11-23T17:44:53",
+        "raw_csv_bytes": 5668366,
+        "mapreduce_tsv_bytes": 49297,
+        "parquet_bytes": 307463,
         "parquet_files": 24,
-        "logical_bytes": 6197183,
-        "logical_mb": 5.91,
+        "logical_bytes": 6025126,
+        "logical_mb": 5.75,
         "block_size_mb": 128,
         "total_blocks": 1,
         "replication_factor": 3,
-        "replicated_bytes": 18591549,
-        "recommended_hdfs_capacity_bytes": 24169013,
+        "replicated_bytes": 18075378,
+        "recommended_hdfs_capacity_bytes": 23497991,
         "recommended_hdfs_capacity_gb": 0.02,
         "worker_memory_gb": 96,
         "yarn_available_memory_gb": 76,
@@ -266,17 +266,17 @@
         "spark_driver_memory_gb": 4
       },
       "config_files": [
-        "data\\hadoop_ecosystem\\cluster\\core-site.xml",
-        "data\\hadoop_ecosystem\\cluster\\hdfs-site.xml",
-        "data\\hadoop_ecosystem\\cluster\\yarn-site.xml",
-        "data\\hadoop_ecosystem\\cluster\\mapred-site.xml",
-        "data\\hadoop_ecosystem\\cluster\\capacity-scheduler.xml",
-        "data\\hadoop_ecosystem\\cluster\\hbase-site.xml",
-        "data\\hadoop_ecosystem\\cluster\\hive-site.xml",
-        "data\\hadoop_ecosystem\\cluster\\spark-defaults.conf"
+        "data/hadoop_ecosystem/cluster/core-site.xml",
+        "data/hadoop_ecosystem/cluster/hdfs-site.xml",
+        "data/hadoop_ecosystem/cluster/yarn-site.xml",
+        "data/hadoop_ecosystem/cluster/mapred-site.xml",
+        "data/hadoop_ecosystem/cluster/capacity-scheduler.xml",
+        "data/hadoop_ecosystem/cluster/hbase-site.xml",
+        "data/hadoop_ecosystem/cluster/hive-site.xml",
+        "data/hadoop_ecosystem/cluster/spark-defaults.conf"
       ],
-      "commands_file": "data\\hadoop_ecosystem\\cluster\\real_cluster_commands.md",
-      "out_dir": "data/hadoop_ecosystem\\cluster"
+      "commands_file": "data/hadoop_ecosystem/cluster/real_cluster_commands.md",
+      "out_dir": "data/hadoop_ecosystem/cluster"
     },
     "zookeeper": {
       "znodes_created": 11,
@@ -315,13 +315,13 @@
       "events_ingested": 500,
       "bytes_ingested": 103790,
       "hdfs_stream_paths": [
-        "/user/news/stream/20261121/FlumeData.20261121.00000.json",
-        "/user/news/stream/20261121/FlumeData.20261121.00001.json",
-        "/user/news/stream/20261121/FlumeData.20261121.00002.json",
-        "/user/news/stream/20261121/FlumeData.20261121.00003.json",
-        "/user/news/stream/20261121/FlumeData.20261121.00004.json"
+        "/user/news/stream/20261123/FlumeData.20261123.00000.json",
+        "/user/news/stream/20261123/FlumeData.20261123.00001.json",
+        "/user/news/stream/20261123/FlumeData.20261123.00002.json",
+        "/user/news/stream/20261123/FlumeData.20261123.00003.json",
+        "/user/news/stream/20261123/FlumeData.20261123.00004.json"
       ],
-      "events_per_second": 2522.48,
+      "events_per_second": 8894.3,
       "channel_capacity": 1000,
       "out_dir": "data/hadoop_ecosystem/flume"
     },
@@ -402,7 +402,7 @@
             "cf_raw"
           ],
           "num_families": 3,
-          "created": "2026-11-21T20:39:49",
+          "created": "2026-11-23T17:44:54",
           "row_count": 2000,
           "families": [
             {
@@ -514,9 +514,9 @@
       "scripts_executed": 3,
       "relations_created": 24,
       "output_files": [
-        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000",
-        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000",
-        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
+        "data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000",
+        "data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000",
+        "data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
       ],
       "staged_input": "data/hadoop_ecosystem/pig/staging/enriched_articles.csv",
       "staged_rows": 6000,

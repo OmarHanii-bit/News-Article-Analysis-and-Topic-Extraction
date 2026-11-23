@@ -97,6 +97,11 @@ def _resolve(path: str) -> str:
     return path if os.path.isabs(path) else os.path.join(PROJECT_ROOT, path)
 
 
+def _relative_path(path: str) -> str:
+    """Returns a project-relative path with portable separators."""
+    return os.path.relpath(os.path.abspath(path), PROJECT_ROOT).replace(os.sep, "/")
+
+
 def _strip_comments(text: str) -> str:
     """
     Removes Pig `--` line comments while respecting single-quoted string literals
@@ -275,6 +280,7 @@ class PigLatinEngine:
         Parses and executes one `.pig` file. Returns the number of relations
         that the script created (i.e. the number of assignment statements).
         """
+        script_path = _resolve(script_path)
         with open(script_path, "r", encoding="utf-8") as fh:
             text = fh.read()
         # 1) strip comments, 2) split into `;`-terminated statements, 3) execute.
@@ -905,7 +911,7 @@ def write_pig_scripts(out_dir: str, input_csv: str, staging_csv: str) -> list:
     paths. `output_dir` inside the scripts is `out_dir/output` (posix style).
     """
     os.makedirs(out_dir, exist_ok=True)
-    out_posix = out_dir.replace(os.sep, "/")
+    out_posix = _relative_path(out_dir)
     output_dir = f"{out_posix}/output"
     scripts = {
         "01_clean_and_count.pig": _script_01(input_csv, output_dir),
@@ -917,14 +923,14 @@ def write_pig_scripts(out_dir: str, input_csv: str, staging_csv: str) -> list:
         path = os.path.join(out_dir, name)
         with open(path, "w", encoding="utf-8") as fh:
             fh.write(content)
-        paths.append(path.replace(os.sep, "/"))
+        paths.append(_relative_path(path))
     _log(f"wrote {len(paths)} .pig scripts to {out_posix}")
     return paths
 
 
 def _build_real_cluster_commands(out_dir: str, scripts: list) -> str:
     """Returns the content of `real_cluster_commands.md` (authentic pig CLI)."""
-    pig_dir = out_dir.replace(os.sep, "/")
+    pig_dir = _relative_path(out_dir)
     script_names = [os.path.basename(s) for s in scripts]
     return "\n".join([
         "# Real Cluster Commands — Apache Pig",
@@ -1003,6 +1009,9 @@ def stage_enriched_csv(parquet_dir: str, input_csv: str, staging_dir: str):
     text format, or use a Parquet loader; we keep the staging step explicit.
     """
     import pandas as pd   # imported locally to keep module import lightweight
+    parquet_dir = _resolve(parquet_dir)
+    input_csv = _resolve(input_csv)
+    staging_dir = _resolve(staging_dir)
     df = None
     try:
         if os.path.exists(parquet_dir):
@@ -1047,7 +1056,8 @@ def run_pig_jobs(input_csv: str = DEFAULT_INPUT_CSV,
     execution log and returns the contract dict.
     """
     started = datetime.datetime.now()
-    out_posix = out_dir.replace(os.sep, "/")
+    out_dir = _resolve(out_dir)
+    out_posix = _relative_path(out_dir)
     os.makedirs(out_dir, exist_ok=True)
     output_dir = os.path.join(out_dir, "output")
     os.makedirs(output_dir, exist_ok=True)
@@ -1056,7 +1066,7 @@ def run_pig_jobs(input_csv: str = DEFAULT_INPUT_CSV,
 
     # --- 1) Stage the enriched corpus that scripts 02/03 load ----------------
     staging_path, staged_rows = stage_enriched_csv(parquet_dir, input_csv, staging_dir)
-    staging_rel = staging_path.replace(os.sep, "/")
+    staging_rel = _relative_path(staging_path)
 
     # --- 2) Write the three authentic Pig scripts ----------------------------
     scripts = write_pig_scripts(out_dir, input_csv=input_csv, staging_csv=staging_rel)
@@ -1081,9 +1091,9 @@ def run_pig_jobs(input_csv: str = DEFAULT_INPUT_CSV,
         output_files.extend(produced)
         execution_log.append({
             "script": os.path.basename(script),
-            "script_path": script,
+            "script_path": _relative_path(script),
             "relations_created": created,
-            "output_files": produced,
+            "output_files": [_relative_path(path) for path in produced],
             "elapsed_ms": round(elapsed_ms, 3),
             "status": "SUCCESS",
         })
@@ -1106,7 +1116,7 @@ def run_pig_jobs(input_csv: str = DEFAULT_INPUT_CSV,
     # --- 6) Record authentic HDFS staging commands ---------------------------
     hdfs_commands = []
     try:
-        fs = LocalHDFS(root="data/hadoop_ecosystem/hdfs", verbose=False)
+        fs = LocalHDFS(root=_resolve("data/hadoop_ecosystem/hdfs"), verbose=False)
         fs.mkdirs(HDFS_PIG_DIR)
         # Stage the first script and the raw input into the simulated HDFS.
         fs.put(scripts[0], f"{HDFS_PIG_DIR}/{os.path.basename(scripts[0])}")
@@ -1122,11 +1132,11 @@ def run_pig_jobs(input_csv: str = DEFAULT_INPUT_CSV,
         "scripts_generated": scripts,
         "scripts_executed": len(execution_log),
         "relations_created": relations_created,
-        "output_files": output_files,
+        "output_files": [_relative_path(path) for path in output_files],
         "staged_input": staging_rel,
         "staged_rows": staged_rows,
-        "execution_log": log_path.replace(os.sep, "/"),
-        "real_cluster_commands": commands_path.replace(os.sep, "/"),
+        "execution_log": _relative_path(log_path),
+        "real_cluster_commands": _relative_path(commands_path),
         "hdfs_commands": hdfs_commands,
         "out_dir": out_posix,
     }

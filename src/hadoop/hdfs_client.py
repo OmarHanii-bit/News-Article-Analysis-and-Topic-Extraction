@@ -214,7 +214,7 @@ class LocalHDFS:
                     bh.write(chunk)                                  # same bytes on every replica
                 replicas.append({
                     "datanode": f"datanode_{dn_index + 1}",
-                    "path": os.path.relpath(dn_path, self.root),    # store path relative to cluster root
+                    "path": os.path.relpath(dn_path, self.root).replace(os.sep, "/"),
                     "size": len(chunk),
                 })
             blocks.append({  # one metadata entry per physical block + its replica list

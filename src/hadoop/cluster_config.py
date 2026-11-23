@@ -30,6 +30,16 @@ import json
 import datetime
 import xml.etree.ElementTree as ET
 
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+
+def _resolve(path: str) -> str:
+    return path if os.path.isabs(path) else os.path.join(PROJECT_ROOT, path)
+
+
+def _relative_path(path: str) -> str:
+    return os.path.relpath(os.path.abspath(path), PROJECT_ROOT).replace(os.sep, "/")
+
 
 # ---------------------------------------------------------------------------
 # Cluster topology definition. In production these are physical hosts; here they
@@ -138,6 +148,10 @@ def compute_capacity_plan(input_csv: str = "data/raw_news_articles.csv",
     Returns a dict containing HDFS block counts, replicated storage demand and
     YARN/Spark resource sizing recommendations.
     """
+    input_csv = _resolve(input_csv)
+    mapreduce_tsv = _resolve(mapreduce_tsv)
+    parquet_dir = _resolve(parquet_dir)
+
     # --- 1. Measure the real raw input volume on disk --------------------
     raw_bytes = os.path.getsize(input_csv) if os.path.exists(input_csv) else 0
     tsv_bytes = os.path.getsize(mapreduce_tsv) if os.path.exists(mapreduce_tsv) else 0
@@ -213,6 +227,8 @@ def generate_hadoop_configs(out_dir: str = "data/hadoop_ecosystem/cluster") -> d
     """
     Emits the production Hadoop/YARN XML configuration set plus spark-defaults.
     """
+    out_dir = _resolve(out_dir)
+    os.makedirs(out_dir, exist_ok=True)
     nn = CLUSTER_TOPOLOGY["namenode"]["host"]
     created = []
 
@@ -363,7 +379,11 @@ def generate_hadoop_configs(out_dir: str = "data/hadoop_ecosystem/cluster") -> d
         fh.write(f"spark.serializer                   org.apache.spark.serializer.KryoSerializer\n")
     created.append(spark_conf_path)
 
-    return {"config_files": created, "config_count": len(created), "out_dir": out_dir}
+    return {
+        "config_files": [_relative_path(path) for path in created],
+        "config_count": len(created),
+        "out_dir": _relative_path(out_dir),
+    }
 
 
 def generate_real_cluster_commands(out_dir: str = "data/hadoop_ecosystem/cluster") -> str:
@@ -371,6 +391,7 @@ def generate_real_cluster_commands(out_dir: str = "data/hadoop_ecosystem/cluster
     Writes `real_cluster_commands.md` — the authentic bring-up / run / monitor
     command set for a genuine Hadoop+YARN cluster.
     """
+    out_dir = _resolve(out_dir)
     nn = CLUSTER_TOPOLOGY["namenode"]["host"]
     commands = f"""# Real Hadoop Cluster Operations — News Article Analysis Pipeline
 
@@ -471,7 +492,7 @@ mapred job -list                               # running MapReduce jobs
     path = os.path.join(out_dir, "real_cluster_commands.md")
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(commands)
-    return path
+    return _relative_path(path)
 
 
 def run_cluster_planning(input_csv: str = "data/raw_news_articles.csv",
@@ -503,12 +524,13 @@ def run_cluster_planning(input_csv: str = "data/raw_news_articles.csv",
         "cluster_name": CLUSTER_TOPOLOGY["cluster_name"],
         "topology": CLUSTER_TOPOLOGY,
         "capacity_plan": plan,
-        "config_files": [os.path.relpath(p) for p in configs["config_files"]],
-        "commands_file": os.path.relpath(cmd_path),
-        "out_dir": out_dir,
+        "config_files": configs["config_files"],
+        "commands_file": cmd_path,
+        "out_dir": configs["out_dir"],
     }
-    os.makedirs(out_dir, exist_ok=True)
-    summary_path = os.path.join(out_dir, "cluster_summary.json")
+    resolved_out_dir = _resolve(out_dir)
+    os.makedirs(resolved_out_dir, exist_ok=True)
+    summary_path = os.path.join(resolved_out_dir, "cluster_summary.json")
     with open(summary_path, "w", encoding="utf-8") as fh:
         json.dump(summary, fh, indent=2)
     print(f"[Cluster] Summary -> {summary_path}")

@@ -3,13 +3,13 @@
   "events_ingested": 500,
   "bytes_ingested": 103790,
   "hdfs_stream_paths": [
-    "/user/news/stream/20261121/FlumeData.20261121.00000.json",
-    "/user/news/stream/20261121/FlumeData.20261121.00001.json",
-    "/user/news/stream/20261121/FlumeData.20261121.00002.json",
-    "/user/news/stream/20261121/FlumeData.20261121.00003.json",
-    "/user/news/stream/20261121/FlumeData.20261121.00004.json"
+    "/user/news/stream/20261123/FlumeData.20261123.00000.json",
+    "/user/news/stream/20261123/FlumeData.20261123.00001.json",
+    "/user/news/stream/20261123/FlumeData.20261123.00002.json",
+    "/user/news/stream/20261123/FlumeData.20261123.00003.json",
+    "/user/news/stream/20261123/FlumeData.20261123.00004.json"
   ],
-  "events_per_second": 2522.48,
+  "events_per_second": 8894.3,
   "channel_capacity": 1000,
   "out_dir": "data/hadoop_ecosystem/flume"
 }

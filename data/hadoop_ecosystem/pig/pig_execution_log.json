@@ -161,9 +161,9 @@
       "script_path": "data/hadoop_ecosystem/pig/01_clean_and_count.pig",
       "relations_created": 8,
       "output_files": [
-        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000"
+        "data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000"
       ],
-      "elapsed_ms": 1860.541,
+      "elapsed_ms": 5418.787,
       "status": "SUCCESS"
     },
     {
@@ -171,9 +171,9 @@
       "script_path": "data/hadoop_ecosystem/pig/02_topic_publisher_join.pig",
       "relations_created": 11,
       "output_files": [
-        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000"
+        "data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000"
       ],
-      "elapsed_ms": 518.706,
+      "elapsed_ms": 1668.471,
       "status": "SUCCESS"
     },
     {
@@ -181,9 +181,9 @@
       "script_path": "data/hadoop_ecosystem/pig/03_sentiment_filter.pig",
       "relations_created": 5,
       "output_files": [
-        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
+        "data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
       ],
-      "elapsed_ms": 179.275,
+      "elapsed_ms": 485.579,
       "status": "SUCCESS"
     }
   ]
