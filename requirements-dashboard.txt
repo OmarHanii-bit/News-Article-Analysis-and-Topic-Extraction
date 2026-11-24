@@ -1,0 +1,10 @@
+# Slim runtime for the Streamlit dashboard on Streamlit Community Cloud.
+# Use this as the "Requirements file" in Advanced settings instead of the full
+# requirements.txt, which also installs PySpark, Jupyter and the deck/report
+# toolchain that the dashboard does not need.
+streamlit>=1.30.0
+pandas>=2.0.0
+numpy>=1.24.0
+plotly>=5.18.0
+pyarrow>=14.0.0
+matplotlib>=3.8.0

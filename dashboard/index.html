@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>News Intelligence · Dashboard Index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#090D16;--card:#111827;--hover:#1A2234;--border:rgba(255,255,255,.08);
+    --text:#E6EAF2;--muted:#94A3B8;--dim:#64748B;--cyan:#06B6D4;--violet:#8B5CF6;
+    --emerald:#10B981;--amber:#F59E0B;--rose:#F43F5E;
+    --sans:"Inter","Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+    min-height:100vh;-webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(900px 520px at 12% -10%,rgba(6,182,212,.14),transparent 60%),
+      radial-gradient(800px 480px at 88% 0%,rgba(139,92,246,.14),transparent 62%),
+      radial-gradient(900px 600px at 50% 110%,rgba(16,185,129,.07),transparent 60%);
+  }
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 24px 60px}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:34px;flex-wrap:wrap}
+  .logo{
+    width:44px;height:44px;border-radius:13px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--cyan),var(--violet));
+    box-shadow:0 0 28px rgba(6,182,212,.35),inset 0 0 0 1px rgba(255,255,255,.18);
+  }
+  .logo svg{width:24px;height:24px}
+  h1{font-size:22px;margin:0;letter-spacing:-.02em}
+  header p{margin:2px 0 0;color:var(--muted);font-size:12.5px}
+  .live{
+    margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:7px 12px;
+    border-radius:999px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);
+    font-size:11px;font-weight:600;color:#6EE7B7;white-space:nowrap;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.55)}70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+  .hero{margin-bottom:26px}
+  .hero h2{font-size:30px;line-height:1.15;letter-spacing:-.035em;margin:0 0 10px;max-width:760px}
+  .hero h2 em{font-style:normal;color:#67E8F9}
+  .hero p{color:var(--muted);font-size:14px;line-height:1.7;max-width:760px;margin:0}
+  .grid{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:16px}
+  .card{
+    position:relative;overflow:hidden;display:flex;flex-direction:column;
+    background:linear-gradient(180deg,rgba(17,24,39,.96),rgba(13,20,34,.9));
+    border:1px solid var(--border);border-radius:16px;padding:22px;
+    color:inherit;transition:transform .2s,border-color .2s,box-shadow .2s;
+  }
+  .card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.17);box-shadow:0 22px 50px rgba(0,0,0,.45);text-decoration:none}
+  .card::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px 150px at 90% -20%,var(--glow,rgba(6,182,212,.16)),transparent 70%)}
+  .card.primary{--glow:rgba(6,182,212,.22);border-color:rgba(6,182,212,.3)}
+  .tag{
+    align-self:flex-start;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    padding:3px 7px;border-radius:5px;border:1px solid rgba(6,182,212,.28);
+    background:rgba(6,182,212,.09);color:#67E8F9;margin-bottom:14px;
+  }
+  .card.real .tag{border-color:rgba(139,92,246,.3);background:rgba(139,92,246,.1);color:#C4B5FD}
+  .card.synth .tag{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.1);color:#6EE7B7}
+  .card h3{margin:0 0 7px;font-size:17px;letter-spacing:-.02em;line-height:1.25}
+  .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.65;flex:1}
+  .metrics{display:flex;gap:16px;margin:16px 0 14px;flex-wrap:wrap}
+  .metric b{display:block;font-family:var(--mono);font-size:18px;letter-spacing:-.03em}
+  .metric span{font-size:9.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+  .open{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#67E8F9;margin-top:8px}
+  .card.real .open{color:#C4B5FD}
+  .card.synth .open{color:#6EE7B7}
+  .section{margin-top:34px}
+  .section h2{font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin:0 0 12px}
+  .links{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .link{
+    display:flex;flex-direction:column;gap:3px;padding:13px 15px;border-radius:10px;
+    background:rgba(255,255,255,.025);border:1px solid var(--border);color:var(--text);
+    font-size:12.5px;font-weight:600;transition:.15s;
+  }
+  .link:hover{background:var(--hover);border-color:rgba(255,255,255,.16);text-decoration:none}
+  .link small{font-weight:400;color:var(--dim);font-size:10.5px}
+  .note{
+    margin-top:26px;padding:14px 16px;border-radius:10px;border:1px solid var(--border);
+    background:rgba(255,255,255,.02);color:var(--muted);font-size:11.5px;line-height:1.7;
+  }
+  .note code{font-family:var(--mono);font-size:10.5px;color:#A5F3FC;background:rgba(6,182,212,.08);padding:1px 5px;border-radius:4px}
+  footer{margin-top:30px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--dim);font-size:10.5px}
+  @media(max-width:960px){.grid{grid-template-columns:1fr}.links{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.links{grid-template-columns:1fr}.hero h2{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#04121A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 17l5-6 4 4 5-7 4 5"/><path d="M3 21h18"/>
+      </svg>
+    </div>
+    <div>
+      <h1>News Intelligence</h1>
+      <p>Big Data News Article Analysis &amp; Topic Extraction · dashboard index</p>
+    </div>
+    <span class="live"><span class="dot"></span> Static · no server required</span>
+  </header>
+
+  <div class="hero">
+    <h2>Three ways to explore the same <em>16,712-article</em> pipeline.</h2>
+    <p>Every view is generated from the committed PySpark summaries, HBase article records and raw corpora.
+       The Command Center is a single self-contained HTML file; the two Plotly dashboards are offline-interactive
+       exports of the same 12-column lakehouse.</p>
+  </div>
+
+  <div class="grid">
+    <a class="card primary" href="command_center.html">
+      <span class="tag">New · Intelligence Command Center</span>
+      <h3>Dark-mode topic &amp; entity command center</h3>
+      <p>Zoomable topic clusters, brushable velocity timeline, entity sentiment bars, live feed and a slide-over
+         article inspector. Fully cross-filtered in vanilla JavaScript with no CDN dependency.</p>
+      <div class="metrics">
+        <div class="metric"><b>11</b><span>topics</span></div>
+        <div class="metric"><b>3,069</b><span>feed rows</span></div>
+        <div class="metric"><b>16</b><span>entities</span></div>
+      </div>
+      <span class="open">Open Command Center →</span>
+    </a>
+
+    <a class="card synth" href="interactive_dashboard.html">
+      <span class="tag">Synthetic benchmark · 6,000</span>
+      <h3>Curated benchmark dashboard</h3>
+      <p>Deterministic full-text corpus with curated editorial labels, 8 publishers and 24 months of traffic.
+         The stable grading and regression baseline.</p>
+      <div class="metrics">
+        <div class="metric"><b>6</b><span>LDA topics</span></div>
+        <div class="metric"><b>0.991</b><span>confidence</span></div>
+      </div>
+      <span class="open">Open synthetic dashboard →</span>
+    </a>
+
+    <a class="card real" href="interactive_dashboard_real.html">
+      <span class="tag">Real wire · 10,712</span>
+      <h3>Reuters-21578 dashboard</h3>
+      <p>Authentic newswire documents with auto-derived topic labels. Lower, more realistic confidence and a
+         single-publisher corpus that tests generalisation.</p>
+      <div class="metrics">
+        <div class="metric"><b>6</b><span>LDA topics</span></div>
+        <div class="metric"><b>0.684</b><span>confidence</span></div>
+      </div>
+      <span class="open">Open Reuters dashboard →</span>
+    </a>
+  </div>
+
+  <div class="section">
+    <h2>Project evidence</h2>
+    <div class="links">
+      <a class="link" href="https://github.com/OmarHanii-bit/News-Article-Analysis-and-Topic-Extraction" target="_blank" rel="noopener">GitHub repository <small>source, CI and history</small></a>
+      <a class="link" href="https://github.com/OmarHanii-bit/News-Article-Analysis-and-Topic-Extraction/blob/main/PROJECT_REPORT.md" target="_blank" rel="noopener">Project report <small>full academic write-up</small></a>
+      <a class="link" href="https://github.com/OmarHanii-bit/News-Article-Analysis-and-Topic-Extraction/blob/main/docs/SHARING.md" target="_blank" rel="noopener">Sharing guide <small>Pages, Streamlit Cloud, Docker</small></a>
+      <a class="link" href="https://github.com/OmarHanii-bit/News-Article-Analysis-and-Topic-Extraction/tree/main/visualizations" target="_blank" rel="noopener">Visualization gallery <small>17 × 300-DPI charts</small></a>
+    </div>
+  </div>
+
+  <div class="note">
+    Regenerate the Command Center with <code>python src/build_command_center.py</code>; the Plotly exports with
+    <code>python src/build_interactive_dashboard.py</code>. The live Streamlit application runs with
+    <code>streamlit run src/dashboard.py</code>. This page is served as-is by GitHub Pages.
+  </div>
+
+  <footer>
+    <span>© 2026 The Distributed Insights Collective · Big Data Analytics &amp; Distributed Systems capstone</span>
+    <span>Static HTML · no tracking · no API keys</span>
+  </footer>
+</div>
+</body>
+</html>

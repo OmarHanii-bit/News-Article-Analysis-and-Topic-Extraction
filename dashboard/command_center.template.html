@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="description" content="Dark-mode Intelligence Command Center for the News Article Analysis and Topic Extraction Big Data capstone."/>
+<title>Intelligence Command Center · News Topic Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#090D16;
+    --card:#111827;
+    --card-2:#0E1524;
+    --hover:#1A2234;
+    --border:rgba(255,255,255,.08);
+    --border-strong:rgba(255,255,255,.16);
+    --text:#E6EAF2;
+    --muted:#94A3B8;
+    --dim:#64748B;
+    --cyan:#06B6D4;
+    --violet:#8B5CF6;
+    --emerald:#10B981;
+    --amber:#F59E0B;
+    --rose:#F43F5E;
+    --blue:#3B82F6;
+    --radius:16px;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:"Inter","Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+    font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(900px 520px at 12% -10%,rgba(6,182,212,.13),transparent 60%),
+      radial-gradient(800px 480px at 88% 0%,rgba(139,92,246,.13),transparent 62%),
+      radial-gradient(900px 600px at 50% 110%,rgba(16,185,129,.06),transparent 60%);
+  }
+  ::selection{background:rgba(6,182,212,.35);color:#fff}
+  button,input,select{font:inherit;color:inherit}
+  button{cursor:pointer}
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  /* ---------------- top command bar ---------------- */
+  .topbar{
+    position:sticky;top:0;z-index:60;
+    background:rgba(9,13,22,.82);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-inner{
+    max-width:1580px;margin:0 auto;padding:12px 24px;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:12px;min-width:250px}
+  .logo{
+    width:40px;height:40px;border-radius:12px;flex:0 0 auto;position:relative;
+    background:linear-gradient(135deg,var(--cyan),var(--violet));
+    box-shadow:0 0 24px rgba(6,182,212,.35),inset 0 0 0 1px rgba(255,255,255,.18);
+    display:grid;place-items:center;
+  }
+  .logo svg{width:22px;height:22px}
+  .brand h1{font-size:15px;margin:0;letter-spacing:-.01em;font-weight:700;white-space:nowrap}
+  .brand p{margin:1px 0 0;font-size:11px;color:var(--muted);letter-spacing:.02em;white-space:nowrap}
+  .live-badge{
+    display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;
+    background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);
+    font-size:11px;font-weight:600;color:#6EE7B7;white-space:nowrap;
+  }
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:pulse 2s infinite}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(16,185,129,.55)}
+    70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}
+    100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
+  }
+  .bar-controls{display:flex;align-items:center;gap:10px;flex:1;justify-content:flex-end;flex-wrap:wrap}
+  .search{
+    position:relative;min-width:190px;flex:1;max-width:300px;
+  }
+  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--dim);pointer-events:none}
+  .search input{
+    width:100%;padding:9px 38px 9px 36px;border-radius:10px;
+    background:rgba(255,255,255,.035);border:1px solid var(--border);outline:none;
+    color:var(--text);transition:border-color .18s,box-shadow .18s,background .18s;
+  }
+  .search input::placeholder{color:var(--dim)}
+  .search input:focus{border-color:rgba(6,182,212,.55);box-shadow:0 0 0 3px rgba(6,182,212,.12);background:rgba(255,255,255,.05)}
+  .search kbd{
+    position:absolute;right:10px;top:50%;transform:translateY(-50%);
+    font-family:var(--mono);font-size:10px;color:var(--dim);
+    border:1px solid var(--border);border-radius:5px;padding:1px 5px;background:rgba(255,255,255,.03);
+  }
+  .select-wrap{position:relative}
+  select.control,button.control{
+    appearance:none;background:rgba(255,255,255,.035);border:1px solid var(--border);
+    border-radius:10px;padding:9px 32px 9px 12px;font-size:12.5px;color:var(--text);
+    transition:border-color .18s,background .18s;white-space:nowrap;
+  }
+  select.control:hover,button.control:hover{border-color:var(--border-strong);background:var(--hover)}
+  select.control:focus-visible,button.control:focus-visible{outline:none;border-color:rgba(6,182,212,.55);box-shadow:0 0 0 3px rgba(6,182,212,.12)}
+  .select-wrap::after{
+    content:"";position:absolute;right:12px;top:50%;width:6px;height:6px;
+    border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);
+    transform:translateY(-70%) rotate(45deg);pointer-events:none;
+  }
+  .source-wrap{position:relative}
+  .source-btn{display:inline-flex;align-items:center;gap:8px;padding-right:12px}
+  .source-btn .caret{width:6px;height:6px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);margin-top:-3px}
+  .source-btn .count{font-family:var(--mono);font-size:10px;background:rgba(6,182,212,.18);color:#67E8F9;border-radius:999px;padding:1px 6px}
+  .popover{
+    position:absolute;top:calc(100% + 8px);right:0;z-index:70;width:280px;
+    background:#0D1422;border:1px solid var(--border-strong);border-radius:12px;
+    box-shadow:0 24px 60px rgba(0,0,0,.55);padding:10px;display:none;
+  }
+  .popover.open{display:block;animation:pop .14s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .popover-head{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 8px;border-bottom:1px solid var(--border);margin-bottom:6px}
+  .popover-head span{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}
+  .popover-head button{background:none;border:none;color:var(--cyan);font-size:11px;padding:2px 4px}
+  .popover-list{max-height:260px;overflow:auto}
+  .check{
+    display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:7px;
+    font-size:12.5px;color:var(--text);cursor:pointer;transition:background .12s;
+  }
+  .check:hover{background:var(--hover)}
+  .check input{appearance:none;width:15px;height:15px;border-radius:4px;border:1px solid var(--border-strong);background:transparent;display:grid;place-items:center;margin:0;flex:0 0 auto}
+  .check input:checked{background:var(--cyan);border-color:var(--cyan)}
+  .check input:checked::after{content:"";width:4px;height:8px;border-right:2px solid #04121A;border-bottom:2px solid #04121A;transform:rotate(45deg) translate(-1px,-1px)}
+  .check .n{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--dim)}
+
+  /* ---------------- page shell ---------------- */
+  .shell{max-width:1580px;margin:0 auto;padding:22px 24px 64px}
+  .chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 16px;min-height:0}
+  .chips:empty{display:none}
+  .chip{
+    display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border-radius:999px;
+    background:rgba(6,182,212,.09);border:1px solid rgba(6,182,212,.3);
+    font-size:11.5px;color:#A5F3FC;
+  }
+  .chip b{font-weight:600;color:#E0F7FA}
+  .chip button{background:none;border:none;color:inherit;opacity:.75;padding:0;line-height:1;font-size:14px}
+  .chip button:hover{opacity:1}
+  .chip.neutral{background:rgba(255,255,255,.04);border-color:var(--border);color:var(--muted)}
+  .ghost-btn{
+    background:transparent;border:1px solid var(--border);border-radius:8px;
+    padding:5px 10px;font-size:11px;color:var(--muted);transition:.15s;
+  }
+  .ghost-btn:hover{color:var(--text);border-color:var(--border-strong);background:var(--hover)}
+
+  /* ---------------- KPI cards ---------------- */
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:18px}
+  .kpi{
+    position:relative;overflow:hidden;padding:18px 18px 16px;border-radius:var(--radius);
+    background:linear-gradient(180deg,rgba(17,24,39,.95),rgba(14,21,36,.86));
+    border:1px solid var(--border);
+    transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+  }
+  .kpi::after{
+    content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+    background:radial-gradient(420px 140px at 90% -20%,var(--glow,rgba(6,182,212,.16)),transparent 70%);
+    opacity:.9;
+  }
+  .kpi:hover{transform:translateY(-2px);border-color:var(--border-strong);box-shadow:0 18px 40px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03)}
+  .kpi-top{display:flex;align-items:center;justify-content:space-between;gap:8px;position:relative;z-index:1}
+  .kpi-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:700}
+  .kpi-icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--accent,var(--cyan))}
+  .kpi-icon svg{width:14px;height:14px}
+  .kpi-value{font-family:var(--mono);font-size:32px;font-weight:600;letter-spacing:-.03em;line-height:1.15;margin:12px 0 4px;position:relative;z-index:1}
+  .kpi-value.small{font-size:23px;line-height:1.3}
+  .kpi-sub{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:7px;position:relative;z-index:1;flex-wrap:wrap}
+  .delta{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 6px;border-radius:5px}
+  .delta.up{color:#6EE7B7;background:rgba(16,185,129,.12)}
+  .delta.down{color:#FDA4AF;background:rgba(244,63,94,.12)}
+  .delta.flat{color:#FCD34D;background:rgba(245,158,11,.12)}
+  .spark{width:100%;height:34px;display:block;margin-top:10px;position:relative;z-index:1}
+  .tag{
+    display:inline-flex;align-items:center;gap:5px;padding:2px 7px;border-radius:5px;
+    font-size:10.5px;font-weight:600;white-space:nowrap;border:1px solid transparent;
+  }
+  .tag.cyan{color:#67E8F9;background:rgba(6,182,212,.11);border-color:rgba(6,182,212,.25)}
+  .tag.violet{color:#C4B5FD;background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.28)}
+  .tag.emerald{color:#6EE7B7;background:rgba(16,185,129,.11);border-color:rgba(16,185,129,.26)}
+  .tag.amber{color:#FCD34D;background:rgba(245,158,11,.11);border-color:rgba(245,158,11,.26)}
+  .tag.rose{color:#FDA4AF;background:rgba(244,63,94,.11);border-color:rgba(244,63,94,.26)}
+  .tag.slate{color:#CBD5E1;background:rgba(148,163,184,.1);border-color:rgba(148,163,184,.22)}
+
+  /* ---------------- panels ---------------- */
+  .grid-main{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:16px;margin-bottom:16px}
+  .grid-bottom{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:16px}
+  .panel{
+    border-radius:var(--radius);border:1px solid var(--border);
+    background:linear-gradient(180deg,rgba(17,24,39,.92),rgba(13,20,34,.88));
+    display:flex;flex-direction:column;min-width:0;overflow:hidden;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  .panel:hover{border-color:rgba(255,255,255,.12);box-shadow:0 16px 44px rgba(0,0,0,.28)}
+  .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 18px 10px}
+  .panel-title{font-size:13.5px;font-weight:700;letter-spacing:-.01em;margin:0;display:flex;align-items:center;gap:8px}
+  .panel-title .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px rgba(6,182,212,.8)}
+  .panel-sub{font-size:11px;color:var(--muted);margin:3px 0 0}
+  .panel-tools{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+  .icon-btn{
+    width:27px;height:27px;display:grid;place-items:center;border-radius:7px;
+    background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);
+    transition:.15s;font-size:14px;line-height:1;
+  }
+  .icon-btn:hover{color:var(--text);background:var(--hover);border-color:var(--border-strong)}
+  .panel-body{padding:0 12px 12px;flex:1;min-height:0;position:relative}
+
+  /* ---------------- cluster map ---------------- */
+  .map-wrap{position:relative;height:432px;border-radius:12px;overflow:hidden;background:radial-gradient(600px 380px at 50% 45%,rgba(6,182,212,.05),transparent 70%)}
+  #clusterMap{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+  #clusterMap.dragging{cursor:grabbing}
+  .bubble{cursor:pointer;transition:opacity .2s}
+  .bubble circle.core{transition:filter .2s,stroke-width .2s}
+  .bubble:hover circle.core{filter:drop-shadow(0 0 14px var(--bubble))}
+  .bubble.dim{opacity:.24}
+  .bubble.sel circle.core{stroke:#fff;stroke-width:2.5}
+  .bubble text{pointer-events:none;fill:#F8FAFC;font-weight:600;letter-spacing:-.01em}
+  .bubble text.vol{fill:rgba(255,255,255,.72);font-family:var(--mono);font-weight:500}
+  .map-legend{position:absolute;left:12px;bottom:10px;display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--muted);pointer-events:none;text-shadow:0 1px 3px #000}
+  .map-legend span{display:inline-flex;align-items:center;gap:5px}
+  .map-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .map-controls{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:5px}
+  .map-controls button{
+    width:28px;height:28px;border-radius:7px;background:rgba(13,20,34,.9);
+    border:1px solid var(--border);color:var(--muted);font-size:14px;line-height:1;
+    display:grid;place-items:center;backdrop-filter:blur(6px);
+  }
+  .map-controls button:hover{color:var(--text);border-color:var(--border-strong);background:var(--hover)}
+
+  /* ---------------- timeline ---------------- */
+  .tl-wrap{position:relative;height:432px;border-radius:12px;overflow:hidden}
+  #timeline{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+  .tl-legend{display:flex;flex-wrap:wrap;gap:5px;padding:0 6px 8px}
+  .tl-key{
+    display:inline-flex;align-items:center;gap:6px;padding:3px 7px;border-radius:6px;
+    border:1px solid var(--border);background:rgba(255,255,255,.025);font-size:10.5px;
+    color:var(--muted);cursor:pointer;transition:.15s;max-width:190px;
+  }
+  .tl-key:hover{color:var(--text);border-color:var(--border-strong)}
+  .tl-key.off{opacity:.35;text-decoration:line-through}
+  .tl-key i{width:7px;height:7px;border-radius:2px;flex:0 0 auto}
+  .tl-key span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tl-note{font-size:9.5px;color:var(--dim);margin-left:auto;align-self:center;padding-right:4px}
+  .brush-hint{position:absolute;right:12px;top:8px;font-size:10px;color:var(--dim);pointer-events:none}
+
+  /* ---------------- entities ---------------- */
+  .sent-pills{display:flex;gap:5px;flex-wrap:wrap;padding:0 6px 10px}
+  .pill{
+    padding:4px 9px;border-radius:999px;font-size:10.5px;font-weight:600;
+    border:1px solid var(--border);background:transparent;color:var(--muted);transition:.15s;
+  }
+  .pill:hover{color:var(--text);background:var(--hover)}
+  .pill.active[data-s="all"]{color:#E2E8F0;background:rgba(148,163,184,.16);border-color:rgba(148,163,184,.4)}
+  .pill.active[data-s="positive"]{color:#6EE7B7;background:rgba(16,185,129,.13);border-color:rgba(16,185,129,.4)}
+  .pill.active[data-s="neutral"]{color:#FCD34D;background:rgba(245,158,11,.13);border-color:rgba(245,158,11,.4)}
+  .pill.active[data-s="negative"]{color:#FDA4AF;background:rgba(244,63,94,.13);border-color:rgba(244,63,94,.4)}
+  .entity-list{height:356px;overflow:auto;padding:0 6px 4px;display:flex;flex-direction:column;gap:7px}
+  .entity{
+    display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:8px;align-items:center;
+    padding:7px 9px;border-radius:9px;border:1px solid transparent;transition:.15s;
+    cursor:pointer;background:rgba(255,255,255,.018);
+  }
+  .entity:hover{background:var(--hover);border-color:var(--border)}
+  .entity.sel{border-color:rgba(6,182,212,.45);background:rgba(6,182,212,.07)}
+  .entity-name{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;margin-bottom:5px;min-width:0}
+  .entity-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .type{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;padding:1px 4px;border-radius:3px;border:1px solid var(--border);color:var(--dim);flex:0 0 auto}
+  .type.ORG{color:#67E8F9;border-color:rgba(6,182,212,.3)}
+  .type.PERSON{color:#C4B5FD;border-color:rgba(139,92,246,.3)}
+  .type.LOC{color:#FCD34D;border-color:rgba(245,158,11,.3)}
+  .bar{height:7px;border-radius:4px;background:rgba(255,255,255,.05);display:flex;overflow:hidden}
+  .bar i{display:block;height:100%}
+  .bar .p{background:var(--emerald)}
+  .bar .n{background:var(--amber);opacity:.9}
+  .bar .g{background:var(--rose)}
+  .entity-count{font-family:var(--mono);font-size:12px;color:var(--text);text-align:right}
+  .entity-count small{display:block;font-size:8.5px;color:var(--dim);letter-spacing:.04em}
+
+  /* ---------------- feed ---------------- */
+  .feed-tools{display:flex;align-items:center;gap:6px}
+  .feed-count{font-family:var(--mono);font-size:10px;color:var(--dim);margin-right:4px}
+  .feed{height:356px;overflow:auto;padding:0 6px 6px;display:flex;flex-direction:column;gap:5px}
+  .row{
+    display:grid;grid-template-columns:3px minmax(0,1fr) auto;gap:11px;align-items:start;
+    padding:10px 10px 10px 8px;border-radius:9px;border:1px solid transparent;
+    cursor:pointer;transition:background .15s,border-color .15s,transform .15s;
+  }
+  .row:hover{background:var(--hover);border-color:var(--border);transform:translateX(2px)}
+  .row .stripe{width:3px;height:100%;min-height:34px;border-radius:2px;background:var(--dim)}
+  .row.pos .stripe{background:var(--emerald)}
+  .row.neu .stripe{background:var(--amber)}
+  .row.neg .stripe{background:var(--rose)}
+  .row-title{font-size:12.5px;font-weight:600;line-height:1.38;letter-spacing:-.005em;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .row-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;color:var(--dim)}
+  .row-meta .src{color:var(--muted);font-weight:600}
+  .row-meta .topic-pill{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row-right{text-align:right;padding-top:1px}
+  .sent-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:9.5px;font-weight:600;padding:2px 5px;border-radius:4px;white-space:nowrap}
+  .sent-badge.pos{color:#6EE7B7;background:rgba(16,185,129,.12)}
+  .sent-badge.neu{color:#FCD34D;background:rgba(245,158,11,.12)}
+  .sent-badge.neg{color:#FDA4AF;background:rgba(244,63,94,.12)}
+  .row-right .conf{display:block;margin-top:5px;font-family:var(--mono);font-size:9px;color:var(--dim)}
+  .empty{padding:48px 20px;text-align:center;color:var(--dim);font-size:12px}
+  .empty b{display:block;color:var(--muted);font-size:13px;margin-bottom:4px}
+
+  /* ---------------- slide-over ---------------- */
+  .scrim{position:fixed;inset:0;z-index:90;background:rgba(3,7,14,.62);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;z-index:100;width:min(470px,94vw);
+    background:linear-gradient(180deg,#0E1524,#0A101C);
+    border-left:1px solid var(--border-strong);
+    box-shadow:-30px 0 80px rgba(0,0,0,.6);
+    transform:translateX(102%);transition:transform .3s cubic-bezier(.22,.61,.36,1);
+    display:flex;flex-direction:column;
+  }
+  .drawer.open{transform:none}
+  .drawer-head{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start}
+  .drawer-head .grow{flex:1;min-width:0}
+  .drawer-kicker{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .drawer h2{font-size:17px;line-height:1.35;margin:0;letter-spacing:-.02em;font-weight:700}
+  .drawer-body{padding:18px 20px 28px;overflow:auto;flex:1}
+  .drawer-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-bottom:16px}
+  .drawer-meta b{color:var(--text);font-weight:600}
+  .meter{margin:0 0 14px}
+  .meter-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+  .meter-label b{font-family:var(--mono);color:var(--text);font-size:11px;letter-spacing:0;text-transform:none}
+  .meter-track{height:8px;border-radius:5px;background:rgba(255,255,255,.06);position:relative;overflow:hidden}
+  .meter-fill{height:100%;border-radius:5px;transition:width .5s ease}
+  .meter-mid{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:rgba(255,255,255,.18)}
+  .drawer-summary{font-size:13px;line-height:1.72;color:#CBD5E1;margin:0 0 18px}
+  .drawer-summary mark{background:rgba(6,182,212,.16);color:#A5F3FC;border-radius:3px;padding:0 2px;border-bottom:1px solid rgba(6,182,212,.4)}
+  .drawer-summary mark.person{background:rgba(139,92,246,.16);color:#DDD6FE;border-color:rgba(139,92,246,.4)}
+  .drawer-summary mark.loc{background:rgba(245,158,11,.15);color:#FDE68A;border-color:rgba(245,158,11,.4)}
+  .section-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.13em;color:var(--dim);font-weight:700;margin:18px 0 8px}
+  .kw{display:flex;gap:5px;flex-wrap:wrap}
+  .kw span{font-family:var(--mono);font-size:10px;padding:3px 6px;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted)}
+  .ner-tags{display:flex;gap:5px;flex-wrap:wrap}
+  .ner-tag{font-size:10px;padding:3px 7px;border-radius:5px;border:1px solid rgba(6,182,212,.28);background:rgba(6,182,212,.08);color:#A5F3FC}
+  .ner-tag.PERSON{border-color:rgba(139,92,246,.3);background:rgba(139,92,246,.09);color:#DDD6FE}
+  .ner-tag.LOC{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.09);color:#FDE68A}
+  .drawer-link{display:inline-flex;align-items:center;gap:6px;margin-top:22px;font-size:12px;font-weight:600}
+  .close-btn{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);display:grid;place-items:center;font-size:17px;flex:0 0 auto}
+  .close-btn:hover{color:var(--text);background:var(--hover)}
+
+  /* ---------------- tooltip ---------------- */
+  .tooltip{
+    position:fixed;z-index:120;pointer-events:none;max-width:290px;
+    background:rgba(10,16,28,.97);border:1px solid var(--border-strong);
+    border-radius:10px;padding:10px 12px;box-shadow:0 18px 50px rgba(0,0,0,.55);
+    font-size:11.5px;line-height:1.5;opacity:0;transform:translateY(3px);
+    transition:opacity .12s,transform .12s;
+  }
+  .tooltip.show{opacity:1;transform:none}
+  .tt-title{font-weight:700;font-size:12.5px;margin-bottom:2px;color:#F1F5F9}
+  .tt-sub{color:var(--muted);font-size:10.5px;margin-bottom:7px}
+  .tt-row{display:flex;justify-content:space-between;gap:14px;color:var(--muted)}
+  .tt-row b{font-family:var(--mono);color:var(--text);font-weight:500}
+  .tt-kw{margin-top:7px;padding-top:7px;border-top:1px solid var(--border);color:var(--dim);font-size:10px;line-height:1.6}
+
+  /* ---------------- footer ---------------- */
+  footer{margin-top:26px;padding-top:18px;border-top:1px solid var(--border);color:var(--dim);font-size:11px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:24px;margin-bottom:16px}
+  footer h3{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);margin:0 0 8px}
+  footer p{margin:0 0 6px;line-height:1.65}
+  footer ul{margin:0;padding-left:16px;line-height:1.8}
+  footer a{color:#67E8F9}
+  .foot-bottom{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--border)}
+
+  /* ---------------- scrollbars / responsive ---------------- */
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(148,163,184,.22);border-radius:6px;border:2px solid transparent;background-clip:content-box}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(148,163,184,.4);background-clip:content-box}
+  @media(max-width:1180px){
+    .grid-main{grid-template-columns:1fr}
+    .grid-bottom{grid-template-columns:1fr}
+    .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .map-wrap,.tl-wrap{height:390px}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    #resetBtn{display:none}
+  }
+  @media(max-width:720px){
+    .topbar-inner{padding:10px 14px;gap:10px}
+    .brand{min-width:0;flex:1}
+    .brand p{display:none}
+    .live-badge{order:3}
+    .bar-controls{order:4;flex-basis:100%;justify-content:stretch}
+    .search{max-width:none;min-width:0;flex:1}
+    .shell{padding:16px 14px 48px}
+    .kpis{grid-template-columns:1fr;gap:10px}
+    .kpi-value{font-size:27px}
+    .map-wrap,.tl-wrap{height:340px}
+    .foot-grid{grid-template-columns:1fr}
+    .row-meta .topic-pill{max-width:130px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  }
+</style>
+</head>
+<body>
+<noscript>
+  <div style="max-width:720px;margin:48px auto;padding:24px;border:1px solid rgba(255,255,255,.12);border-radius:12px;font-family:Segoe UI,Arial,sans-serif">
+    <h1 style="font-size:20px;margin-top:0">JavaScript is required</h1>
+    <p>This dashboard renders its charts in the browser from an embedded JSON payload.
+       Enable JavaScript, or open <code>PROJECT_REPORT.md</code> and the static PNGs in
+       <code>visualizations/</code> for the same evidence.</p>
+  </div>
+</noscript>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#04121A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 17l5-6 4 4 5-7 4 5"/><path d="M3 21h18"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Intelligence Command Center</h1>
+        <p>Big Data News Analysis &amp; Topic Extraction</p>
+      </div>
+    </div>
+
+    <div class="live-badge" title="Payload regenerated from committed pipeline artifacts">
+      <span class="live-dot"></span>
+      <span id="liveBadge">Pipeline live · 16,712 indexed</span>
+    </div>
+
+    <div class="bar-controls">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="searchInput" type="search" placeholder="Search headlines, topics…" autocomplete="off" aria-label="Search articles"/>
+        <kbd>/</kbd>
+      </div>
+
+      <div class="select-wrap">
+        <select id="dateRange" class="control" aria-label="Date range">
+          <option value="all">All time · 2024–2025</option>
+          <option value="2025">Year 2025</option>
+          <option value="2024">Year 2024</option>
+          <option value="h2-2025">H2 2025</option>
+          <option value="h1-2025">H1 2025</option>
+          <option value="last-90">Last 90 days of data</option>
+          <option value="custom" hidden>Custom brush</option>
+        </select>
+      </div>
+
+      <div class="source-wrap">
+        <button id="sourceBtn" class="control source-btn" aria-haspopup="true" aria-expanded="false">
+          <span>Sources</span>
+          <span id="sourceCount" class="count" hidden>0</span>
+          <span class="caret"></span>
+        </button>
+        <div id="sourcePopover" class="popover" role="dialog" aria-label="News source filter">
+          <div class="popover-head">
+            <span>News source</span>
+            <button id="sourceAll" type="button">Select all</button>
+          </div>
+          <div id="sourceList" class="popover-list"></div>
+        </div>
+      </div>
+
+      <button id="resetBtn" class="control" type="button">Reset</button>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <div id="chips" class="chips" aria-live="polite"></div>
+
+  <!-- KPI row -->
+  <section class="kpis" aria-label="Key performance indicators">
+    <article class="kpi" style="--glow:rgba(6,182,212,.18)">
+      <div class="kpi-top">
+        <span class="kpi-label">Total Articles Analyzed</span>
+        <span class="kpi-icon" style="--accent:var(--cyan)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h12l4 4v12H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+        </span>
+      </div>
+      <div id="kpiTotal" class="kpi-value mono">16,712</div>
+      <div class="kpi-sub">
+        <span id="kpiDelta" class="delta up">+0.0%</span>
+        <span id="kpiTotalSub">last 6 mo vs prior</span>
+      </div>
+      <svg id="sparkTotal" class="spark" viewBox="0 0 220 34" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </article>
+
+    <article class="kpi" style="--glow:rgba(139,92,246,.18)">
+      <div class="kpi-top">
+        <span class="kpi-label">Active Extracted Topics</span>
+        <span class="kpi-icon" style="--accent:var(--violet)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="8" r="3"/><circle cx="17" cy="7" r="2.4"/><circle cx="12" cy="17" r="3.2"/><path d="M9.5 9.6l1.8 4.6M15.2 9l-1.9 4.8"/></svg>
+        </span>
+      </div>
+      <div id="kpiTopics" class="kpi-value mono">11</div>
+      <div class="kpi-sub">
+        <span>trending</span>
+        <span id="kpiTrending" class="tag violet">—</span>
+      </div>
+      <svg id="sparkTopics" class="spark" viewBox="0 0 220 34" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </article>
+
+    <article class="kpi" style="--glow:rgba(16,185,129,.18)">
+      <div class="kpi-top">
+        <span class="kpi-label">Net Sentiment Index</span>
+        <span class="kpi-icon" style="--accent:var(--emerald)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2.2 4 2.2S16 14 16 14"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>
+        </span>
+      </div>
+      <div id="kpiSentiment" class="kpi-value mono" style="color:var(--emerald)">+0.000</div>
+      <div class="kpi-sub">
+        <span id="kpiSentTag" class="tag emerald">Positive</span>
+        <span>volume-weighted · −1.0 to +1.0</span>
+      </div>
+      <svg id="sparkSent" class="spark" viewBox="0 0 220 34" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </article>
+
+    <article class="kpi" style="--glow:rgba(245,158,11,.18)">
+      <div class="kpi-top">
+        <span class="kpi-label">Top Named Entity</span>
+        <span class="kpi-icon" style="--accent:var(--amber)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.2l5.9-.9z"/></svg>
+        </span>
+      </div>
+      <div id="kpiEntity" class="kpi-value small">—</div>
+      <div class="kpi-sub">
+        <span id="kpiEntityType" class="tag cyan">ORG</span>
+        <span id="kpiEntityCount" class="mono">0 mentions</span>
+      </div>
+      <svg id="sparkEntity" class="spark" viewBox="0 0 220 34" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </article>
+  </section>
+
+  <!-- Primary visualisation grid -->
+  <section class="grid-main">
+    <article class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title"><span class="dot"></span>Interactive Topic Cluster Map</h2>
+          <p class="panel-sub">Bubble size = article volume · colour = dominant sentiment · click to cross-filter</p>
+        </div>
+        <div class="panel-tools">
+          <button id="mapReset" class="ghost-btn" type="button">Fit view</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="map-wrap">
+          <svg id="clusterMap" viewBox="0 0 1000 455" role="img" aria-label="Topic cluster bubble map"></svg>
+          <div class="map-legend">
+            <span><i style="background:var(--emerald)"></i>Positive</span>
+            <span><i style="background:var(--amber)"></i>Neutral</span>
+            <span><i style="background:var(--rose)"></i>Negative</span>
+            <span style="opacity:.7">scroll = zoom · drag = pan</span>
+          </div>
+          <div class="map-controls">
+            <button id="zoomIn" type="button" aria-label="Zoom in">+</button>
+            <button id="zoomOut" type="button" aria-label="Zoom out">−</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title"><span class="dot" style="background:var(--violet);box-shadow:0 0 10px rgba(139,92,246,.8)"></span>Topic Velocity &amp; Sentiment</h2>
+          <p class="panel-sub">Monthly volume by topic · drag across the plot to brush-zoom</p>
+        </div>
+        <div class="panel-tools">
+          <button id="brushReset" class="ghost-btn" type="button">Clear brush</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="tl-wrap">
+          <svg id="timeline" viewBox="0 0 700 360" role="img" aria-label="Topic velocity and sentiment timeline"></svg>
+          <span class="brush-hint">drag to brush</span>
+        </div>
+        <div id="tlLegend" class="tl-legend"></div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Drill-down grid -->
+  <section class="grid-bottom">
+    <article class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title"><span class="dot" style="background:var(--amber);box-shadow:0 0 10px rgba(245,158,11,.8)"></span>Top Entities &amp; Sentiment</h2>
+          <p class="panel-sub">Gazetteer over titles, bylines and publications</p>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="sent-pills" id="sentPills" role="group" aria-label="Sentiment filter">
+          <button class="pill active" data-s="all" type="button">All</button>
+          <button class="pill" data-s="positive" type="button">Positive</button>
+          <button class="pill" data-s="neutral" type="button">Neutral</button>
+          <button class="pill" data-s="negative" type="button">Negative</button>
+        </div>
+        <div id="entityList" class="entity-list"></div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title"><span class="dot" style="background:var(--emerald);box-shadow:0 0 10px rgba(16,185,129,.8)"></span>Live Article Feed</h2>
+          <p class="panel-sub">Click any headline to open the inspection drawer</p>
+        </div>
+        <div class="panel-tools feed-tools">
+          <span id="feedCount" class="feed-count">—</span>
+          <button id="exportBtn" class="ghost-btn" type="button">Export CSV</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div id="feed" class="feed" aria-live="polite"></div>
+      </div>
+    </article>
+  </section>
+
+  <footer>
+    <div class="foot-grid">
+      <div>
+        <h3>Provenance</h3>
+        <p id="footGenerated">Generated —</p>
+        <p>Topic volume, sentiment, confidence and monthly series are measured PySpark LDA outputs. No dashboard values are hand-typed.</p>
+        <p><a href="https://github.com/OmarHanii-bit/News-Article-Analysis-and-Topic-Extraction" target="_blank" rel="noopener">Repository</a> ·
+           <a href="https://github.com/OmarHanii-bit/News-Article-Analysis-and-Topic-Extraction/blob/main/PROJECT_REPORT.md" target="_blank" rel="noopener">Report</a> ·
+           <a href="index.html">Dashboard index</a></p>
+      </div>
+      <div>
+        <h3>Corpora</h3>
+        <ul id="footCorpora"></ul>
+      </div>
+      <div>
+        <h3>Method notes</h3>
+        <ul id="footNotes"></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 The Distributed Insights Collective · Big Data Analytics &amp; Distributed Systems capstone</span>
+      <span class="mono" id="footCount">—</span>
+    </div>
+  </footer>
+</main>
+
+<div id="scrim" class="scrim"></div>
+<aside id="drawer" class="drawer" aria-hidden="true" aria-label="Article inspector">
+  <div class="drawer-head">
+    <div class="grow">
+      <div id="drawerKicker" class="drawer-kicker"></div>
+      <h2 id="drawerTitle">Article</h2>
+    </div>
+    <button id="drawerClose" class="close-btn" type="button" aria-label="Close inspector">×</button>
+  </div>
+  <div class="drawer-body">
+    <div id="drawerMeta" class="drawer-meta"></div>
+    <div class="meter">
+      <div class="meter-label"><span>Sentiment</span><b id="drawerSentVal">—</b></div>
+      <div class="meter-track"><div id="drawerSentFill" class="meter-fill" style="width:50%"></div><span class="meter-mid"></span></div>
+    </div>
+    <div class="meter">
+      <div class="meter-label"><span>Topic confidence</span><b id="drawerConfVal">—</b></div>
+      <div class="meter-track"><div id="drawerConfFill" class="meter-fill" style="width:0%;background:linear-gradient(90deg,var(--cyan),var(--violet))"></div></div>
+    </div>
+    <p class="section-label">Summary</p>
+    <p id="drawerSummary" class="drawer-summary"></p>
+    <p class="section-label">Named entities</p>
+    <div id="drawerNer" class="ner-tags"></div>
+    <p class="section-label">Topic keywords</p>
+    <div id="drawerKw" class="kw"></div>
+    <a id="drawerLink" class="drawer-link" href="#" target="_blank" rel="noopener">Open source article ↗</a>
+  </div>
+</aside>
+
+<div id="tooltip" class="tooltip" role="status"></div>
+
+<script id="payload" type="application/json">__PAYLOAD__</script>
+<script>
+(function(){
+  "use strict";
+  const DATA = JSON.parse(document.getElementById("payload").textContent);
+  const NS = "http://www.w3.org/2000/svg";
+  const PALETTE = ["#06B6D4","#8B5CF6","#10B981","#F59E0B","#F43F5E","#3B82F6","#22D3EE","#A78BFA"];
+  const SENT_COLOR = {positive:"#10B981", neutral:"#F59E0B", negative:"#F43F5E"};
+  const SENT_LABEL = {positive:"Positive", neutral:"Neutral", negative:"Negative"};
+  const TOPIC = Object.fromEntries(DATA.topics.map(t => [t.id, t]));
+  const MONTHS = DATA.months;
+  const state = {
+    topic:null, sentiment:"all", sources:new Set(), search:"",
+    dateFrom:null, dateTo:null, entity:null,
+    brush:null, hiddenSeries:new Set(), drawerArticle:null
+  };
+
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const fmt = n => Number(n||0).toLocaleString("en-US");
+  const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+  const bucket = v => v > 0.05 ? "positive" : (v < -0.05 ? "negative" : "neutral");
+  const monthLabel = ym => {
+    const [y,m] = ym.split("-").map(Number);
+    return new Date(y, m-1, 1).toLocaleString("en-US",{month:"short"}) + " " + String(y).slice(2);
+  };
+  const fullDate = d => {
+    if(!d) return "—";
+    const dt = new Date(d + "T00:00:00");
+    if(isNaN(dt)) return d;
+    return dt.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  };
+
+  function svg(tag, attrs={}, parent){
+    const node = document.createElementNS(NS, tag);
+    for(const k in attrs) node.setAttribute(k, attrs[k]);
+    if(parent) parent.appendChild(node);
+    return node;
+  }
+
+  // ------------------------------------------------------------------
+  // Filtering
+  // ------------------------------------------------------------------
+  function filtersActive(){
+    return !!(state.topic || state.sentiment !== "all" || state.sources.size ||
+              state.search || state.dateFrom || state.dateTo || state.entity);
+  }
+
+  function filtered(){
+    const q = state.search.trim().toLowerCase();
+    return DATA.articles.filter(a => {
+      if(state.topic && a.topic !== state.topic) return false;
+      if(state.sentiment !== "all" && bucket(a.sentiment) !== state.sentiment) return false;
+      if(state.sources.size && !state.sources.has(a.source)) return false;
+      if(state.entity){
+        const inTags = (a.entities||[]).includes(state.entity);
+        const inMeta = a.author === state.entity || a.source === state.entity;
+        if(!inTags && !inMeta) return false;
+      }
+      if(state.dateFrom && a.date < state.dateFrom) return false;
+      if(state.dateTo && a.date > state.dateTo) return false;
+      if(q){
+        const hay = [a.title, a.source, a.author, a.snippet,
+                     TOPIC[a.topic] ? TOPIC[a.topic].label : "",
+                     (a.entities||[]).join(" ")].join(" ").toLowerCase();
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Header / chips / sources
+  // ------------------------------------------------------------------
+  function renderSources(){
+    const list = $("#sourceList");
+    list.innerHTML = "";
+    const counts = {};
+    DATA.articles.forEach(a => { if(a.source) counts[a.source] = (counts[a.source]||0)+1; });
+    DATA.sources.forEach(src => {
+      const label = document.createElement("label");
+      label.className = "check";
+      const box = document.createElement("input");
+      box.type = "checkbox";
+      box.checked = state.sources.has(src);
+      box.addEventListener("change", () => {
+        if(box.checked) state.sources.add(src); else state.sources.delete(src);
+        update();
+      });
+      label.appendChild(box);
+      const name = document.createElement("span");
+      name.textContent = src;
+      label.appendChild(name);
+      const n = document.createElement("span");
+      n.className = "n";
+      n.textContent = fmt(counts[src]||0);
+      label.appendChild(n);
+      list.appendChild(label);
+    });
+    const badge = $("#sourceCount");
+    badge.hidden = state.sources.size === 0;
+    badge.textContent = state.sources.size;
+  }
+
+  function renderChips(){
+    const host = $("#chips");
+    host.innerHTML = "";
+    const add = (text, onClear, neutral) => {
+      const chip = document.createElement("span");
+      chip.className = "chip" + (neutral ? " neutral" : "");
+      chip.innerHTML = "<b>" + esc(text) + "</b>";
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.setAttribute("aria-label","Clear filter"); btn.textContent = "×";
+      btn.addEventListener("click", () => { onClear(); update(); });
+      chip.appendChild(btn);
+      host.appendChild(chip);
+    };
+    if(state.topic && TOPIC[state.topic]) add("Topic · " + TOPIC[state.topic].label, () => state.topic = null);
+    if(state.sentiment !== "all") add("Sentiment · " + SENT_LABEL[state.sentiment], () => state.sentiment = "all");
+    if(state.entity) add("Entity · " + state.entity, () => state.entity = null);
+    if(state.sources.size) add(state.sources.size + " source" + (state.sources.size>1?"s":""), () => state.sources.clear());
+    if(state.dateFrom || state.dateTo){
+      const text = (state.dateFrom ? fullDate(state.dateFrom) : "start") + " → " + (state.dateTo ? fullDate(state.dateTo) : "now");
+      add("Period · " + text, () => { state.dateFrom = null; state.dateTo = null; state.brush = null; $("#dateRange").value = "all"; renderTimeline(); });
+    }
+    if(state.search) add('Search · "' + state.search + '"', () => { state.search = ""; $("#searchInput").value = ""; });
+    if(filtersActive()){
+      const reset = document.createElement("button");
+      reset.className = "ghost-btn"; reset.type = "button"; reset.textContent = "Clear all";
+      reset.addEventListener("click", resetAll);
+      host.appendChild(reset);
+    }
+  }
+
+  function resetAll(){
+    state.topic = null; state.sentiment = "all"; state.sources.clear();
+    state.search = ""; state.dateFrom = null; state.dateTo = null;
+    state.entity = null; state.brush = null;
+    $("#searchInput").value = ""; $("#dateRange").value = "all";
+    closeDrawer(); update();
+  }
+
+  // ------------------------------------------------------------------
+  // KPI cards
+  // ------------------------------------------------------------------
+  function sparkline(node, values, color){
+    node.innerHTML = "";
+    if(!values || values.length < 2) return;
+    const w = 220, h = 34, pad = 3;
+    const min = Math.min(...values), max = Math.max(...values);
+    const span = (max - min) || 1;
+    const pts = values.map((v,i) => [
+      pad + i*(w-2*pad)/(values.length-1),
+      h - pad - ((v-min)/span)*(h-2*pad)
+    ]);
+    const gid = "sg-" + Math.random().toString(36).slice(2,8);
+    const defs = svg("defs", {}, node);
+    const grad = svg("linearGradient", {id:gid, x1:0, y1:0, x2:0, y2:1}, defs);
+    svg("stop", {offset:"0%","stop-color":color,"stop-opacity":".42"}, grad);
+    svg("stop", {offset:"100%","stop-color":color,"stop-opacity":"0"}, grad);
+    let d = "M" + pts[0][0] + "," + pts[0][1];
+    for(let i=1;i<pts.length;i++){
+      const p0 = pts[i-1], p1 = pts[i];
+      const cx = (p0[0]+p1[0])/2;
+      d += " C" + cx + "," + p0[1] + " " + cx + "," + p1[1] + " " + p1[0] + "," + p1[1];
+    }
+    const area = d + " L" + pts[pts.length-1][0] + "," + h + " L" + pts[0][0] + "," + h + " Z";
+    svg("path", {d:area, fill:"url(#"+gid+")"}, node);
+    svg("path", {d:d, fill:"none", stroke:color, "stroke-width":"1.6", "stroke-linecap":"round"}, node);
+    const last = pts[pts.length-1];
+    svg("circle", {cx:last[0], cy:last[1], r:"2.4", fill:color, stroke:"#0B1220", "stroke-width":"1.5"}, node);
+  }
+
+  function renderKpis(){
+    const arts = filtered();
+    const active = filtersActive();
+    const total = active ? arts.length : DATA.kpis.total_articles;
+    $("#kpiTotal").textContent = fmt(total);
+    $("#kpiTotalSub").textContent = active ? "filtered feed sample · of " + fmt(DATA.kpis.total_articles) + " indexed" : "last 6 mo vs prior";
+    $("#kpiDelta").style.display = active ? "none" : "";
+    $("#liveBadge").textContent = "Pipeline live · " + fmt(DATA.kpis.total_articles) + " indexed";
+
+    const delta = $("#kpiDelta");
+    const d = DATA.kpis.delta_pct;
+    delta.textContent = (d >= 0 ? "+" : "") + d.toFixed(1) + "%";
+    delta.className = "delta " + (d > 0.05 ? "up" : (d < -0.05 ? "down" : "flat"));
+
+    const topicCount = active ? new Set(arts.map(a => a.topic)).size : DATA.kpis.topic_count;
+    $("#kpiTopics").textContent = fmt(topicCount);
+    const trend = $("#kpiTrending");
+    const trendText = DATA.kpis.trending_topic.label + " · " + (DATA.kpis.trending_topic.growth >= 0 ? "+" : "") + DATA.kpis.trending_topic.growth.toFixed(1) + "%";
+    trend.textContent = trendText;
+    trend.title = "Largest 6-month volume growth";
+
+    const net = active && arts.length
+      ? arts.reduce((s,a) => s + a.sentiment, 0) / arts.length
+      : DATA.kpis.net_sentiment;
+    const sentNode = $("#kpiSentiment");
+    sentNode.textContent = (net >= 0 ? "+" : "") + net.toFixed(3);
+    const b = bucket(net);
+    sentNode.style.color = SENT_COLOR[b];
+    const tag = $("#kpiSentTag");
+    tag.textContent = SENT_LABEL[b];
+    tag.className = "tag " + (b === "positive" ? "emerald" : b === "negative" ? "rose" : "amber");
+
+    let entity = DATA.kpis.top_entity;
+    if(active && arts.length){
+      const counts = {};
+      arts.forEach(a => (a.entities||[]).forEach(name => { counts[name] = (counts[name]||0)+1; }));
+      const top = Object.entries(counts).sort((a,b) => b[1]-a[1])[0];
+      if(top){
+        const known = DATA.entities.find(e => e.name === top[0]);
+        entity = {name: top[0], type: known ? known.type : "ORG", count: top[1]};
+      }
+    }
+    $("#kpiEntity").textContent = entity.name;
+    $("#kpiEntity").style.fontSize = entity.name.length > 20 ? "17px" : entity.name.length > 13 ? "20px" : "";
+    $("#kpiEntityType").textContent = entity.type;
+    $("#kpiEntityCount").textContent = fmt(entity.count) + " mentions";
+
+    sparkline($("#sparkTotal"), DATA.kpis.sparkline, "#06B6D4");
+    sparkline($("#sparkTopics"), DATA.kpis.topic_sparkline || DATA.kpis.sparkline, "#8B5CF6");
+    sparkline($("#sparkSent"), DATA.kpis.sentiment_sparkline, "#10B981");
+    sparkline($("#sparkEntity"), DATA.kpis.entity_sparkline || DATA.kpis.sparkline, "#F59E0B");
+  }
+
+  // ------------------------------------------------------------------
+  // Cluster map
+  // ------------------------------------------------------------------
+  const mapView = {x:0, y:0, w:1000, h:455};
+  const MAP_W = 1000, MAP_H = 455;
+  let mapLayout = null;
+
+  function computeLayout(){
+    const W = MAP_W, H = MAP_H;
+    const maxV = Math.max(...DATA.topics.map(t => t.volume));
+    const nodes = DATA.topics.map((t,i) => ({
+      id:t.id,
+      r: 30 + 58 * Math.sqrt(t.volume / maxV),
+      x: W/2 + Math.cos(i * 2.399963) * (220 + i*16),
+      y: H/2 + Math.sin(i * 2.399963) * (150 + i*10)
+    }));
+    for(let iter=0; iter<320; iter++){
+      for(let i=0;i<nodes.length;i++){
+        for(let j=i+1;j<nodes.length;j++){
+          const a = nodes[i], b = nodes[j];
+          let dx = b.x - a.x, dy = b.y - a.y;
+          let dist = Math.hypot(dx,dy) || 0.01;
+          const min = a.r + b.r + 12;
+          if(dist < min){
+            const push = (min - dist) / dist / 2;
+            a.x -= dx*push; a.y -= dy*push;
+            b.x += dx*push; b.y += dy*push;
+          }
+        }
+      }
+      nodes.forEach(n => {
+        n.x += (W/2 - n.x) * 0.0025;
+        n.y += (H/2 - n.y) * 0.0035;
+        n.x = clamp(n.x, n.r+14, W-n.r-14);
+        n.y = clamp(n.y, n.r+14, H-n.r-14);
+      });
+    }
+    return nodes;
+  }
+
+  function shortLabel(label){
+    const words = label.replace(/&/g," & ").split(/\s+/);
+    const lines = []; let line = "";
+    for(const word of words){
+      if((line + " " + word).trim().length > 16 && line){
+        lines.push(line); line = word;
+      } else line = (line + " " + word).trim();
+    }
+    if(line) lines.push(line);
+    return lines.slice(0,2);
+  }
+
+  function renderMap(){
+    const svgEl = $("#clusterMap");
+    svgEl.innerHTML = "";
+    mapLayout = mapLayout || computeLayout();
+    const defs = svg("defs", {}, svgEl);
+    Object.entries(SENT_COLOR).forEach(([k,color]) => {
+      const g = svg("radialGradient", {id:"map-grad-"+k, cx:"35%", cy:"28%", r:"80%"}, defs);
+      svg("stop", {offset:"0%","stop-color":color,"stop-opacity":".82"}, g);
+      svg("stop", {offset:"62%","stop-color":color,"stop-opacity":".42"}, g);
+      svg("stop", {offset:"100%","stop-color":color,"stop-opacity":".20"}, g);
+    });
+    const bg = svg("g", {opacity:".5"}, svgEl);
+    [110, 190, 275].forEach(r => svg("circle", {cx:500, cy:MAP_H/2, r:r, fill:"none", stroke:"rgba(148,163,184,.10)", "stroke-dasharray":"2 6"}, bg));
+    for(let i=0;i<12;i++){
+      const a = i * Math.PI/6;
+      svg("line", {x1:500+Math.cos(a)*85, y1:MAP_H/2+Math.sin(a)*85, x2:500+Math.cos(a)*280, y2:MAP_H/2+Math.sin(a)*280, stroke:"rgba(148,163,184,.06)"}, bg);
+    }
+
+    const counts = {};
+    filtered().forEach(a => { counts[a.topic] = (counts[a.topic]||0)+1; });
+    const g = svg("g", {}, svgEl);
+
+    DATA.topics.forEach((t, idx) => {
+      const node = mapLayout[idx];
+      const sel = state.topic === t.id;
+      const dim = filtersActive() && (!counts[t.id] || (state.topic && !sel));
+      const grp = svg("g", {class:"bubble" + (dim?" dim":"") + (sel?" sel":""), "data-id":t.id}, g);
+      grp.style.setProperty("--bubble", SENT_COLOR[t.bucket]);
+      svg("circle", {cx:node.x, cy:node.y, r:node.r+7, fill:SENT_COLOR[t.bucket], opacity:".10"}, grp);
+      svg("circle", {class:"core", cx:node.x, cy:node.y, r:node.r,
+                     fill:"url(#map-grad-"+t.bucket+")",
+                     stroke:SENT_COLOR[t.bucket], "stroke-width":sel?2.5:1.2, "stroke-opacity":".75"}, grp);
+      const lines = shortLabel(t.label);
+      const fs = clamp(node.r/6.4, 10, 13.5);
+      const startY = node.y - (lines.length-1)*fs*0.62 - 4;
+      lines.forEach((line,i) => {
+        const text = svg("text", {x:node.x, y:startY + i*fs*1.22, "text-anchor":"middle", "font-size":fs}, grp);
+        text.textContent = line;
+      });
+      const vol = svg("text", {class:"vol", x:node.x, y:startY + lines.length*fs*1.22 + 3, "text-anchor":"middle", "font-size":Math.max(9,fs-2.4)}, grp);
+      vol.textContent = fmt(t.volume);
+
+      grp.addEventListener("mouseenter", ev => showMapTip(ev, t, counts[t.id]||0));
+      grp.addEventListener("mousemove", moveTip);
+      grp.addEventListener("mouseleave", hideTip);
+      grp.addEventListener("click", ev => {
+        ev.stopPropagation();
+        state.topic = state.topic === t.id ? null : t.id;
+        update();
+      });
+    });
+    applyView();
+  }
+
+  function applyView(){
+    $("#clusterMap").setAttribute("viewBox", [mapView.x, mapView.y, mapView.w, mapView.h].join(" "));
+  }
+
+  function showMapTip(ev, topic, matched){
+    const tip = $("#tooltip");
+    const terms = topic.terms.slice(0,6).map(x => esc(x)).join(" · ");
+    tip.innerHTML =
+      '<div class="tt-title">' + esc(topic.label) + '</div>' +
+      '<div class="tt-sub">' + esc(topic.corpus === "reuters" ? "Reuters wire · auto-derived: " + topic.raw_label : "Synthetic benchmark · curated label") + '</div>' +
+      '<div class="tt-row"><span>Volume</span><b>' + fmt(topic.volume) + '</b></div>' +
+      '<div class="tt-row"><span>Share of corpus</span><b>' + topic.share.toFixed(1) + '%</b></div>' +
+      '<div class="tt-row"><span>Mean sentiment</span><b style="color:' + SENT_COLOR[topic.bucket] + '">' + (topic.sentiment>=0?"+":"") + topic.sentiment.toFixed(3) + '</b></div>' +
+      '<div class="tt-row"><span>Mean confidence</span><b>' + (topic.confidence*100).toFixed(1) + '%</b></div>' +
+      (filtersActive() ? '<div class="tt-row"><span>Matching feed rows</span><b>' + fmt(matched) + '</b></div>' : '') +
+      '<div class="tt-kw">' + terms + '</div>';
+    tip.classList.add("show");
+    moveTip(ev);
+  }
+
+  function moveTip(ev){
+    const tip = $("#tooltip");
+    const pad = 14;
+    const rect = tip.getBoundingClientRect();
+    let x = ev.clientX + pad, y = ev.clientY + pad;
+    if(x + rect.width > window.innerWidth - 8) x = ev.clientX - rect.width - pad;
+    if(y + rect.height > window.innerHeight - 8) y = ev.clientY - rect.height - pad;
+    tip.style.left = Math.max(8,x) + "px";
+    tip.style.top = Math.max(8,y) + "px";
+  }
+
+  function hideTip(){ $("#tooltip").classList.remove("show"); }
+
+  function bindMapZoom(){
+    const el = $("#clusterMap");
+    el.addEventListener("wheel", ev => {
+      ev.preventDefault();
+      const pt = toSvg(ev);
+      const factor = ev.deltaY > 0 ? 1.12 : 0.89;
+      const nw = clamp(mapView.w * factor, 220, 2400);
+      const nh = nw * (MAP_H / MAP_W);
+      mapView.x = pt.x - (pt.x - mapView.x) * (nw / mapView.w);
+      mapView.y = pt.y - (pt.y - mapView.y) * (nh / mapView.h);
+      mapView.w = nw; mapView.h = nh;
+      applyView();
+    }, {passive:false});
+
+    let drag = null;
+    el.addEventListener("pointerdown", ev => {
+      if(ev.target.closest(".bubble")) return;
+      drag = {x:ev.clientX, y:ev.clientY, vx:mapView.x, vy:mapView.y};
+      el.classList.add("dragging");
+      try { el.setPointerCapture(ev.pointerId); } catch(e) { /* synthetic events */ }
+    });
+    el.addEventListener("pointermove", ev => {
+      if(!drag) return;
+      const scale = mapView.w / el.getBoundingClientRect().width;
+      mapView.x = drag.vx - (ev.clientX - drag.x) * scale;
+      mapView.y = drag.vy - (ev.clientY - drag.y) * scale;
+      applyView();
+    });
+    const end = () => { drag = null; el.classList.remove("dragging"); };
+    el.addEventListener("pointerup", end);
+    el.addEventListener("pointercancel", end);
+
+    const zoom = factor => {
+      const cx = mapView.x + mapView.w/2, cy = mapView.y + mapView.h/2;
+      const nw = clamp(mapView.w * factor, 220, 2400);
+      const nh = nw * (MAP_H / MAP_W);
+      mapView.x = cx - nw/2; mapView.y = cy - nh/2; mapView.w = nw; mapView.h = nh;
+      applyView();
+    };
+    $("#zoomIn").addEventListener("click", () => zoom(0.82));
+    $("#zoomOut").addEventListener("click", () => zoom(1.22));
+    $("#mapReset").addEventListener("click", () => {
+      mapView.x = 0; mapView.y = 0; mapView.w = MAP_W; mapView.h = MAP_H; applyView();
+    });
+  }
+
+  function toSvg(ev){
+    const el = $("#clusterMap");
+    const rect = el.getBoundingClientRect();
+    const vb = el.viewBox.baseVal;
+    return {
+      x: vb.x + (ev.clientX - rect.left) / rect.width * vb.width,
+      y: vb.y + (ev.clientY - rect.top) / rect.height * vb.height
+    };
+  }
+
+  // ------------------------------------------------------------------
+  // Timeline
+  // ------------------------------------------------------------------
+  function timelineSeries(){
+    const ranked = [...DATA.topics].sort((a,b) => b.volume - a.volume);
+    const chosen = ranked.slice(0,6);
+    if(state.topic && !chosen.find(t => t.id === state.topic)){
+      const selected = DATA.topics.find(t => t.id === state.topic);
+      if(selected) chosen[chosen.length-1] = selected;
+    }
+    return chosen;
+  }
+
+  function renderTimeline(){
+    const el = $("#timeline");
+    el.innerHTML = "";
+    const series = timelineSeries();
+    const idx0 = state.brush ? state.brush[0] : 0;
+    const idx1 = state.brush ? state.brush[1] : MONTHS.length-1;
+    const months = MONTHS.slice(idx0, idx1+1);
+    const W = 700, H = 360, L = 46, R = 14, T = 18, B = 50;
+    const plotW = W-L-R, plotH = H-T-B;
+
+    const visible = series.filter(t => !state.hiddenSeries.has(t.id));
+    let maxY = 1;
+    visible.forEach(t => months.forEach(m => {
+      maxY = Math.max(maxY, (DATA.timeline[m].by_topic[t.id]||{}).count||0);
+    }));
+    maxY = Math.ceil(maxY * 1.12 / 10) * 10;
+
+    const x = i => L + (months.length === 1 ? plotW/2 : i*plotW/(months.length-1));
+    const y = v => T + plotH - (v/maxY)*plotH;
+
+    const defs = svg("defs", {}, el);
+    series.forEach((t,i) => {
+      const g = svg("linearGradient", {id:"tl-grad-"+i, x1:0, y1:0, x2:0, y2:1}, defs);
+      svg("stop", {offset:"0%","stop-color":PALETTE[i%PALETTE.length],"stop-opacity":".22"}, g);
+      svg("stop", {offset:"100%","stop-color":PALETTE[i%PALETTE.length],"stop-opacity":".01"}, g);
+    });
+
+    for(let i=0;i<=4;i++){
+      const gy = T + plotH*i/4;
+      svg("line", {x1:L, y1:gy, x2:W-R, y2:gy, stroke:"rgba(255,255,255,.055)"}, el);
+      const label = svg("text", {x:L-8, y:gy+3.5, "text-anchor":"end", fill:"#64748B", "font-size":"9.5", "font-family":"JetBrains Mono, monospace"}, el);
+      label.textContent = fmt(Math.round(maxY*(4-i)/4));
+    }
+
+    const step = Math.max(1, Math.ceil(months.length/6));
+    months.forEach((m,i) => {
+      if(i % step && i !== months.length-1) return;
+      const label = svg("text", {x:x(i), y:H-6, "text-anchor":"middle", fill:"#64748B", "font-size":"9.5", "font-family":"JetBrains Mono, monospace"}, el);
+      label.textContent = monthLabel(m);
+    });
+
+    // Sentiment ribbon: one cell per month, coloured by net sentiment.
+    const cellW = Math.max(2, plotW/months.length - 2);
+    months.forEach((m,i) => {
+      const bucketName = bucket(DATA.timeline[m].sentiment);
+      const rect = svg("rect", {
+        x: x(i) - cellW/2, y: T + plotH + 8, width: cellW, height: 5, rx: 1.5,
+        fill: SENT_COLOR[bucketName], opacity: ".85"
+      }, el);
+      const title = svg("title", {}, rect);
+      title.textContent = monthLabel(m) + " · sentiment " +
+        (DATA.timeline[m].sentiment >= 0 ? "+" : "") + DATA.timeline[m].sentiment.toFixed(2);
+    });
+    const ribLabel = svg("text", {x:L-8, y:T+plotH+12, "text-anchor":"end", fill:"#475569", "font-size":"8", "font-family":"JetBrains Mono, monospace"}, el);
+    ribLabel.textContent = "sent.";
+
+    series.forEach((t, si) => {
+      if(state.hiddenSeries.has(t.id)) return;
+      const color = PALETTE[si%PALETTE.length];
+      const pts = months.map((m,i) => [x(i), y((DATA.timeline[m].by_topic[t.id]||{}).count||0)]);
+      let d = "M" + pts[0][0] + "," + pts[0][1];
+      for(let i=1;i<pts.length;i++){
+        const p0 = pts[i-1], p1 = pts[i];
+        const cx = (p0[0]+p1[0])/2;
+        d += " C" + cx + "," + p0[1] + " " + cx + "," + p1[1] + " " + p1[0] + "," + p1[1];
+      }
+      const area = d + " L" + pts[pts.length-1][0] + "," + (T+plotH) + " L" + pts[0][0] + "," + (T+plotH) + " Z";
+      svg("path", {d:area, fill:"url(#tl-grad-"+si+")"}, el);
+      const strong = !state.topic || state.topic === t.id;
+      svg("path", {d:d, fill:"none", stroke:color, "stroke-width":strong?2:1.3, "stroke-opacity":strong?1:.35, "stroke-linecap":"round"}, el);
+    });
+
+    // Brush selection rectangle
+    if(state.brush){
+      svg("rect", {x:L, y:T, width:plotW, height:plotH, fill:"rgba(6,182,212,.045)", stroke:"rgba(6,182,212,.35)", "stroke-dasharray":"3 4", rx:"4"}, el);
+    }
+
+    const overlay = svg("rect", {x:L, y:T, width:plotW, height:plotH, fill:"transparent", style:"cursor:crosshair"}, el);
+    let brushStart = null;
+    const toIndex = ev => {
+      const rect = el.getBoundingClientRect();
+      const px = (ev.clientX - rect.left) / rect.width * W;
+      return clamp(Math.round((px - L) / plotW * (months.length-1)), 0, months.length-1);
+    };
+    overlay.addEventListener("pointerdown", ev => {
+      brushStart = toIndex(ev);
+      try { overlay.setPointerCapture(ev.pointerId); } catch(e) { /* synthetic events */ }
+    });
+    overlay.addEventListener("pointermove", ev => {
+      const tip = $("#tooltip");
+      if(brushStart != null) return;
+      const i = toIndex(ev);
+      const m = months[i];
+      const rows = series.filter(t => !state.hiddenSeries.has(t.id))
+        .map(t => {
+          const c = (DATA.timeline[m].by_topic[t.id]||{}).count||0;
+          return '<div class="tt-row"><span>' + esc(t.label) + '</span><b>' + fmt(c) + '</b></div>';
+        }).join("");
+      tip.innerHTML = '<div class="tt-title">' + monthLabel(m) + '</div>' +
+        '<div class="tt-sub">' + fmt(DATA.timeline[m].total) + ' articles · sentiment ' +
+        (DATA.timeline[m].sentiment>=0?"+":"") + DATA.timeline[m].sentiment.toFixed(2) + '</div>' + rows;
+      tip.classList.add("show");
+      moveTip(ev);
+    });
+    overlay.addEventListener("pointerleave", () => { if(brushStart == null) hideTip(); });
+    overlay.addEventListener("pointerup", ev => {
+      if(brushStart == null) return;
+      const end = toIndex(ev);
+      const a = Math.min(brushStart, end), b = Math.max(brushStart, end);
+      brushStart = null;
+      hideTip();
+      if(b - a < 1){ return; }
+      state.brush = [a,b];
+      state.dateFrom = MONTHS[a] + "-01";
+      state.dateTo = MONTHS[b] + "-31";
+      $("#dateRange").value = "custom";
+      update();
+    });
+    overlay.addEventListener("dblclick", () => {
+      state.brush = null; state.dateFrom = null; state.dateTo = null;
+      $("#dateRange").value = "all"; update();
+    });
+
+    // Legend
+    const legend = $("#tlLegend");
+    legend.innerHTML = "";
+    series.forEach((t, i) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tl-key" + (state.hiddenSeries.has(t.id) ? " off" : "");
+      btn.innerHTML = '<i style="background:' + PALETTE[i%PALETTE.length] + '"></i><span>' + esc(t.label) + '</span>';
+      btn.title = t.label;
+      btn.addEventListener("click", () => {
+        if(state.hiddenSeries.has(t.id)) state.hiddenSeries.delete(t.id);
+        else state.hiddenSeries.add(t.id);
+        renderTimeline();
+      });
+      legend.appendChild(btn);
+    });
+    const note = document.createElement("span");
+    note.className = "tl-note";
+    note.textContent = "bottom ribbon = monthly net sentiment";
+    legend.appendChild(note);
+  }
+
+  // ------------------------------------------------------------------
+  // Entities
+  // ------------------------------------------------------------------
+  function entityStats(){
+    const arts = filtered();
+    const active = filtersActive();
+    return DATA.entities.map(e => {
+      if(!active) return {...e};
+      const matched = arts.filter(a =>
+        (a.entities||[]).includes(e.name) || a.author === e.name || a.source === e.name);
+      const pos = matched.filter(a => bucket(a.sentiment) === "positive").length;
+      const neg = matched.filter(a => bucket(a.sentiment) === "negative").length;
+      return {...e, count:matched.length, positive:pos, negative:neg, neutral:matched.length-pos-neg};
+    }).filter(e => e.count > 0)
+      .sort((a,b) => b.count - a.count)
+      .slice(0,12);
+  }
+
+  function renderEntities(){
+    const host = $("#entityList");
+    host.innerHTML = "";
+    let list = entityStats();
+    if(state.sentiment !== "all"){
+      list = list.filter(e => {
+        const dominant = e.positive >= e.neutral && e.positive >= e.negative ? "positive"
+          : (e.negative >= e.neutral ? "negative" : "neutral");
+        return dominant === state.sentiment;
+      });
+    }
+    if(!list.length){
+      host.innerHTML = '<div class="empty"><b>No entities match</b>Adjust the sentiment pill or clear a filter.</div>';
+      return;
+    }
+    const max = Math.max(...list.map(e => e.count), 1);
+    list.forEach(e => {
+      const row = document.createElement("div");
+      row.className = "entity" + (state.entity === e.name ? " sel" : "");
+      row.setAttribute("role","button");
+      row.tabIndex = 0;
+      const total = Math.max(e.count, 1);
+      const p = e.positive/total*100, n = e.neutral/total*100, g = e.negative/total*100;
+      row.innerHTML =
+        '<div><div class="entity-name"><span>' + esc(e.name) + '</span><em class="type ' + e.type + '">' + e.type + '</em></div>' +
+        '<div class="bar" style="width:' + (e.count/max*100).toFixed(1) + '%">' +
+          '<i class="p" style="width:' + p.toFixed(1) + '%"></i>' +
+          '<i class="n" style="width:' + n.toFixed(1) + '%"></i>' +
+          '<i class="g" style="width:' + g.toFixed(1) + '%"></i>' +
+        '</div></div>' +
+        '<div class="entity-count">' + fmt(e.count) + '<small>MENTIONS</small></div>';
+      const toggle = () => {
+        state.entity = state.entity === e.name ? null : e.name;
+        update();
+      };
+      row.addEventListener("click", toggle);
+      row.addEventListener("keydown", ev => { if(ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); toggle(); } });
+      host.appendChild(row);
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Feed + drawer
+  // ------------------------------------------------------------------
+  function renderFeed(){
+    const host = $("#feed");
+    const arts = filtered();
+    $("#feedCount").textContent = fmt(arts.length) + " rows";
+    host.innerHTML = "";
+    if(!arts.length){
+      host.innerHTML = '<div class="empty"><b>No articles match these filters</b>Try clearing the search, date brush or source selection.</div>';
+      return;
+    }
+    const shown = arts.slice(0,80);
+    shown.forEach(a => {
+      const b = bucket(a.sentiment);
+      const row = document.createElement("div");
+      row.className = "row " + (b === "positive" ? "pos" : b === "negative" ? "neg" : "neu");
+      row.setAttribute("role","button");
+      row.tabIndex = 0;
+      const topic = TOPIC[a.topic];
+      const conf = a.confidence == null ? (a.corpus === "reuters" ? "keyword match" : "") : (a.confidence*100).toFixed(1) + "%";
+      row.innerHTML =
+        '<span class="stripe"></span>' +
+        '<div><div class="row-title">' + esc(a.title) + '</div>' +
+        '<div class="row-meta"><span class="src">' + esc(a.source) + '</span><span>·</span><span class="mono">' + fullDate(a.date) + '</span>' +
+        (topic ? '<span>·</span><span class="tag slate topic-pill">' + esc(topic.label) + '</span>' : '') +
+        '</div></div>' +
+        '<div class="row-right"><span class="sent-badge ' + (b === "positive" ? "pos" : b === "negative" ? "neg" : "neu") + '">' +
+        (a.sentiment >= 0 ? "+" : "") + a.sentiment.toFixed(2) + '</span>' +
+        (conf ? '<span class="conf">' + conf + '</span>' : '') + '</div>';
+      const open = () => openDrawer(a);
+      row.addEventListener("click", open);
+      row.addEventListener("keydown", ev => { if(ev.key === "Enter") open(); });
+      host.appendChild(row);
+    });
+  }
+
+  function highlightEntities(text, entities){
+    let html = esc(text);
+    const names = (entities||[]).slice().sort((a,b) => b.length-a.length);
+    names.forEach(name => {
+      const entity = DATA.entities.find(e => e.name === name);
+      const cls = entity && entity.type === "PERSON" ? " person" : entity && entity.type === "LOC" ? " loc" : "";
+      const safe = esc(name).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      html = html.replace(new RegExp("(?<![A-Za-z0-9])(" + safe + ")(?![A-Za-z0-9])", "gi"), '<mark class="' + cls.trim() + '">$1</mark>');
+    });
+    return html;
+  }
+
+  function openDrawer(a){
+    state.drawerArticle = a;
+    const topic = TOPIC[a.topic];
+    const b = bucket(a.sentiment);
+    $("#drawerKicker").innerHTML =
+      '<span class="tag ' + (a.corpus === "reuters" ? "violet" : "cyan") + '">' + (a.corpus === "reuters" ? "REUTERS WIRE" : "SYNTHETIC BENCHMARK") + '</span>' +
+      (topic ? '<span class="tag slate">' + esc(topic.label) + '</span>' : '') +
+      '<span class="tag ' + (b === "positive" ? "emerald" : b === "negative" ? "rose" : "amber") + '">' + SENT_LABEL[b] + '</span>';
+    $("#drawerTitle").textContent = a.title || "Untitled article";
+    $("#drawerMeta").innerHTML =
+      '<span><b>' + esc(a.source) + '</b></span><span>·</span><span class="mono">' + fullDate(a.date) + '</span>' +
+      (a.author ? '<span>·</span><span>by <b>' + esc(a.author) + '</b></span>' : '') +
+      '<span>·</span><span class="mono">' + esc(a.id) + '</span>';
+    const sentPct = clamp((a.sentiment + 1) / 2 * 100, 0, 100);
+    $("#drawerSentVal").textContent = (a.sentiment >= 0 ? "+" : "") + a.sentiment.toFixed(3);
+    const fill = $("#drawerSentFill");
+    fill.style.width = sentPct + "%";
+    fill.style.background = SENT_COLOR[b];
+    const conf = a.confidence == null ? null : a.confidence;
+    $("#drawerConfVal").textContent = conf == null ? "keyword match" : (conf*100).toFixed(1) + "%";
+    $("#drawerConfFill").style.width = conf == null ? "100%" : (conf*100).toFixed(1) + "%";
+    $("#drawerConfFill").style.opacity = conf == null ? ".35" : "1";
+    $("#drawerSummary").innerHTML = highlightEntities(a.snippet || "No summary available.", a.entities);
+    const ner = $("#drawerNer");
+    ner.innerHTML = "";
+    (a.entities||[]).forEach(name => {
+      const entity = DATA.entities.find(e => e.name === name);
+      const span = document.createElement("span");
+      span.className = "ner-tag " + (entity ? entity.type : "ORG");
+      span.textContent = name + (entity ? " · " + entity.type : "");
+      ner.appendChild(span);
+    });
+    if(!(a.entities||[]).length) ner.innerHTML = '<span class="ner-tag">No gazetteer match</span>';
+    const kw = $("#drawerKw");
+    kw.innerHTML = "";
+    (topic ? topic.terms.slice(0,10) : []).forEach(term => {
+      const span = document.createElement("span");
+      span.textContent = term;
+      kw.appendChild(span);
+    });
+    const link = $("#drawerLink");
+    link.href = a.url || "#";
+    link.style.display = a.url ? "inline-flex" : "none";
+
+    $("#drawer").classList.add("open");
+    $("#drawer").setAttribute("aria-hidden","false");
+    $("#scrim").classList.add("open");
+    $("#drawerClose").focus({preventScroll:true});
+  }
+
+  function closeDrawer(){
+    state.drawerArticle = null;
+    $("#drawer").classList.remove("open");
+    $("#drawer").setAttribute("aria-hidden","true");
+    $("#scrim").classList.remove("open");
+  }
+
+  // ------------------------------------------------------------------
+  // Footer
+  // ------------------------------------------------------------------
+  function renderFooter(){
+    $("#footGenerated").textContent = "Generated " + DATA.generated_at + " · " + fmt(DATA.kpis.embedded_articles) + " article rows embedded";
+    $("#footCount").textContent = DATA.kpis.date_min + " → " + DATA.kpis.date_max + " · " + DATA.kpis.topic_count + " topics";
+    $("#footCorpora").innerHTML = DATA.provenance.corpora.map(c =>
+      '<li>' + esc(c.name) + ' · <span class="mono">' + fmt(c.records) + '</span></li>').join("");
+    $("#footNotes").innerHTML = DATA.provenance.notes.map(n => '<li>' + esc(n) + '</li>').join("");
+  }
+
+  // ------------------------------------------------------------------
+  // Update loop
+  // ------------------------------------------------------------------
+  function update(){
+    renderChips();
+    renderKpis();
+    renderMap();
+    renderTimeline();
+    renderEntities();
+    renderFeed();
+    renderSources();
+  }
+
+  // ------------------------------------------------------------------
+  // Events
+  // ------------------------------------------------------------------
+  function bindEvents(){
+    let searchTimer = null;
+    $("#searchInput").addEventListener("input", ev => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => { state.search = ev.target.value; update(); }, 130);
+    });
+    document.addEventListener("keydown", ev => {
+      if(ev.key === "/" && document.activeElement !== $("#searchInput")){
+        ev.preventDefault(); $("#searchInput").focus();
+      }
+      if(ev.key === "Escape"){
+        closeDrawer();
+        $("#sourcePopover").classList.remove("open");
+        $("#sourceBtn").setAttribute("aria-expanded","false");
+      }
+    });
+
+    $("#dateRange").addEventListener("change", ev => {
+      const v = ev.target.value;
+      state.brush = null;
+      if(v === "all"){ state.dateFrom = null; state.dateTo = null; }
+      else if(v === "2025"){ state.dateFrom = "2025-01-01"; state.dateTo = "2025-12-31"; }
+      else if(v === "2024"){ state.dateFrom = "2024-01-01"; state.dateTo = "2024-12-31"; }
+      else if(v === "h2-2025"){ state.dateFrom = "2025-07-01"; state.dateTo = "2025-12-31"; }
+      else if(v === "h1-2025"){ state.dateFrom = "2025-01-01"; state.dateTo = "2025-06-30"; }
+      else if(v === "last-90"){
+        const end = new Date(DATA.kpis.date_max + "T00:00:00");
+        const start = new Date(end.getTime() - 89*86400000);
+        state.dateFrom = start.toISOString().slice(0,10);
+        state.dateTo = DATA.kpis.date_max;
+      }
+      update();
+    });
+
+    $("#sourceBtn").addEventListener("click", ev => {
+      ev.stopPropagation();
+      const pop = $("#sourcePopover");
+      const open = pop.classList.toggle("open");
+      $("#sourceBtn").setAttribute("aria-expanded", String(open));
+    });
+    $("#sourcePopover").addEventListener("click", ev => ev.stopPropagation());
+    document.addEventListener("click", () => {
+      $("#sourcePopover").classList.remove("open");
+      $("#sourceBtn").setAttribute("aria-expanded","false");
+    });
+    $("#sourceAll").addEventListener("click", () => {
+      if(state.sources.size === DATA.sources.length) state.sources.clear();
+      else DATA.sources.forEach(s => state.sources.add(s));
+      update();
+    });
+
+    $("#resetBtn").addEventListener("click", resetAll);
+    $("#brushReset").addEventListener("click", () => {
+      state.brush = null; state.dateFrom = null; state.dateTo = null;
+      $("#dateRange").value = "all"; update();
+    });
+    $("#scrim").addEventListener("click", closeDrawer);
+    $("#drawerClose").addEventListener("click", closeDrawer);
+
+    $$("#sentPills .pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        state.sentiment = pill.dataset.s;
+        $$("#sentPills .pill").forEach(p => p.classList.toggle("active", p === pill));
+        update();
+      });
+    });
+
+    $("#exportBtn").addEventListener("click", () => {
+      const rows = [["id","date","source","author","topic","sentiment","confidence","title"]];
+      filtered().forEach(a => rows.push([
+        a.id, a.date, a.source, a.author,
+        TOPIC[a.topic] ? TOPIC[a.topic].label : a.topic,
+        a.sentiment, a.confidence == null ? "" : a.confidence,
+        a.title
+      ]));
+      const csv = rows.map(r => r.map(v => '"' + String(v==null?"":v).replace(/"/g,'""') + '"').join(",")).join("\n");
+      const blob = new Blob(["\ufeff" + csv], {type:"text/csv;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "command_center_filtered_articles.csv";
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+
+    window.addEventListener("resize", () => { hideTip(); });
+  }
+
+  // ------------------------------------------------------------------
+  // Boot
+  // ------------------------------------------------------------------
+  function boot(){
+    bindEvents();
+    bindMapZoom();
+    renderFooter();
+    renderSources();
+    update();
+    const b = bucket(DATA.kpis.net_sentiment);
+    $("#kpiSentTag").className = "tag " + (b === "positive" ? "emerald" : b === "negative" ? "rose" : "amber");
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
