@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+# Rendered notebook exports are derived from the .ipynb; regenerate on demand
+notebooks/*.html
+
+# Regenerable intermediate build artifacts (produced by run_all.py)
+# The canonical raw datasets ARE committed so a fresh clone is self-contained;
+# only large regenerable intermediates and simulation block files are ignored.
+data/processed_parquet/
+data/real_news/processed_parquet/
+data/streaming_parquet/
+data/streaming_input/
+data/mongodb_offline_collections/
+data/hadoop_ecosystem/hdfs/
+# Hadoop staging/spool files are rebuilt by run_all.py; the committed
+# *_summary.json files preserve the measured record counts.
+data/hadoop_ecosystem/flume/spool/
+data/hadoop_ecosystem/pig/staging/
+data/hadoop_ecosystem/sqoop/news_staging.db
+data/hadoop_ecosystem/sqoop/articles_staging.csv
+data/hadoop_ecosystem/sqoop/articles_enriched.csv
+data/hadoop_ecosystem/sqoop/publishers.csv
+data/hadoop_ecosystem/sqoop/publishers.json
+data/hadoop_ecosystem/*.log
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+# Microsoft Office lock files (e.g. ~$PROJECT_REPORT.docx)
+~$*
