@@ -1,0 +1,104 @@
+# ============================================================================
+# Continuous Integration: News Article Analysis and Topic Extraction
+# ============================================================================
+# Verifies every push / pull request by:
+#   1. Statically compiling all pipeline source and test modules.
+#   2. Regenerating the full pipeline artifacts (Hadoop ecosystem, PySpark
+#      lakehouse, MongoDB collections, visualizations, offline dashboards).
+#   3. Running the authoritative full test suite (119+ tests) and failing the build on error.
+#
+# Note: the integration tests read generated lakehouse artifacts (raw CSV,
+# Snappy Parquet, offline MongoDB collections) which are intentionally
+# .gitignore'd, so the pipeline is regenerated inside the runner first.
+# ============================================================================
+
+name: Big Data Pipeline CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pipeline-verification:
+    name: Pipeline Build & Full Test Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      SPARK_LOCAL_IP: 127.0.0.1
+      PYTHONUNBUFFERED: "1"
+      PYTHONIOENCODING: "utf-8"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Set up Java 17 (PySpark / Hadoop runtime)
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Pre-download NLTK data (VADER, Reuters, punkt, punkt_tab, stopwords)
+        # punkt_tab is required by modern NLTK tokenizers; older downloads
+        # silently left offline tokenization broken.
+        run: python -m nltk.downloader -q vader_lexicon reuters punkt punkt_tab stopwords
+
+      - name: Static compile check (all source & tests)
+        run: python -m compileall -q src tests run_all.py
+
+      - name: Generate pipeline artifacts (Hadoop, PySpark, MongoDB, viz)
+        # --force guarantees the synthetic CSV, PySpark summary AND the
+        # git-ignored Parquet lakehouse are (re)built in the runner, so the
+        # integration tests never run against a missing lakehouse.
+        run: python run_all.py --non-interactive --force
+
+      - name: Run automated test suite (119+ tests)
+        # PYTHONIOENCODING=utf-8 is set job-wide so Unicode output (e.g. chart
+        # labels) never raises UnicodeEncodeError on a C-locale runner.
+        run: |
+          set -o pipefail
+          python tests/run_tests.py 2>&1 | tee test-output.log
+
+      - name: Surface failing tests in the run summary
+        # Job logs require a GitHub login. Publish the failure lines as a public
+        # annotation so reviewers can see which test broke without repo access.
+        if: failure()
+        run: |
+          python - <<'PY'
+          import pathlib, re
+          path = pathlib.Path("test-output.log")
+          text = path.read_text(encoding="utf-8", errors="replace") if path.exists() else ""
+          lines = [ln.strip().replace("%", "%25") for ln in text.splitlines()
+                   if re.search(r"^(FAIL|ERROR):|^AssertionError|\[FAIL\]", ln.strip())]
+          body = "%0A".join(lines[-40:]) or "test-output.log missing or empty"
+          print("::error title=Test failure summary::" + body[:60000])
+          PY
+
+      - name: Upload generated evidence artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-evidence
+          path: |
+            data/*.json
+            visualizations/*.png
+          if-no-files-found: warn
