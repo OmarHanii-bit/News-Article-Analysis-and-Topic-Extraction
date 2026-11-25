@@ -1,0 +1,190 @@
+{
+  "component": "pig_transform",
+  "engine": "PigLatinEngine (local simulation)",
+  "staged_input": "data/hadoop_ecosystem/pig/staging/enriched_articles.csv",
+  "staged_rows": 6000,
+  "relations": {
+    "articles": [
+      "article_id",
+      "title",
+      "author",
+      "date",
+      "year",
+      "month",
+      "publication",
+      "category",
+      "sub_topic",
+      "content",
+      "word_count",
+      "url"
+    ],
+    "data": [
+      "article_id",
+      "title",
+      "author",
+      "date",
+      "year",
+      "month",
+      "publication",
+      "category",
+      "sub_topic",
+      "content",
+      "word_count",
+      "url"
+    ],
+    "cleaned": [
+      "article_id",
+      "clean_content"
+    ],
+    "tokens": [
+      "word"
+    ],
+    "word_groups": [
+      "group",
+      "tokens"
+    ],
+    "word_counts": [
+      "word",
+      "cnt"
+    ],
+    "ranked": [
+      "topic_label",
+      "positive_articles",
+      "avg_sentiment",
+      "max_sentiment",
+      "min_sentiment"
+    ],
+    "top_terms": [
+      "word",
+      "cnt"
+    ],
+    "enriched": [
+      "article_id",
+      "publication",
+      "topic_label",
+      "sentiment_polarity",
+      "word_count"
+    ],
+    "valid": [
+      "article_id",
+      "publication",
+      "topic_label",
+      "sentiment_polarity",
+      "word_count"
+    ],
+    "pub_groups": [
+      "group",
+      "valid"
+    ],
+    "publisher_stats": [
+      "pub",
+      "pub_articles",
+      "pub_avg_sent"
+    ],
+    "topic_groups": [
+      "group",
+      "positive"
+    ],
+    "topic_stats": [
+      "tlabel",
+      "topic_articles",
+      "topic_avg_sent"
+    ],
+    "pub_joined": [
+      "article_id",
+      "publication",
+      "topic_label",
+      "sentiment_polarity",
+      "word_count",
+      "pub",
+      "pub_articles",
+      "pub_avg_sent"
+    ],
+    "full_joined": [
+      "article_id",
+      "publication",
+      "topic_label",
+      "sentiment_polarity",
+      "word_count",
+      "pub",
+      "pub_articles",
+      "pub_avg_sent",
+      "tlabel",
+      "topic_articles",
+      "topic_avg_sent"
+    ],
+    "report": [
+      "article_id",
+      "publication",
+      "topic_label",
+      "pub_articles",
+      "pub_avg_sent",
+      "topic_articles",
+      "topic_avg_sent"
+    ],
+    "ordered": [
+      "article_id",
+      "publication",
+      "topic_label",
+      "pub_articles",
+      "pub_avg_sent",
+      "topic_articles",
+      "topic_avg_sent"
+    ],
+    "top50": [
+      "article_id",
+      "publication",
+      "topic_label",
+      "pub_articles",
+      "pub_avg_sent",
+      "topic_articles",
+      "topic_avg_sent"
+    ],
+    "positive": [
+      "article_id",
+      "publication",
+      "topic_label",
+      "sentiment_polarity",
+      "word_count"
+    ],
+    "topic_sentiment": [
+      "topic_label",
+      "positive_articles",
+      "avg_sentiment",
+      "max_sentiment",
+      "min_sentiment"
+    ]
+  },
+  "scripts": [
+    {
+      "script": "01_clean_and_count.pig",
+      "script_path": "data/hadoop_ecosystem/pig/01_clean_and_count.pig",
+      "relations_created": 8,
+      "output_files": [
+        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/01_word_counts/part-r-00000"
+      ],
+      "elapsed_ms": 1909.816,
+      "status": "SUCCESS"
+    },
+    {
+      "script": "02_topic_publisher_join.pig",
+      "script_path": "data/hadoop_ecosystem/pig/02_topic_publisher_join.pig",
+      "relations_created": 11,
+      "output_files": [
+        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/02_topic_publisher_join/part-r-00000"
+      ],
+      "elapsed_ms": 662.512,
+      "status": "SUCCESS"
+    },
+    {
+      "script": "03_sentiment_filter.pig",
+      "script_path": "data/hadoop_ecosystem/pig/03_sentiment_filter.pig",
+      "relations_created": 5,
+      "output_files": [
+        "C:/News Article Analysis and Topic Extraction/data/hadoop_ecosystem/pig/output/03_sentiment_by_topic/part-r-00000"
+      ],
+      "elapsed_ms": 192.359,
+      "status": "SUCCESS"
+    }
+  ]
+}
