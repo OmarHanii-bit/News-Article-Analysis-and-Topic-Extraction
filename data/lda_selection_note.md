@@ -31,14 +31,14 @@ The knee rule selects **k=3**, the smallest k on the interpretability plateau; i
 
 The production pipeline keeps `k=6` for **engineering and interpretability reasons**, not because it was proven statistically optimal:
 
-1. The curated synthetic benchmark is explicitly organised into **six domains**, and the dashboard/heatmap labels and cross-corpus comparisons (synthetic 6,000 articles vs. Reuters 10,712 articles) require a **fixed, comparable k**.
-2. At k=6 the six dominant-topic clusters map cleanly onto the intended editorial themes (Clinical Medicine, Quantum Physics, AI Infrastructure, Monetary Policy, Antitrust/Regulatory, plus the enterprise-analytics cluster), and topic labels are interpretable for stakeholders.
+1. The synthetic benchmark is explicitly organised into **six domains**, and the dashboard/heatmap labels and cross-corpus comparisons (synthetic 6,000 articles vs. Reuters 10,712 articles) require a **fixed, comparable k**.
+2. At k=6 the dominant-topic rollup produces **five coherent clusters plus one unused component**: Clinical Medicine & Genomics (Healthcare), Grid Decarbonization & Clean Energy (Climate), Quantum Physics & Advanced Materials (Science), Markets, Politics & Regulation (Business + Politics merged), and AI Infrastructure & Compute (Technology). Labels are assigned post-hoc from each cluster's majority `category`; the clustering itself remains unsupervised. This structure is interpretable for stakeholders and auditable via `metadata.label_diagnostics`.
 3. The dominant-topic confidence is high (>99% mean), but that indicates decisive assignments at the configured k, not optimality of k itself.
 
 This is an acknowledged trade-off: the sweep on 438 terms favours fewer, broader topics by its knee rule, while the deployed model trades a small coherence difference for benchmark alignment and comparability.
 
 ## Honest wording for reports and defenses
 
-> A sweep over k in [3,12] was run with UMass-style coherence, log perplexity and distinctness on a 438-term feature space. Perplexity was non-monotonic; the statistical knee rule selected k=3. Production retains k=6 because the curated six-domain synthetic benchmark and cross-corpus comparability require a fixed k, and topic labels are interpretable at k=6. This is an engineering/interpretability choice, not a proven optimum; a 5,000-term rerun is future work.
+> A sweep over k in [3,12] was run with UMass-style coherence, log perplexity and distinctness on a 438-term feature space. Perplexity was non-monotonic; the statistical knee rule selected k=3. Production retains k=6 because the six-domain synthetic benchmark and cross-corpus comparability require a fixed k, and topic labels are interpretable at k=6. At k=6 the rollup yields five dominant clusters plus one unused component; labels are assigned post-hoc from each cluster's majority category. This is an engineering/interpretability choice, not a proven optimum; a 5,000-term rerun is future work.
 
 **Evidence:** `src/lda_topic_selection.py`, `data/lda_k_sweep.json`, `visualizations/lda_k_sweep.png`, `data/pipeline_analytics_summary.json`.

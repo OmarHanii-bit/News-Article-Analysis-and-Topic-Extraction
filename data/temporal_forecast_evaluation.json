@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T13:01:47Z",
+  "generated_at": "2026-11-27T08:11:36Z",
   "experiment": "Held-out monthly topic-volume forecasting (train 2024, test 2025)",
   "design": {
     "split": "chronological calendar-year split; no random split, no leakage",
@@ -41,13 +41,54 @@
       "source_json": "data/pipeline_analytics_summary.json",
       "status": "ok",
       "metadata": {
-        "execution_timestamp": "2026-11-21 10:23:23",
+        "execution_timestamp": "2026-11-27 10:10:39",
         "input_dataset": "data/raw_news_articles.csv",
-        "label_mode": "curated",
+        "label_mode": "majority-category",
+        "label_method": "majority-category",
+        "topic_labels": {
+          "0": "Clinical Medicine & Genomics",
+          "1": "Grid Decarbonization & Clean Energy",
+          "2": "Quantum Physics & Advanced Materials",
+          "3": "Markets, Politics & Regulation",
+          "4": "Unused topic (no dominant assignments)",
+          "5": "AI Infrastructure & Compute"
+        },
+        "label_diagnostics": {
+          "0": {
+            "total": 951,
+            "majority": "Healthcare",
+            "share": 1.0
+          },
+          "1": {
+            "total": 723,
+            "majority": "Climate",
+            "share": 1.0
+          },
+          "2": {
+            "total": 470,
+            "majority": "Science",
+            "share": 1.0
+          },
+          "3": {
+            "total": 2386,
+            "majority": "Business",
+            "share": 0.5629
+          },
+          "4": {
+            "total": 0,
+            "majority": null,
+            "share": 0.0
+          },
+          "5": {
+            "total": 1470,
+            "majority": "Technology",
+            "share": 1.0
+          }
+        },
         "total_articles_processed": 6000,
         "vocabulary_size": 438,
         "num_topics": 6,
-        "elapsed_seconds": 49.99
+        "elapsed_seconds": 52.08
       },
       "train_range": {
         "start": "2024-01",
@@ -61,6 +102,73 @@
       },
       "per_topic_metrics": {
         "AI Infrastructure & Compute": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 694.0,
+          "test_total_articles": 776.0,
+          "total_articles": 1470.0,
+          "actual_counts": [
+            65,
+            48,
+            66,
+            78,
+            79,
+            60,
+            64,
+            58,
+            67,
+            69,
+            65,
+            57
+          ],
+          "naive_persistence_forecast": [
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0,
+            62.0
+          ],
+          "linear_trend_forecast": [
+            66.61,
+            67.96,
+            69.31,
+            70.66,
+            72.0,
+            73.35,
+            74.7,
+            76.05,
+            77.4,
+            78.75,
+            80.1,
+            81.45
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 6.8333,
+              "rmse": 8.6506,
+              "mape": 10.5187
+            },
+            "linear_trend": {
+              "mae": 11.7525,
+              "rmse": 13.4251,
+              "mape": 19.4358
+            }
+          },
+          "improvement_pct": {
+            "mae": -71.9886,
+            "rmse": -55.1927,
+            "mape": -84.7738
+          }
+        },
+        "Clinical Medicine & Genomics": {
           "status": "ok",
           "train_months": 12,
           "test_months": 12,
@@ -127,141 +235,7 @@
             "mape": -39.3584
           }
         },
-        "Antitrust & Regulatory Policy": {
-          "status": "ok",
-          "train_months": 12,
-          "test_months": 12,
-          "train_total_articles": 234.0,
-          "test_total_articles": 236.0,
-          "total_articles": 470.0,
-          "actual_counts": [
-            25,
-            25,
-            20,
-            22,
-            12,
-            17,
-            22,
-            21,
-            19,
-            15,
-            14,
-            24
-          ],
-          "naive_persistence_forecast": [
-            19.0,
-            19.0,
-            19.0,
-            19.0,
-            19.0,
-            19.0,
-            19.0,
-            19.0,
-            19.0,
-            19.0,
-            19.0,
-            19.0
-          ],
-          "linear_trend_forecast": [
-            21.27,
-            21.55,
-            21.82,
-            22.09,
-            22.36,
-            22.64,
-            22.91,
-            23.18,
-            23.45,
-            23.73,
-            24.0,
-            24.27
-          ],
-          "models": {
-            "naive_persistence": {
-              "mae": 3.6667,
-              "rmse": 4.223,
-              "mape": 20.2591
-            },
-            "linear_trend": {
-              "mae": 4.303,
-              "rmse": 5.5527,
-              "mape": 27.2053
-            }
-          },
-          "improvement_pct": {
-            "mae": -17.3535,
-            "rmse": -31.4871,
-            "mape": -34.2868
-          }
-        },
-        "Clinical Medicine & Genomics": {
-          "status": "ok",
-          "train_months": 12,
-          "test_months": 12,
-          "train_total_articles": 1165.0,
-          "test_total_articles": 1221.0,
-          "total_articles": 2386.0,
-          "actual_counts": [
-            112,
-            87,
-            121,
-            99,
-            112,
-            105,
-            88,
-            105,
-            102,
-            95,
-            93,
-            102
-          ],
-          "naive_persistence_forecast": [
-            88.0,
-            88.0,
-            88.0,
-            88.0,
-            88.0,
-            88.0,
-            88.0,
-            88.0,
-            88.0,
-            88.0,
-            88.0,
-            88.0
-          ],
-          "linear_trend_forecast": [
-            92.2,
-            91.45,
-            90.69,
-            89.94,
-            89.19,
-            88.44,
-            87.69,
-            86.93,
-            86.18,
-            85.43,
-            84.68,
-            83.93
-          ],
-          "models": {
-            "naive_persistence": {
-              "mae": 13.9167,
-              "rmse": 16.8498,
-              "mape": 12.9139
-            },
-            "linear_trend": {
-              "mae": 14.4285,
-              "rmse": 16.5103,
-              "mape": 13.5776
-            }
-          },
-          "improvement_pct": {
-            "mae": -3.6776,
-            "rmse": 2.0149,
-            "mape": -5.1394
-          }
-        },
-        "Monetary Policy & Markets": {
+        "Grid Decarbonization & Clean Energy": {
           "status": "ok",
           "train_months": 12,
           "test_months": 12,
@@ -328,71 +302,138 @@
             "mape": -60.9584
           }
         },
+        "Markets, Politics & Regulation": {
+          "status": "ok",
+          "train_months": 12,
+          "test_months": 12,
+          "train_total_articles": 1165.0,
+          "test_total_articles": 1221.0,
+          "total_articles": 2386.0,
+          "actual_counts": [
+            112,
+            87,
+            121,
+            99,
+            112,
+            105,
+            88,
+            105,
+            102,
+            95,
+            93,
+            102
+          ],
+          "naive_persistence_forecast": [
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0,
+            88.0
+          ],
+          "linear_trend_forecast": [
+            92.2,
+            91.45,
+            90.69,
+            89.94,
+            89.19,
+            88.44,
+            87.69,
+            86.93,
+            86.18,
+            85.43,
+            84.68,
+            83.93
+          ],
+          "models": {
+            "naive_persistence": {
+              "mae": 13.9167,
+              "rmse": 16.8498,
+              "mape": 12.9139
+            },
+            "linear_trend": {
+              "mae": 14.4285,
+              "rmse": 16.5103,
+              "mape": 13.5776
+            }
+          },
+          "improvement_pct": {
+            "mae": -3.6776,
+            "rmse": 2.0149,
+            "mape": -5.1394
+          }
+        },
         "Quantum Physics & Advanced Materials": {
           "status": "ok",
           "train_months": 12,
           "test_months": 12,
-          "train_total_articles": 694.0,
-          "test_total_articles": 776.0,
-          "total_articles": 1470.0,
+          "train_total_articles": 234.0,
+          "test_total_articles": 236.0,
+          "total_articles": 470.0,
           "actual_counts": [
-            65,
-            48,
-            66,
-            78,
-            79,
-            60,
-            64,
-            58,
-            67,
-            69,
-            65,
-            57
+            25,
+            25,
+            20,
+            22,
+            12,
+            17,
+            22,
+            21,
+            19,
+            15,
+            14,
+            24
           ],
           "naive_persistence_forecast": [
-            62.0,
-            62.0,
-            62.0,
-            62.0,
-            62.0,
-            62.0,
-            62.0,
-            62.0,
-            62.0,
-            62.0,
-            62.0,
-            62.0
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0
           ],
           "linear_trend_forecast": [
-            66.61,
-            67.96,
-            69.31,
-            70.66,
-            72.0,
-            73.35,
-            74.7,
-            76.05,
-            77.4,
-            78.75,
-            80.1,
-            81.45
+            21.27,
+            21.55,
+            21.82,
+            22.09,
+            22.36,
+            22.64,
+            22.91,
+            23.18,
+            23.45,
+            23.73,
+            24.0,
+            24.27
           ],
           "models": {
             "naive_persistence": {
-              "mae": 6.8333,
-              "rmse": 8.6506,
-              "mape": 10.5187
+              "mae": 3.6667,
+              "rmse": 4.223,
+              "mape": 20.2591
             },
             "linear_trend": {
-              "mae": 11.7525,
-              "rmse": 13.4251,
-              "mape": 19.4358
+              "mae": 4.303,
+              "rmse": 5.5527,
+              "mape": 27.2053
             }
           },
           "improvement_pct": {
-            "mae": -71.9886,
-            "rmse": -55.1927,
-            "mape": -84.7738
+            "mae": -17.3535,
+            "rmse": -31.4871,
+            "mape": -34.2868
           }
         }
       },
@@ -420,13 +461,13 @@
       "source_json": "data/real_news/pipeline_analytics_summary.json",
       "status": "ok",
       "metadata": {
-        "execution_timestamp": "2026-11-21 11:25:58",
+        "execution_timestamp": "2026-11-25 10:23:33",
         "input_dataset": "data/real_news/raw_news_articles_real.csv",
         "label_mode": "auto",
         "total_articles_processed": 10712,
         "vocabulary_size": 5000,
         "num_topics": 6,
-        "elapsed_seconds": 71.66
+        "elapsed_seconds": 68.4
       },
       "train_range": {
         "start": "2024-01",

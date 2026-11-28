@@ -317,7 +317,7 @@ def render_command_center(summary, df_articles, corpus_label):
                 yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)", zeroline=False, showticklabels=False),
                 height=380,
             )
-            st.plotly_chart(fig_clusters, use_container_width=True)
+            st.plotly_chart(fig_clusters, width="stretch")
         else:
             st.info("Topic cluster data is loading...")
 
@@ -353,7 +353,7 @@ def render_command_center(summary, df_articles, corpus_label):
                 height=380,
                 legend=dict(orientation="h", yanchor="bottom", y=-0.4, xanchor="center", x=0.5, font=dict(size=10)),
             )
-            st.plotly_chart(fig_time, use_container_width=True)
+            st.plotly_chart(fig_time, width="stretch")
         else:
             st.info("Timeline data is loading...")
 
@@ -393,7 +393,7 @@ def render_command_center(summary, df_articles, corpus_label):
                 height=360,
                 legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5, font=dict(size=10)),
             )
-            st.plotly_chart(fig_ents, use_container_width=True)
+            st.plotly_chart(fig_ents, width="stretch")
 
     with d_right:
         st.subheader("📰 Live Article Feed & Slide-Over Inspector")
@@ -814,7 +814,7 @@ elif view_mode == "Publisher Editorial Analysis":
 
         st.divider()
         st.subheader("Editorial Share per Publisher (Interactive)")
-        st.caption("Each publisher's coverage normalised to 100% across the six latent topics.")
+        st.caption("Each publisher's coverage normalised to 100% across the five dominant topics (six LDA components; one unused).")
         editorial_share = pivot_table.div(pivot_table.sum(axis=1), axis=0)
         st.bar_chart(editorial_share)
     else:
@@ -1119,11 +1119,11 @@ elif view_mode == "Supervised ML & Drift Monitoring":
             with c_left:
                 st.markdown("**Model Benchmark Comparison**")
                 if os.path.exists("visualizations/supervised_model_comparison.png"):
-                    st.image("visualizations/supervised_model_comparison.png", use_container_width=True)
+                    st.image("visualizations/supervised_model_comparison.png", width="stretch")
             with c_right:
                 st.markdown("**Normalized Confusion Matrix (17 Classes)**")
                 if os.path.exists("visualizations/supervised_confusion_matrix.png"):
-                    st.image("visualizations/supervised_confusion_matrix.png", use_container_width=True)
+                    st.image("visualizations/supervised_confusion_matrix.png", width="stretch")
 
             st.markdown("**Per-Category Classification Breakdown (Top Ground-Truth Classes)**")
             class_df = pd.DataFrame(sup_data.get("detailed_class_performance", {})).T
@@ -1145,7 +1145,7 @@ elif view_mode == "Supervised ML & Drift Monitoring":
             d3.metric("Quarterly Drift Status", "🟢 STABLE (<0.10 JSD)")
 
             if os.path.exists("visualizations/topic_drift_monitoring.png"):
-                st.image("visualizations/topic_drift_monitoring.png", use_container_width=True)
+                st.image("visualizations/topic_drift_monitoring.png", width="stretch")
 
             st.markdown("**Quarterly Drift History Table**")
             drift_history_df = pd.DataFrame(drift_data.get("quarterly_drift_history", []))
@@ -1200,25 +1200,25 @@ elif view_mode == "Insights & What Next":
         """
 | Finding | Metric / trigger | Decision | Owner | Horizon |
 | :--- | :--- | :--- | :--- | :--- |
-| Regulatory sentiment anomaly (only negative-topic mean) | Antitrust share 470/6,000 = 7.8%; alert when topic volume **exceeds its 30-day mean + 2σ** | Alert risk desk; auto-hedge large-cap tech 48–72 h before subpoena publication | Quantitative portfolio managers | Real-time |
-| Editorial specialization / competitive gap | TechCrunch AI+Quantum share **41.7%**; Bloomberg Monetary share **11.9%**; FT **13.9%**. If a peer's topic share jumps **>10 pp MoM** while ours is 0 | Create editorial assignment; fire Slack/email competitor-gap alert | Newsroom editors | Daily |
-| Clinical-topic concentration | Clinical Medicine **2,386/6,000 = 39.8%** of all articles | Commission follow-on healthcare desk coverage only if 30-day share exceeds mean + 2σ; otherwise hold staffing | Editorial board | Monthly |
+| Science sentiment anomaly (only negative-topic mean) | Quantum share **470/6,000 = 7.8%**; alert when 30-day mean < **−0.15** | Route to science desk for lexicon review; no trading rule without validation | NLP lead / science editor | Weekly |
+| Publisher coverage mix (null result) | Every publisher **38.3–41.6%** Markets and **21.0–26.8%** AI; no strong specialization | No publisher-prior adjustment for synthetic corpus; re-test a real multi-publisher corpus | Analytics lead | Next corpus |
+| Markets/Politics concentration | Markets, Politics & Regulation **2,386/6,000 = 39.8%** of all articles | Commission follow-on policy/regulation reporting if 30-day share exceeds mean + 2σ; otherwise hold staffing | Editorial board | Monthly |
 | Confidence calibration differs by corpus | Synthetic LDA **0.991–0.993** vs Reuters **0.684–0.892** | Gate auto-publishing at ≥0.90; route lower-confidence articles to human review | NLP / ML lead | Next release |
-| Batch latency cannot serve breaking news | 49.99 s synthetic / 71.66 s Reuters batch run; target classification **<5 s** | Deploy Kafka `news-wire-incoming` + PySpark Structured Streaming micro-batches | Platform engineering | 1 sprint |
+| Batch latency cannot serve breaking news | **52.08 s** synthetic / **68.4 s** Reuters batch run; target classification **<5 s** | Deploy Kafka `news-wire-incoming` + PySpark Structured Streaming micro-batches | Platform engineering | 1 sprint |
         """
     )
 
     st.info(
-        "**Action 1 — Financial trading alpha:** 30-day volume > mean + 2σ for "
-        "*Antitrust & Regulatory Policy* → risk desk hedge."
+        "**Action 1 — Science-desk review:** 30-day mean < −0.15 for "
+        "*Quantum Physics & Advanced Materials* → lexicon review; no automated trading rule."
     )
     st.warning(
         "**Action 2 — Streaming upgrade:** replace static CSV ingestion with Kafka + "
         "PySpark Structured Streaming; 3-minute classification → under 5 seconds."
     )
     st.success(
-        "**Action 3 — Competitive editorial intelligence:** peer publisher topic share "
-        ">10 pp MoM with zero own coverage → automatic editorial assignment."
+        "**Action 3 — Corpus expansion:** the synthetic publisher mix is a null result; "
+        "re-test publisher priors on the real multi-publisher RSS corpus before using them."
     )
     st.caption(
         "Portable equivalent: open `dashboard/index.html` → "

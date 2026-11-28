@@ -62,16 +62,102 @@ except LookupError:
 # ---------------------------------------------------------------------------
 # Topic labelling strategy
 # ---------------------------------------------------------------------------
-# Curated labels hand-tuned to the canonical synthetic demo corpus. These stay
-# fixed so the graded visualizations/report remain stable across re-runs.
+# Legacy fallback map only. LDA topic indices are NOT stable across runs, so
+# production paths call derive_cluster_labels() instead of trusting this dict.
+# These values match the current 2026-11-27 run for backwards compatibility.
 CANONICAL_TOPIC_LABELS = {
-    0: "AI Infrastructure & Compute",
-    1: "Monetary Policy & Markets",
-    2: "Antitrust & Regulatory Policy",
-    3: "Clinical Medicine & Genomics",
-    4: "Grid Decarbonization & Clean Energy",
-    5: "Quantum Physics & Advanced Materials"
+    0: "Clinical Medicine & Genomics",
+    1: "Grid Decarbonization & Clean Energy",
+    2: "Quantum Physics & Advanced Materials",
+    3: "Markets, Politics & Regulation",
+    4: "Unused topic (no dominant assignments)",
+    5: "AI Infrastructure & Compute"
 }
+
+# Post-hoc naming map for the synthetic benchmark. LDA topic indices are
+# NOT stable across runs, so labels must follow each cluster's actual content
+# rather than a fixed index. The synthetic generator exposes a `category`
+# column; we use its majority value only to NAME a cluster, never to train or
+# reassign documents. The clustering itself remains fully unsupervised.
+CATEGORY_TO_TOPIC_LABEL = {
+    "Technology": "AI Infrastructure & Compute",
+    "Business": "Monetary Policy & Markets",
+    "Politics": "Antitrust & Regulatory Policy",
+    "Healthcare": "Clinical Medicine & Genomics",
+    "Climate": "Grid Decarbonization & Clean Energy",
+    "Science": "Quantum Physics & Advanced Materials",
+}
+
+CATEGORY_SHORT_LABEL = {
+    "Technology": "AI",
+    "Business": "Markets",
+    "Politics": "Politics",
+    "Healthcare": "Clinical",
+    "Climate": "Clean Energy",
+    "Science": "Quantum",
+}
+
+
+def derive_cluster_labels(df_with_topics, num_topics, extracted_topics):
+    """
+    Names each LDA cluster from its majority ``category``.
+
+    Returns ``(labels_by_topic, diagnostics)``. A cluster that mixes Business
+    and Politics is named explicitly because k=6 on this corpus merges those
+    two domains; an empty topic is marked as unused. If the corpus has no
+    usable category column, the function falls back to term-derived labels.
+    """
+    rows = (
+        df_with_topics
+        .groupBy("dominant_topic", "category")
+        .count()
+        .collect()
+    )
+    counts = {}
+    for row in rows:
+        tid = int(row["dominant_topic"])
+        category = row["category"] or "Unknown"
+        counts.setdefault(tid, {})[str(category)] = int(row["count"])
+
+    labels = {}
+    diagnostics = {}
+    for tid in range(num_topics):
+        topic_counts = counts.get(tid, {})
+        total = sum(topic_counts.values())
+        if total == 0:
+            labels[tid] = "Unused topic (no dominant assignments)"
+            diagnostics[tid] = {"total": 0, "majority": None, "share": 0.0}
+            continue
+
+        ranked = sorted(topic_counts.items(), key=lambda item: (-item[1], item[0]))
+        top_category, top_count = ranked[0]
+        top_share = top_count / total
+        diagnostics[tid] = {
+            "total": total,
+            "majority": top_category,
+            "share": round(top_share, 4),
+        }
+
+        if top_category in CATEGORY_TO_TOPIC_LABEL and top_share >= 0.75:
+            labels[tid] = CATEGORY_TO_TOPIC_LABEL[top_category]
+        elif (
+            top_category in CATEGORY_TO_TOPIC_LABEL
+            and len(ranked) > 1
+            and {top_category, ranked[1][0]} == {"Business", "Politics"}
+        ):
+            # Honest name for the merged markets/regulatory cluster.
+            labels[tid] = "Markets, Politics & Regulation"
+        elif top_category in CATEGORY_TO_TOPIC_LABEL:
+            second = ranked[1][0]
+            labels[tid] = (
+                f"{CATEGORY_TO_TOPIC_LABEL[top_category]} & "
+                f"{CATEGORY_SHORT_LABEL.get(second, second)}"
+            )
+        else:
+            terms = extracted_topics.get(f"Topic_{tid}", {}).get("terms", [])
+            labels[tid] = derive_topic_label(terms)
+
+    return labels, diagnostics
 
 # High-frequency news filler words that make poor topic labels when derived
 # automatically from the LDA top-term lists of a real-world corpus.
@@ -94,7 +180,7 @@ def derive_topic_label(top_words, max_words: int = 3) -> str:
     Builds a human-readable topic label straight from the model's top terms.
 
     This keeps the pipeline correct on ANY corpus (including real Reuters
-    wire stories) where the curated canonical labels would be meaningless.
+    wire stories) where the synthetic canonical labels would be meaningless.
     """
     picked = [w for w in top_words if w.lower() not in LABEL_STOPWORDS][:max_words]
     if not picked:
@@ -205,7 +291,7 @@ def run_distributed_pipeline(
     dataset (default) OR a real full-text corpus (e.g. Reuters wire stories)
     simply by pointing ``input_csv_path`` at a different file. Pass
     ``auto_labels=True`` for real corpora so topic labels are derived from the
-    learned top terms instead of the curated synthetic-corpus labels.
+    learned top terms instead of the majority-category synthetic labels.
     """
     start_time = time.time()
     spark = init_spark_session()
@@ -375,8 +461,13 @@ def run_distributed_pipeline(
     )
 
     # Assign interpretable topic labels.
-    #   - Curated mode (default): fixed labels tuned to the synthetic corpus.
+    #   - Synthetic mode (default): name each cluster from its majority category
+    #     (post-hoc naming only; clustering stays unsupervised).
     #   - Auto mode (real corpora) : labels derived from each topic's top terms.
+    #   - Explicit topic_labels_map still wins when supplied by a caller.
+    label_method = "provided-map" if topic_labels_map else (
+        "term-derived" if auto_labels else "majority-category"
+    )
     if auto_labels:
         active_labels = {}
         for tid in range(num_topics):
@@ -384,10 +475,17 @@ def run_distributed_pipeline(
             # keeps auto-labelling total instead of raising a KeyError.
             topic_terms = extracted_topics.get(f"Topic_{tid}", {}).get("terms", [])
             active_labels[tid] = derive_topic_label(topic_terms)
+        label_diagnostics = {}
         print("\n[*] Auto-derived topic labels from learned top terms:")
+    elif topic_labels_map:
+        active_labels = dict(topic_labels_map)
+        label_diagnostics = {}
+        print("\n[*] Using caller-supplied topic labels:")
     else:
-        active_labels = dict(topic_labels_map or CANONICAL_TOPIC_LABELS)
-        print("\n[*] Using curated topic labels:")
+        active_labels, label_diagnostics = derive_cluster_labels(
+            df_enriched, num_topics, extracted_topics
+        )
+        print("\n[*] Semantically aligned topic labels (majority category per cluster):")
     for tid in range(num_topics):
         print(f"    Topic {tid}: {active_labels.get(tid, f'Topic {tid}')}")
 
@@ -504,7 +602,10 @@ def run_distributed_pipeline(
         "metadata": {
             "execution_timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
             "input_dataset": input_csv_path,
-            "label_mode": "auto" if auto_labels else "curated",
+            "label_mode": "auto" if auto_labels else "majority-category",
+            "label_method": label_method,
+            "topic_labels": {str(k): v for k, v in active_labels.items()},
+            "label_diagnostics": {str(k): v for k, v in label_diagnostics.items()},
             "total_articles_processed": valid_count,
             "vocabulary_size": len(vocabulary),
             "num_topics": num_topics,

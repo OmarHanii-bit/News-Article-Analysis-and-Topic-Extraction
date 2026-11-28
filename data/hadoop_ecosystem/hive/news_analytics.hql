@@ -51,9 +51,9 @@ ORDER BY article_count DESC;
 -- ---- (b) Publisher x topic cross-tabulation (conditional aggregation) ---
 SELECT publication,
         SUM(CASE WHEN topic_label = 'AI Infrastructure & Compute' THEN 1 ELSE 0 END) AS `AI_Infrastructure_Compute`,
-        SUM(CASE WHEN topic_label = 'Antitrust & Regulatory Policy' THEN 1 ELSE 0 END) AS `Antitrust_Regulatory_Policy`,
         SUM(CASE WHEN topic_label = 'Clinical Medicine & Genomics' THEN 1 ELSE 0 END) AS `Clinical_Medicine_Genomics`,
-        SUM(CASE WHEN topic_label = 'Monetary Policy & Markets' THEN 1 ELSE 0 END) AS `Monetary_Policy_Markets`,
+        SUM(CASE WHEN topic_label = 'Grid Decarbonization & Clean Energy' THEN 1 ELSE 0 END) AS `Grid_Decarbonization_Clean_Energy`,
+        SUM(CASE WHEN topic_label = 'Markets, Politics & Regulation' THEN 1 ELSE 0 END) AS `Markets_Politics_Regulation`,
         SUM(CASE WHEN topic_label = 'Quantum Physics & Advanced Materials' THEN 1 ELSE 0 END) AS `Quantum_Physics_Advanced_Materials`
 FROM news_articles
 GROUP BY publication

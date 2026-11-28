@@ -68,6 +68,13 @@ def evaluate_temporal_topic_drift(parquet_path: str, summary_path: str):
             summary = json.load(f)
 
     topic_names = summary.get("topic_definitions", {})
+    if not topic_names:
+        # The Spark pipeline exposes the semantic label per topic in metadata.
+        # Older payloads have no such map, so fall back to the numeric topic id.
+        topic_names = {
+            str(tid): {"label": label}
+            for tid, label in (summary.get("metadata", {}).get("topic_labels") or {}).items()
+        }
 
     # Load Parquet lakehouse
     if not os.path.exists(parquet_path):
@@ -149,6 +156,10 @@ def evaluate_temporal_topic_drift(parquet_path: str, summary_path: str):
         "total_documents_monitored": int(len(df)),
         "monitoring_metric": "Jensen-Shannon Divergence (JSD) & Population Stability Index (PSI)",
         "num_topics": int(num_topics),
+        "topic_labels": {
+            str(t): topic_names.get(str(t), {}).get("label", f"Topic {t}")
+            for t in range(num_topics)
+        },
         "global_baseline_distribution": {str(t): round(float(global_p[t]), 4) for t in range(num_topics)},
         "quarterly_drift_history": quarterly_drift,
         "total_alerts_fired": int(len(alerts)),

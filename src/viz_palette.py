@@ -31,13 +31,16 @@ TOPIC_PALETTE_EXTENDED = TOPIC_PALETTE + ["#B56576", "#457B9D", "#A8DADC", "#F4A
 # keeps the same colour whether it is rendered from the synthetic benchmark or
 # from the real Reuters-21578 wire archive.
 TOPIC_LABEL_COLORS = {
-    # Synthetic benchmark (curated editorial labels)
+    # Synthetic benchmark (post-hoc majority-category labels)
     "Clinical Medicine & Genomics": TOPIC_PALETTE[0],
     "Quantum Physics & Advanced Materials": TOPIC_PALETTE[1],
     "AI Infrastructure & Compute": TOPIC_PALETTE[2],
+    "Markets, Politics & Regulation": TOPIC_PALETTE[3],
+    "Grid Decarbonization & Clean Energy": TOPIC_PALETTE[5],
+    "Unused topic (no dominant assignments)": "#BFC9D4",
+    # Legacy labels retained for older artifacts / notebook demonstrations
     "Monetary Policy & Markets": TOPIC_PALETTE[3],
     "Antitrust & Regulatory Policy": TOPIC_PALETTE[4],
-    "Grid Decarbonization & Clean Energy": TOPIC_PALETTE[5],
     "Enterprise Analytics & Benchmarks": TOPIC_PALETTE[5],
     "AI Infrastructure & Cloud Compute": TOPIC_PALETTE[2],
     # Real Reuters-21578 wire (auto-derived labels from PySpark LDA)

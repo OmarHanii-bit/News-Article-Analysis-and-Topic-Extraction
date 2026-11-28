@@ -126,34 +126,72 @@ def compute_business_kpis(summary, frame):
 
 
 def build_decisions_panel(corpus_label, summary, frame):
-    """Findings paired with decisions, owners and numeric triggers (report §6.3)."""
+    """Corpus-specific findings paired with decisions, owners and numeric triggers."""
     is_real = "Reuters" in corpus_label
-    rows = [
-        ("Regulatory sentiment anomaly — only negative-topic mean (−0.028)",
-         "Antitrust 470/6,000 = 7.8%; alert if 30-day volume > mean + 2σ",
-         "Alert risk desk; hedge large-cap tech 48–72 h", "Quant desk", "Real-time"),
-        ("Publisher specialization / competitor gap",
-         "TechCrunch 41.7% AI+Quantum; Bloomberg 11.9% Monetary; FT 13.9% Monetary; peer share jump >10 pp MoM",
-         "Create editorial assignment when own coverage = 0", "Newsroom editors", "Daily"),
-        ("Clinical-topic concentration",
-         "Clinical Medicine 2,386/6,000 = 39.8%; trigger at 30-day share > mean + 2σ",
-         "Scale or hold healthcare desk staffing", "Editorial board", "Monthly"),
-        ("Model confidence calibration differs by corpus",
-         "Synthetic 0.991–0.993 vs Reuters 0.684–0.892; auto-publish gate ≥0.90",
-         "Route sub-0.90 confidence to human review", "NLP / ML lead", "Next release"),
-        ("Batch latency cannot serve breaking news",
-         "49.99 s synthetic / 71.66 s Reuters; target <5 s classification",
-         "Deploy Kafka `news-wire-incoming` + Structured Streaming", "Platform engineering", "1 sprint"),
-    ]
+
+    if is_real:
+        topics = sorted(
+            summary.get("topic_summary", []),
+            key=lambda row: -int(row.get("total_articles", 0)),
+        )
+        total = sum(int(row.get("total_articles", 0)) for row in topics) or 1
+        top = topics[0] if topics else {"topic_label": "n/a", "total_articles": 0}
+        top_share = 100.0 * int(top.get("total_articles", 0)) / total
+        confidences = [float(row.get("mean_confidence", 0.0)) for row in topics] or [0.0]
+        rows = [
+            ("Auto-label confidence is lower than the synthetic benchmark",
+             f"Reuters confidence {min(confidences):.3f}–{max(confidences):.3f}; gate at ≥0.90",
+             "Route sub-0.90 articles to human review before auto-publishing", "NLP / ML lead", "Next release"),
+            ("Single-publisher corpus",
+             "1 publisher × 6 auto-labeled topics; the publisher heatmap is degenerate by design",
+             "Do not infer editorial bias from Reuters; use the synthetic multi-publisher corpus for that check", "Analytics lead", "N/A"),
+            ("Descriptive topic mix",
+             f"Largest auto topic: {top['topic_label']} {int(top.get('total_articles', 0)):,}/{total:,} = {top_share:.1f}%",
+             "Use as a corpus profile, not a market signal", "Editorial analytics", "Descriptive"),
+            ("Publication dates are derived",
+             "Reuters-21578 has no per-article timestamps; dates are deterministic 2024–2025",
+             "Treat temporal trends as illustrative; no real-world temporal inference", "Data governance", "Always"),
+            ("Batch latency cannot serve breaking news",
+             "68.4 s for 10,712 articles; target <5 s classification",
+             "Deploy Kafka + PySpark Structured Streaming micro-batches", "Platform engineering", "1 sprint"),
+        ]
+        note = (
+            "This view is the Reuters auto-label corpus: publisher heatmaps are "
+            "degenerate by design (1 publisher × 6 topics) because every source document is a Reuters wire story."
+        )
+        footer = (
+            "Actions for this corpus: (1) human review below 0.90 confidence, "
+            "(2) Kafka + PySpark Structured Streaming upgrade, (3) treat publisher and temporal claims as illustrative only."
+        )
+    else:
+        rows = [
+            ("Science sentiment anomaly — only negative-topic mean (−0.028)",
+             "Quantum 470/6,000 = 7.8%; alert if 30-day mean < −0.15",
+             "Route to science desk for lexicon review; no trading rule without validation", "NLP lead / science editor", "Weekly"),
+            ("Publisher coverage mix — null result",
+             "Every publisher 38.3–41.6% Markets, 21.0–26.8% AI; no strong specialization",
+             "No publisher-prior adjustment for synthetic corpus; re-test the real corpus", "Analytics lead", "Next corpus"),
+            ("Markets/Politics concentration",
+             "Markets, Politics & Regulation 2,386/6,000 = 39.8%; trigger at 30-day share > mean + 2σ",
+             "Commission follow-on policy/regulation reporting or hold staffing", "Editorial board", "Monthly"),
+            ("Model confidence calibration differs by corpus",
+             "Synthetic 0.991–0.993 vs Reuters 0.684–0.892; auto-publish gate ≥0.90",
+             "Route sub-0.90 confidence to human review", "NLP / ML lead", "Next release"),
+            ("Batch latency cannot serve breaking news",
+             "52.08 s synthetic / 68.4 s Reuters; target <5 s classification",
+             "Deploy Kafka `news-wire-incoming` + Structured Streaming", "Platform engineering", "1 sprint"),
+        ]
+        note = (
+            "This is the synthetic benchmark corpus: publisher heatmaps cover 8 publishers × 6 LDA components "
+            "(5 dominant labels plus 1 unused component)."
+        )
+        footer = (
+            "Actions implement <code>PROJECT_REPORT.md</code> §6.3: (1) science-desk lexicon review, "
+            "(2) Kafka + PySpark Structured Streaming upgrade, (3) re-test publisher priors on a real multi-publisher corpus."
+        )
+
     table_rows = "".join(
         "<tr>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>" for row in rows
-    )
-    note = (
-        "This view is the Reuters auto-label corpus: publisher heatmaps are "
-        "degenerate by design (1 publisher × 6 topics) because every source document is a Reuters wire story."
-        if is_real else
-        "This is the synthetic benchmark corpus: publisher heatmaps cover 8 publishers × 6 LDA components "
-        "(5 distinct dominant labels — two components share a dominant label)."
     )
     return f"""
 <section class="panel decisions">
@@ -163,8 +201,7 @@ def build_decisions_panel(corpus_label, summary, frame):
     <thead><tr><th>Finding</th><th>Metric / numeric trigger</th><th>Decision</th><th>Owner</th><th>Horizon</th></tr></thead>
     <tbody>{table_rows}</tbody>
   </table>
-  <p class="caption">Actions implement <code>PROJECT_REPORT.md</code> §6.3: (1) risk-desk hedge alert,
-  (2) Kafka + PySpark Structured Streaming upgrade, (3) automated competitive editorial intelligence.</p>
+  <p class="caption">{footer}</p>
 </section>
 """
 
@@ -422,6 +459,13 @@ def build_html(df, summary, figures, corpus_label, eco_cards=None, eco_table=Non
 
     is_real = "Reuters" in corpus_label
     if is_real:
+        real_topics = sorted(
+            summary.get("topic_summary", []),
+            key=lambda row: -int(row.get("total_articles", 0)),
+        )
+        real_top = real_topics[0] if real_topics else {"topic_label": "n/a", "total_articles": 0}
+        real_total = int(meta["total_articles_processed"]) or 1
+        real_share = 100.0 * int(real_top.get("total_articles", 0)) / real_total
         heatmap_caption = (
             "So what? The publisher heatmap is degenerate by design — the Reuters corpus has "
             "1 publisher × 6 topics — so read it as a topic-mix profile, not a peer comparison."
@@ -430,14 +474,31 @@ def build_html(df, summary, figures, corpus_label, eco_cards=None, eco_table=Non
             "So what? Reuters auto-label confidence is 0.684–0.892; n=1,500 random sample (seed 42). "
             "Never compare this scale directly with synthetic confidence."
         )
+        topic_caption = (
+            f"So what? Reuters auto-label corpus: {real_top['topic_label']} is the largest cluster at "
+            f"{int(real_top.get('total_articles', 0)):,}/{real_total:,} = {real_share:.1f}%; "
+            "read it as a descriptive profile, not a market signal."
+        )
+        sentiment_caption = (
+            "So what? Auto-label sentiment is descriptive; Reuters dates are derived, "
+            "so no real-world temporal inference is supported."
+        )
     else:
         heatmap_caption = (
-            "So what? Publisher × topic shares expose editorial specialization; TechCrunch reaches "
-            "41.7% AI+Quantum while Bloomberg/FT sit at 11.9%/13.9% Monetary Policy."
+            "So what? Publisher × topic shares track corpus base rates — every publisher is "
+            "38.3–41.6% Markets and 21.0–26.8% AI; this synthetic corpus shows no strong editorial specialization."
         )
         confidence_caption = (
             "So what? Synthetic LDA confidence is 0.991–0.993; n=1,500 random sample (seed 42). "
             "High separation validates k=6 but does not transfer to Reuters."
+        )
+        topic_caption = (
+            "So what? Markets, Politics & Regulation dominates at 2,386/6,000 = 39.8%; "
+            "a 30-day volume above mean + 2σ triggers the risk/newsroom playbook."
+        )
+        sentiment_caption = (
+            "So what? Quantum Physics & Advanced Materials is the only negative-mean topic (−0.028); "
+            "a sentiment Δ ≤ −0.15 turns the card red."
         )
 
     if eco_table is not None:
@@ -499,11 +560,11 @@ def build_html(df, summary, figures, corpus_label, eco_cards=None, eco_table=Non
 {decisions_panel}
 <main>
   <div class="panel"><h2>Topic Volume</h2>{blocks[0]}
-    <p class="caption"><b>So what?</b> Clinical Medicine dominates at 2,386/6,000 = 39.8%; a 30-day volume above mean + 2σ triggers the risk/newsroom playbook.</p></div>
+    <p class="caption"><b>{topic_caption}</b></p></div>
   <div class="panel"><h2>Publisher × Topic</h2>{blocks[1]}
     <p class="caption">{heatmap_caption}</p></div>
   <div class="panel"><h2>Sentiment by Topic</h2>{blocks[2]}
-    <p class="caption"><b>So what?</b> Antitrust & Regulatory Policy is the only negative-mean topic (−0.028); a sentiment Δ ≤ −0.15 turns the card red.</p></div>
+    <p class="caption"><b>{sentiment_caption}</b></p></div>
   <div class="panel"><h2>Temporal Trajectories</h2>{blocks[3]}
     <p class="caption"><b>So what?</b> 24 months (2024-2025) of monthly volume; |MoM| > 25% is the alert threshold for topic velocity.</p></div>
   <div class="panel"><h2>Top Terms (use the topic selector)</h2>{blocks[4]}

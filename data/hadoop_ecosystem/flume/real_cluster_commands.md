@@ -54,4 +54,4 @@ a1.sources.r1.kafka.consumer.group.id = flume-news
 ## Local simulation result on this workstation
 - Events ingested : 500
 - Bytes ingested  : 103790
-- HDFS stream dir : /user/news/stream/20261125/FlumeData.20261125.00000.json
+- HDFS stream dir : /user/news/stream/20261127/FlumeData.20261127.00000.json

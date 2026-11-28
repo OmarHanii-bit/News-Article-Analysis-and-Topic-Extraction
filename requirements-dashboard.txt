@@ -2,7 +2,7 @@
 # Use this as the "Requirements file" in Advanced settings instead of the full
 # requirements.txt, which also installs PySpark, Jupyter and the deck/report
 # toolchain that the dashboard does not need.
-streamlit>=1.30.0
+streamlit>=1.52.0
 pandas>=2.0.0
 numpy>=1.24.0
 plotly>=5.18.0

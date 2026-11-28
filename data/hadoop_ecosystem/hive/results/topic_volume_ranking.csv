@@ -1,6 +1,6 @@
 topic_label,article_count,mean_sentiment
-Clinical Medicine & Genomics,2386,0.337
-Quantum Physics & Advanced Materials,1470,0.5682
-AI Infrastructure & Compute,951,0.5581
-Monetary Policy & Markets,723,0.7868
-Antitrust & Regulatory Policy,470,-0.0282
+"Markets, Politics & Regulation",2386,0.337
+AI Infrastructure & Compute,1470,0.5682
+Clinical Medicine & Genomics,951,0.5581
+Grid Decarbonization & Clean Energy,723,0.7868
+Quantum Physics & Advanced Materials,470,-0.0282

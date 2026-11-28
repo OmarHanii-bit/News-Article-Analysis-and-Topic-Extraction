@@ -28,23 +28,23 @@
     {
       "row_key": "00_ART_100192",
       "title": "TechCrunch Analysis: Legislative Reform and Bipartisan Coalition in Focus",
-      "topic_label": "Clinical Medicine & Genomics",
+      "topic_label": "Markets, Politics & Regulation",
       "sentiment_polarity": 0.4018999934196472
     },
     {
       "row_key": "00_ART_100219",
       "title": "Special Report: Emerging Trends in Sovereign Debt and Market Dynamics",
-      "topic_label": "Clinical Medicine & Genomics",
+      "topic_label": "Markets, Politics & Regulation",
       "sentiment_polarity": 0.025800000876188278
     },
     {
       "row_key": "00_ART_100276",
       "title": "Breakthrough Developments in Equity Markets Stir Industry Debate",
-      "topic_label": "Clinical Medicine & Genomics",
+      "topic_label": "Markets, Politics & Regulation",
       "sentiment_polarity": -0.3181999921798706
     }
   ],
-  "most_common_topic": "Clinical Medicine & Genomics",
+  "most_common_topic": "Markets, Politics & Regulation",
   "single_row": {
     "cf_meta": {
       "title": "Special Report: Emerging Trends in Quantum Computing and Market Dynamics",
@@ -56,7 +56,7 @@
     },
     "cf_nlp": {
       "dominant_topic": 2,
-      "topic_label": "Antitrust & Regulatory Policy",
+      "topic_label": "Quantum Physics & Advanced Materials",
       "topic_confidence": 0.9892488121986389,
       "sentiment_polarity": 0.07720000296831131,
       "clean_word_count": 70
@@ -75,7 +75,7 @@
         "cf_raw"
       ],
       "num_families": 3,
-      "created": "2026-11-25T10:22:19",
+      "created": "2026-11-27T10:11:20",
       "row_count": 2000,
       "families": [
         {

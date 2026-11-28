@@ -1,121 +1,121 @@
 topic_label,year,month,cnt,mom_delta
-AI Infrastructure & Compute,2024,1,49,
-AI Infrastructure & Compute,2024,2,31,-18.0
-AI Infrastructure & Compute,2024,3,44,13.0
-AI Infrastructure & Compute,2024,4,35,-9.0
-AI Infrastructure & Compute,2024,5,40,5.0
-AI Infrastructure & Compute,2024,6,43,3.0
-AI Infrastructure & Compute,2024,7,26,-17.0
-AI Infrastructure & Compute,2024,8,37,11.0
-AI Infrastructure & Compute,2024,9,41,4.0
-AI Infrastructure & Compute,2024,10,30,-11.0
-AI Infrastructure & Compute,2024,11,41,11.0
-AI Infrastructure & Compute,2024,12,35,-6.0
-AI Infrastructure & Compute,2025,1,29,-6.0
-AI Infrastructure & Compute,2025,2,39,10.0
-AI Infrastructure & Compute,2025,3,46,7.0
-AI Infrastructure & Compute,2025,4,42,-4.0
-AI Infrastructure & Compute,2025,5,46,4.0
-AI Infrastructure & Compute,2025,6,40,-6.0
-AI Infrastructure & Compute,2025,7,32,-8.0
-AI Infrastructure & Compute,2025,8,50,18.0
-AI Infrastructure & Compute,2025,9,40,-10.0
-AI Infrastructure & Compute,2025,10,38,-2.0
-AI Infrastructure & Compute,2025,11,47,9.0
-AI Infrastructure & Compute,2025,12,50,3.0
-Antitrust & Regulatory Policy,2024,1,19,
-Antitrust & Regulatory Policy,2024,2,14,-5.0
-Antitrust & Regulatory Policy,2024,3,28,14.0
-Antitrust & Regulatory Policy,2024,4,16,-12.0
-Antitrust & Regulatory Policy,2024,5,20,4.0
-Antitrust & Regulatory Policy,2024,6,23,3.0
-Antitrust & Regulatory Policy,2024,7,14,-9.0
-Antitrust & Regulatory Policy,2024,8,13,-1.0
-Antitrust & Regulatory Policy,2024,9,13,0.0
-Antitrust & Regulatory Policy,2024,10,25,12.0
-Antitrust & Regulatory Policy,2024,11,30,5.0
-Antitrust & Regulatory Policy,2024,12,19,-11.0
-Antitrust & Regulatory Policy,2025,1,25,6.0
-Antitrust & Regulatory Policy,2025,2,25,0.0
-Antitrust & Regulatory Policy,2025,3,20,-5.0
-Antitrust & Regulatory Policy,2025,4,22,2.0
-Antitrust & Regulatory Policy,2025,5,12,-10.0
-Antitrust & Regulatory Policy,2025,6,17,5.0
-Antitrust & Regulatory Policy,2025,7,22,5.0
-Antitrust & Regulatory Policy,2025,8,21,-1.0
-Antitrust & Regulatory Policy,2025,9,19,-2.0
-Antitrust & Regulatory Policy,2025,10,15,-4.0
-Antitrust & Regulatory Policy,2025,11,14,-1.0
-Antitrust & Regulatory Policy,2025,12,24,10.0
-Clinical Medicine & Genomics,2024,1,93,
-Clinical Medicine & Genomics,2024,2,99,6.0
-Clinical Medicine & Genomics,2024,3,110,11.0
-Clinical Medicine & Genomics,2024,4,101,-9.0
-Clinical Medicine & Genomics,2024,5,93,-8.0
-Clinical Medicine & Genomics,2024,6,95,2.0
-Clinical Medicine & Genomics,2024,7,104,9.0
-Clinical Medicine & Genomics,2024,8,107,3.0
-Clinical Medicine & Genomics,2024,9,83,-24.0
-Clinical Medicine & Genomics,2024,10,94,11.0
-Clinical Medicine & Genomics,2024,11,98,4.0
-Clinical Medicine & Genomics,2024,12,88,-10.0
-Clinical Medicine & Genomics,2025,1,112,24.0
-Clinical Medicine & Genomics,2025,2,87,-25.0
-Clinical Medicine & Genomics,2025,3,121,34.0
-Clinical Medicine & Genomics,2025,4,99,-22.0
-Clinical Medicine & Genomics,2025,5,112,13.0
-Clinical Medicine & Genomics,2025,6,105,-7.0
-Clinical Medicine & Genomics,2025,7,88,-17.0
-Clinical Medicine & Genomics,2025,8,105,17.0
-Clinical Medicine & Genomics,2025,9,102,-3.0
-Clinical Medicine & Genomics,2025,10,95,-7.0
-Clinical Medicine & Genomics,2025,11,93,-2.0
-Clinical Medicine & Genomics,2025,12,102,9.0
-Monetary Policy & Markets,2024,1,37,
-Monetary Policy & Markets,2024,2,20,-17.0
-Monetary Policy & Markets,2024,3,32,12.0
-Monetary Policy & Markets,2024,4,37,5.0
-Monetary Policy & Markets,2024,5,28,-9.0
-Monetary Policy & Markets,2024,6,22,-6.0
-Monetary Policy & Markets,2024,7,36,14.0
-Monetary Policy & Markets,2024,8,27,-9.0
-Monetary Policy & Markets,2024,9,30,3.0
-Monetary Policy & Markets,2024,10,26,-4.0
-Monetary Policy & Markets,2024,11,22,-4.0
-Monetary Policy & Markets,2024,12,29,7.0
-Monetary Policy & Markets,2025,1,24,-5.0
-Monetary Policy & Markets,2025,2,21,-3.0
-Monetary Policy & Markets,2025,3,40,19.0
-Monetary Policy & Markets,2025,4,27,-13.0
-Monetary Policy & Markets,2025,5,27,0.0
-Monetary Policy & Markets,2025,6,38,11.0
-Monetary Policy & Markets,2025,7,32,-6.0
-Monetary Policy & Markets,2025,8,34,2.0
-Monetary Policy & Markets,2025,9,28,-6.0
-Monetary Policy & Markets,2025,10,37,9.0
-Monetary Policy & Markets,2025,11,35,-2.0
-Monetary Policy & Markets,2025,12,34,-1.0
-Quantum Physics & Advanced Materials,2024,1,42,
-Quantum Physics & Advanced Materials,2024,2,55,13.0
-Quantum Physics & Advanced Materials,2024,3,58,3.0
-Quantum Physics & Advanced Materials,2024,4,62,4.0
-Quantum Physics & Advanced Materials,2024,5,52,-10.0
-Quantum Physics & Advanced Materials,2024,6,46,-6.0
-Quantum Physics & Advanced Materials,2024,7,68,22.0
-Quantum Physics & Advanced Materials,2024,8,64,-4.0
-Quantum Physics & Advanced Materials,2024,9,53,-11.0
-Quantum Physics & Advanced Materials,2024,10,67,14.0
-Quantum Physics & Advanced Materials,2024,11,65,-2.0
-Quantum Physics & Advanced Materials,2024,12,62,-3.0
-Quantum Physics & Advanced Materials,2025,1,65,3.0
-Quantum Physics & Advanced Materials,2025,2,48,-17.0
-Quantum Physics & Advanced Materials,2025,3,66,18.0
-Quantum Physics & Advanced Materials,2025,4,78,12.0
-Quantum Physics & Advanced Materials,2025,5,79,1.0
-Quantum Physics & Advanced Materials,2025,6,60,-19.0
-Quantum Physics & Advanced Materials,2025,7,64,4.0
-Quantum Physics & Advanced Materials,2025,8,58,-6.0
-Quantum Physics & Advanced Materials,2025,9,67,9.0
-Quantum Physics & Advanced Materials,2025,10,69,2.0
-Quantum Physics & Advanced Materials,2025,11,65,-4.0
-Quantum Physics & Advanced Materials,2025,12,57,-8.0
+AI Infrastructure & Compute,2024,1,42,
+AI Infrastructure & Compute,2024,2,55,13.0
+AI Infrastructure & Compute,2024,3,58,3.0
+AI Infrastructure & Compute,2024,4,62,4.0
+AI Infrastructure & Compute,2024,5,52,-10.0
+AI Infrastructure & Compute,2024,6,46,-6.0
+AI Infrastructure & Compute,2024,7,68,22.0
+AI Infrastructure & Compute,2024,8,64,-4.0
+AI Infrastructure & Compute,2024,9,53,-11.0
+AI Infrastructure & Compute,2024,10,67,14.0
+AI Infrastructure & Compute,2024,11,65,-2.0
+AI Infrastructure & Compute,2024,12,62,-3.0
+AI Infrastructure & Compute,2025,1,65,3.0
+AI Infrastructure & Compute,2025,2,48,-17.0
+AI Infrastructure & Compute,2025,3,66,18.0
+AI Infrastructure & Compute,2025,4,78,12.0
+AI Infrastructure & Compute,2025,5,79,1.0
+AI Infrastructure & Compute,2025,6,60,-19.0
+AI Infrastructure & Compute,2025,7,64,4.0
+AI Infrastructure & Compute,2025,8,58,-6.0
+AI Infrastructure & Compute,2025,9,67,9.0
+AI Infrastructure & Compute,2025,10,69,2.0
+AI Infrastructure & Compute,2025,11,65,-4.0
+AI Infrastructure & Compute,2025,12,57,-8.0
+Clinical Medicine & Genomics,2024,1,49,
+Clinical Medicine & Genomics,2024,2,31,-18.0
+Clinical Medicine & Genomics,2024,3,44,13.0
+Clinical Medicine & Genomics,2024,4,35,-9.0
+Clinical Medicine & Genomics,2024,5,40,5.0
+Clinical Medicine & Genomics,2024,6,43,3.0
+Clinical Medicine & Genomics,2024,7,26,-17.0
+Clinical Medicine & Genomics,2024,8,37,11.0
+Clinical Medicine & Genomics,2024,9,41,4.0
+Clinical Medicine & Genomics,2024,10,30,-11.0
+Clinical Medicine & Genomics,2024,11,41,11.0
+Clinical Medicine & Genomics,2024,12,35,-6.0
+Clinical Medicine & Genomics,2025,1,29,-6.0
+Clinical Medicine & Genomics,2025,2,39,10.0
+Clinical Medicine & Genomics,2025,3,46,7.0
+Clinical Medicine & Genomics,2025,4,42,-4.0
+Clinical Medicine & Genomics,2025,5,46,4.0
+Clinical Medicine & Genomics,2025,6,40,-6.0
+Clinical Medicine & Genomics,2025,7,32,-8.0
+Clinical Medicine & Genomics,2025,8,50,18.0
+Clinical Medicine & Genomics,2025,9,40,-10.0
+Clinical Medicine & Genomics,2025,10,38,-2.0
+Clinical Medicine & Genomics,2025,11,47,9.0
+Clinical Medicine & Genomics,2025,12,50,3.0
+Grid Decarbonization & Clean Energy,2024,1,37,
+Grid Decarbonization & Clean Energy,2024,2,20,-17.0
+Grid Decarbonization & Clean Energy,2024,3,32,12.0
+Grid Decarbonization & Clean Energy,2024,4,37,5.0
+Grid Decarbonization & Clean Energy,2024,5,28,-9.0
+Grid Decarbonization & Clean Energy,2024,6,22,-6.0
+Grid Decarbonization & Clean Energy,2024,7,36,14.0
+Grid Decarbonization & Clean Energy,2024,8,27,-9.0
+Grid Decarbonization & Clean Energy,2024,9,30,3.0
+Grid Decarbonization & Clean Energy,2024,10,26,-4.0
+Grid Decarbonization & Clean Energy,2024,11,22,-4.0
+Grid Decarbonization & Clean Energy,2024,12,29,7.0
+Grid Decarbonization & Clean Energy,2025,1,24,-5.0
+Grid Decarbonization & Clean Energy,2025,2,21,-3.0
+Grid Decarbonization & Clean Energy,2025,3,40,19.0
+Grid Decarbonization & Clean Energy,2025,4,27,-13.0
+Grid Decarbonization & Clean Energy,2025,5,27,0.0
+Grid Decarbonization & Clean Energy,2025,6,38,11.0
+Grid Decarbonization & Clean Energy,2025,7,32,-6.0
+Grid Decarbonization & Clean Energy,2025,8,34,2.0
+Grid Decarbonization & Clean Energy,2025,9,28,-6.0
+Grid Decarbonization & Clean Energy,2025,10,37,9.0
+Grid Decarbonization & Clean Energy,2025,11,35,-2.0
+Grid Decarbonization & Clean Energy,2025,12,34,-1.0
+"Markets, Politics & Regulation",2024,1,93,
+"Markets, Politics & Regulation",2024,2,99,6.0
+"Markets, Politics & Regulation",2024,3,110,11.0
+"Markets, Politics & Regulation",2024,4,101,-9.0
+"Markets, Politics & Regulation",2024,5,93,-8.0
+"Markets, Politics & Regulation",2024,6,95,2.0
+"Markets, Politics & Regulation",2024,7,104,9.0
+"Markets, Politics & Regulation",2024,8,107,3.0
+"Markets, Politics & Regulation",2024,9,83,-24.0
+"Markets, Politics & Regulation",2024,10,94,11.0
+"Markets, Politics & Regulation",2024,11,98,4.0
+"Markets, Politics & Regulation",2024,12,88,-10.0
+"Markets, Politics & Regulation",2025,1,112,24.0
+"Markets, Politics & Regulation",2025,2,87,-25.0
+"Markets, Politics & Regulation",2025,3,121,34.0
+"Markets, Politics & Regulation",2025,4,99,-22.0
+"Markets, Politics & Regulation",2025,5,112,13.0
+"Markets, Politics & Regulation",2025,6,105,-7.0
+"Markets, Politics & Regulation",2025,7,88,-17.0
+"Markets, Politics & Regulation",2025,8,105,17.0
+"Markets, Politics & Regulation",2025,9,102,-3.0
+"Markets, Politics & Regulation",2025,10,95,-7.0
+"Markets, Politics & Regulation",2025,11,93,-2.0
+"Markets, Politics & Regulation",2025,12,102,9.0
+Quantum Physics & Advanced Materials,2024,1,19,
+Quantum Physics & Advanced Materials,2024,2,14,-5.0
+Quantum Physics & Advanced Materials,2024,3,28,14.0
+Quantum Physics & Advanced Materials,2024,4,16,-12.0
+Quantum Physics & Advanced Materials,2024,5,20,4.0
+Quantum Physics & Advanced Materials,2024,6,23,3.0
+Quantum Physics & Advanced Materials,2024,7,14,-9.0
+Quantum Physics & Advanced Materials,2024,8,13,-1.0
+Quantum Physics & Advanced Materials,2024,9,13,0.0
+Quantum Physics & Advanced Materials,2024,10,25,12.0
+Quantum Physics & Advanced Materials,2024,11,30,5.0
+Quantum Physics & Advanced Materials,2024,12,19,-11.0
+Quantum Physics & Advanced Materials,2025,1,25,6.0
+Quantum Physics & Advanced Materials,2025,2,25,0.0
+Quantum Physics & Advanced Materials,2025,3,20,-5.0
+Quantum Physics & Advanced Materials,2025,4,22,2.0
+Quantum Physics & Advanced Materials,2025,5,12,-10.0
+Quantum Physics & Advanced Materials,2025,6,17,5.0
+Quantum Physics & Advanced Materials,2025,7,22,5.0
+Quantum Physics & Advanced Materials,2025,8,21,-1.0
+Quantum Physics & Advanced Materials,2025,9,19,-2.0
+Quantum Physics & Advanced Materials,2025,10,15,-4.0
+Quantum Physics & Advanced Materials,2025,11,14,-1.0
+Quantum Physics & Advanced Materials,2025,12,24,10.0

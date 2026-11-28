@@ -1,8 +1,16 @@
 {
-  "timestamp": "2026-11-25T10:24:05.678286",
+  "timestamp": "2026-11-27T10:13:38.056676",
   "total_documents_monitored": 6000,
   "monitoring_metric": "Jensen-Shannon Divergence (JSD) & Population Stability Index (PSI)",
   "num_topics": 6,
+  "topic_labels": {
+    "0": "Clinical Medicine & Genomics",
+    "1": "Grid Decarbonization & Clean Energy",
+    "2": "Quantum Physics & Advanced Materials",
+    "3": "Markets, Politics & Regulation",
+    "4": "Unused topic (no dominant assignments)",
+    "5": "AI Infrastructure & Compute"
+  },
   "global_baseline_distribution": {
     "0": 0.1585,
     "1": 0.1205,

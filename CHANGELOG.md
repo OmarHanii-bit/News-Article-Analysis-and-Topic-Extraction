@@ -29,6 +29,31 @@ and the project uses semantic versioning.
   remain in `visualizations/`.
 
 ### Fixed
+- **LDA label alignment (2026-11-27):** LDA topic indices are not stable
+  across runs, so the fixed index→label map could pair, for example, a
+  Politics article with "Clinical Medicine & Genomics." Labels are now
+  assigned **post-hoc from each cluster's majority `category`** (clustering
+  remains unsupervised), and `metadata.label_diagnostics` records the
+  majority and share; `metadata.label_mode` now records `majority-category`
+  for the synthetic corpus instead of the obsolete `curated` value. The corrected five-cluster structure is Clinical
+  Medicine & Genomics 951 (15.8%), Grid Decarbonization & Clean Energy 723
+  (12.1%), Quantum Physics & Advanced Materials 470 (7.8%), Markets, Politics
+  & Regulation 2,386 (39.8%; Business + Politics merged), and AI
+  Infrastructure & Compute 1,470 (24.5%); one LDA component has no dominant
+  assignments. Regenerated the Parquet lakehouse, analytics summary, drift
+  monitor, forecast evaluation, MongoDB offline collections, 17 charts, all
+  three HTML dashboards, report, DOCX and PPTX. The only negative-sentiment
+  cluster is now Quantum (−0.028); the publisher cross-tab is reported as a
+  null result (38.3–41.6% Markets share across every publisher), not as
+  editorial bias.
+- Refreshed report, README and deck metrics against the 2026-11-27 artifacts:
+  pipeline 52.08 s, Reuters 68.4 s, Hadoop 4.28 s / 77 commands, HDFS
+  6,236,201 logical bytes, Hive 26,594 rows scanned, overall sentiment +0.454,
+  current publisher shares and MapReduce term frequencies.
+- Documentation count drift: the Q&A bank is now consistently cited as 16
+  answers (README, report, deck), and the test-suite description as 119 tests
+  across 14 modules with the 118-test execution floor. Stale 12-answer,
+  53-test and 7-module figures were removed.
 - CI (pandas 3) crashed in `src/supervised_classifier.py`: `Series.values`
   returns an Arrow-backed array that scikit-learn cannot index, so
   `run_all.py` stopped before the MongoDB export. The split now materializes

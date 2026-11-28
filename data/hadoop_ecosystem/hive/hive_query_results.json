@@ -10,7 +10,7 @@
     "term_counts": 2255,
     "topics": 72
   },
-  "top_topic_by_volume": "Clinical Medicine & Genomics",
+  "top_topic_by_volume": "Markets, Politics & Regulation",
   "status": "ok",
   "warnings": [],
   "partition_pruning": {
@@ -33,116 +33,116 @@
       "row_count": 5,
       "sample_rows": [
         {
-          "topic_label": "Clinical Medicine & Genomics",
+          "topic_label": "Markets, Politics & Regulation",
           "article_count": 2386,
           "mean_sentiment": 0.337
         },
         {
-          "topic_label": "Quantum Physics & Advanced Materials",
+          "topic_label": "AI Infrastructure & Compute",
           "article_count": 1470,
           "mean_sentiment": 0.5682
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "article_count": 951,
           "mean_sentiment": 0.5581
         },
         {
-          "topic_label": "Monetary Policy & Markets",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "article_count": 723,
           "mean_sentiment": 0.7868
         },
         {
-          "topic_label": "Antitrust & Regulatory Policy",
+          "topic_label": "Quantum Physics & Advanced Materials",
           "article_count": 470,
           "mean_sentiment": -0.0282
         }
       ],
-      "elapsed_ms": 2.422,
+      "elapsed_ms": 1.979,
       "result_csv": "data/hadoop_ecosystem/hive/results/topic_volume_ranking.csv"
     },
     {
       "query_name": "publisher_topic_crosstab",
       "business_question": "Publisher x topic cross-tabulation (conditional aggregation)",
-      "sql": "SELECT publication, SUM(CASE WHEN topic_label = 'AI Infrastructure & Compute' THEN 1 ELSE 0 END) AS `AI_Infrastructure_Compute`, SUM(CASE WHEN topic_label = 'Antitrust & Regulatory Policy' THEN 1 ELSE 0 END) AS `Antitrust_Regulatory_Policy`, SUM(CASE WHEN topic_label = 'Clinical Medicine & Genomics' THEN 1 ELSE 0 END) AS `Clinical_Medicine_Genomics`, SUM(CASE WHEN topic_label = 'Monetary Policy & Markets' THEN 1 ELSE 0 END) AS `Monetary_Policy_Markets`, SUM(CASE WHEN topic_label = 'Quantum Physics & Advanced Materials' THEN 1 ELSE 0 END) AS `Quantum_Physics_Advanced_Materials` FROM news_articles GROUP BY publication ORDER BY SUM(1) DESC LIMIT 10;",
+      "sql": "SELECT publication, SUM(CASE WHEN topic_label = 'AI Infrastructure & Compute' THEN 1 ELSE 0 END) AS `AI_Infrastructure_Compute`, SUM(CASE WHEN topic_label = 'Clinical Medicine & Genomics' THEN 1 ELSE 0 END) AS `Clinical_Medicine_Genomics`, SUM(CASE WHEN topic_label = 'Grid Decarbonization & Clean Energy' THEN 1 ELSE 0 END) AS `Grid_Decarbonization_Clean_Energy`, SUM(CASE WHEN topic_label = 'Markets, Politics & Regulation' THEN 1 ELSE 0 END) AS `Markets_Politics_Regulation`, SUM(CASE WHEN topic_label = 'Quantum Physics & Advanced Materials' THEN 1 ELSE 0 END) AS `Quantum_Physics_Advanced_Materials` FROM news_articles GROUP BY publication ORDER BY SUM(1) DESC LIMIT 10;",
       "status": "ok",
       "rows_scanned": 6000,
       "columns": [
         "publication",
         "AI_Infrastructure_Compute",
-        "Antitrust_Regulatory_Policy",
         "Clinical_Medicine_Genomics",
-        "Monetary_Policy_Markets",
+        "Grid_Decarbonization_Clean_Energy",
+        "Markets_Politics_Regulation",
         "Quantum_Physics_Advanced_Materials"
       ],
       "row_count": 8,
       "sample_rows": [
         {
           "publication": "Reuters",
-          "AI_Infrastructure_Compute": 118,
-          "Antitrust_Regulatory_Policy": 56,
-          "Clinical_Medicine_Genomics": 339,
-          "Monetary_Policy_Markets": 93,
-          "Quantum_Physics_Advanced_Materials": 208
+          "AI_Infrastructure_Compute": 208,
+          "Clinical_Medicine_Genomics": 118,
+          "Grid_Decarbonization_Clean_Energy": 93,
+          "Markets_Politics_Regulation": 339,
+          "Quantum_Physics_Advanced_Materials": 56
         },
         {
           "publication": "Financial Times",
-          "AI_Infrastructure_Compute": 120,
-          "Antitrust_Regulatory_Policy": 59,
-          "Clinical_Medicine_Genomics": 297,
-          "Monetary_Policy_Markets": 106,
-          "Quantum_Physics_Advanced_Materials": 183
+          "AI_Infrastructure_Compute": 183,
+          "Clinical_Medicine_Genomics": 120,
+          "Grid_Decarbonization_Clean_Energy": 106,
+          "Markets_Politics_Regulation": 297,
+          "Quantum_Physics_Advanced_Materials": 59
         },
         {
           "publication": "Associated Press",
-          "AI_Infrastructure_Compute": 127,
-          "Antitrust_Regulatory_Policy": 54,
-          "Clinical_Medicine_Genomics": 298,
-          "Monetary_Policy_Markets": 103,
-          "Quantum_Physics_Advanced_Materials": 170
+          "AI_Infrastructure_Compute": 170,
+          "Clinical_Medicine_Genomics": 127,
+          "Grid_Decarbonization_Clean_Energy": 103,
+          "Markets_Politics_Regulation": 298,
+          "Quantum_Physics_Advanced_Materials": 54
         },
         {
           "publication": "TechCrunch",
-          "AI_Infrastructure_Compute": 113,
-          "Antitrust_Regulatory_Policy": 62,
-          "Clinical_Medicine_Genomics": 291,
-          "Monetary_Policy_Markets": 83,
-          "Quantum_Physics_Advanced_Materials": 199
+          "AI_Infrastructure_Compute": 199,
+          "Clinical_Medicine_Genomics": 113,
+          "Grid_Decarbonization_Clean_Energy": 83,
+          "Markets_Politics_Regulation": 291,
+          "Quantum_Physics_Advanced_Materials": 62
         },
         {
           "publication": "BBC News",
-          "AI_Infrastructure_Compute": 128,
-          "Antitrust_Regulatory_Policy": 63,
-          "Clinical_Medicine_Genomics": 306,
-          "Monetary_Policy_Markets": 94,
-          "Quantum_Physics_Advanced_Materials": 157
+          "AI_Infrastructure_Compute": 157,
+          "Clinical_Medicine_Genomics": 128,
+          "Grid_Decarbonization_Clean_Energy": 94,
+          "Markets_Politics_Regulation": 306,
+          "Quantum_Physics_Advanced_Materials": 63
         },
         {
           "publication": "Bloomberg",
-          "AI_Infrastructure_Compute": 127,
-          "Antitrust_Regulatory_Policy": 60,
-          "Clinical_Medicine_Genomics": 284,
-          "Monetary_Policy_Markets": 88,
-          "Quantum_Physics_Advanced_Materials": 182
+          "AI_Infrastructure_Compute": 182,
+          "Clinical_Medicine_Genomics": 127,
+          "Grid_Decarbonization_Clean_Energy": 88,
+          "Markets_Politics_Regulation": 284,
+          "Quantum_Physics_Advanced_Materials": 60
         },
         {
           "publication": "The Wall Street Journal",
-          "AI_Infrastructure_Compute": 112,
-          "Antitrust_Regulatory_Policy": 49,
-          "Clinical_Medicine_Genomics": 291,
-          "Monetary_Policy_Markets": 77,
-          "Quantum_Physics_Advanced_Materials": 194
+          "AI_Infrastructure_Compute": 194,
+          "Clinical_Medicine_Genomics": 112,
+          "Grid_Decarbonization_Clean_Energy": 77,
+          "Markets_Politics_Regulation": 291,
+          "Quantum_Physics_Advanced_Materials": 49
         },
         {
           "publication": "The New York Times",
-          "AI_Infrastructure_Compute": 106,
-          "Antitrust_Regulatory_Policy": 67,
-          "Clinical_Medicine_Genomics": 280,
-          "Monetary_Policy_Markets": 79,
-          "Quantum_Physics_Advanced_Materials": 177
+          "AI_Infrastructure_Compute": 177,
+          "Clinical_Medicine_Genomics": 106,
+          "Grid_Decarbonization_Clean_Energy": 79,
+          "Markets_Politics_Regulation": 280,
+          "Quantum_Physics_Advanced_Materials": 67
         }
       ],
-      "elapsed_ms": 2.849,
+      "elapsed_ms": 3.393,
       "result_csv": "data/hadoop_ecosystem/hive/results/publisher_topic_crosstab.csv"
     },
     {
@@ -164,354 +164,354 @@
           "topic_label": "AI Infrastructure & Compute",
           "year": 2024,
           "month": 1,
-          "cnt": 49,
+          "cnt": 42,
           "mom_delta": null
         },
         {
           "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 2,
+          "cnt": 55,
+          "mom_delta": 13
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 3,
+          "cnt": 58,
+          "mom_delta": 3
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 4,
+          "cnt": 62,
+          "mom_delta": 4
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 5,
+          "cnt": 52,
+          "mom_delta": -10
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 6,
+          "cnt": 46,
+          "mom_delta": -6
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 7,
+          "cnt": 68,
+          "mom_delta": 22
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 8,
+          "cnt": 64,
+          "mom_delta": -4
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 9,
+          "cnt": 53,
+          "mom_delta": -11
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 10,
+          "cnt": 67,
+          "mom_delta": 14
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 11,
+          "cnt": 65,
+          "mom_delta": -2
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2024,
+          "month": 12,
+          "cnt": 62,
+          "mom_delta": -3
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 1,
+          "cnt": 65,
+          "mom_delta": 3
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 2,
+          "cnt": 48,
+          "mom_delta": -17
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 3,
+          "cnt": 66,
+          "mom_delta": 18
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 4,
+          "cnt": 78,
+          "mom_delta": 12
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 5,
+          "cnt": 79,
+          "mom_delta": 1
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 6,
+          "cnt": 60,
+          "mom_delta": -19
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 7,
+          "cnt": 64,
+          "mom_delta": 4
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 8,
+          "cnt": 58,
+          "mom_delta": -6
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 9,
+          "cnt": 67,
+          "mom_delta": 9
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 10,
+          "cnt": 69,
+          "mom_delta": 2
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 11,
+          "cnt": 65,
+          "mom_delta": -4
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "year": 2025,
+          "month": 12,
+          "cnt": 57,
+          "mom_delta": -8
+        },
+        {
+          "topic_label": "Clinical Medicine & Genomics",
+          "year": 2024,
+          "month": 1,
+          "cnt": 49,
+          "mom_delta": null
+        },
+        {
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 2,
           "cnt": 31,
           "mom_delta": -18
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 3,
           "cnt": 44,
           "mom_delta": 13
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 4,
           "cnt": 35,
           "mom_delta": -9
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 5,
           "cnt": 40,
           "mom_delta": 5
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 6,
           "cnt": 43,
           "mom_delta": 3
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 7,
           "cnt": 26,
           "mom_delta": -17
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 8,
           "cnt": 37,
           "mom_delta": 11
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 9,
           "cnt": 41,
           "mom_delta": 4
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 10,
           "cnt": 30,
           "mom_delta": -11
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 11,
           "cnt": 41,
           "mom_delta": 11
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2024,
           "month": 12,
           "cnt": 35,
           "mom_delta": -6
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 1,
           "cnt": 29,
           "mom_delta": -6
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 2,
           "cnt": 39,
           "mom_delta": 10
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 3,
           "cnt": 46,
           "mom_delta": 7
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 4,
           "cnt": 42,
           "mom_delta": -4
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 5,
           "cnt": 46,
           "mom_delta": 4
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 6,
           "cnt": 40,
           "mom_delta": -6
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 7,
           "cnt": 32,
           "mom_delta": -8
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 8,
           "cnt": 50,
           "mom_delta": 18
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 9,
           "cnt": 40,
           "mom_delta": -10
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 10,
           "cnt": 38,
           "mom_delta": -2
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 11,
           "cnt": 47,
           "mom_delta": 9
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "year": 2025,
           "month": 12,
           "cnt": 50,
           "mom_delta": 3
         },
         {
-          "topic_label": "Antitrust & Regulatory Policy",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "year": 2024,
           "month": 1,
-          "cnt": 19,
+          "cnt": 37,
           "mom_delta": null
         },
         {
-          "topic_label": "Antitrust & Regulatory Policy",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "year": 2024,
           "month": 2,
-          "cnt": 14,
-          "mom_delta": -5
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 3,
-          "cnt": 28,
-          "mom_delta": 14
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 4,
-          "cnt": 16,
-          "mom_delta": -12
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 5,
           "cnt": 20,
-          "mom_delta": 4
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 6,
-          "cnt": 23,
-          "mom_delta": 3
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 7,
-          "cnt": 14,
-          "mom_delta": -9
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 8,
-          "cnt": 13,
-          "mom_delta": -1
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 9,
-          "cnt": 13,
-          "mom_delta": 0
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 10,
-          "cnt": 25,
-          "mom_delta": 12
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 11,
-          "cnt": 30,
-          "mom_delta": 5
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2024,
-          "month": 12,
-          "cnt": 19,
-          "mom_delta": -11
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 1,
-          "cnt": 25,
-          "mom_delta": 6
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 2,
-          "cnt": 25,
-          "mom_delta": 0
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 3,
-          "cnt": 20,
-          "mom_delta": -5
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 4,
-          "cnt": 22,
-          "mom_delta": 2
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 5,
-          "cnt": 12,
-          "mom_delta": -10
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 6,
-          "cnt": 17,
-          "mom_delta": 5
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 7,
-          "cnt": 22,
-          "mom_delta": 5
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 8,
-          "cnt": 21,
-          "mom_delta": -1
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 9,
-          "cnt": 19,
-          "mom_delta": -2
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 10,
-          "cnt": 15,
-          "mom_delta": -4
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 11,
-          "cnt": 14,
-          "mom_delta": -1
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "year": 2025,
-          "month": 12,
-          "cnt": 24,
-          "mom_delta": 10
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "year": 2024,
-          "month": 1,
-          "cnt": 93,
-          "mom_delta": null
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "year": 2024,
-          "month": 2,
-          "cnt": 99,
-          "mom_delta": 6
+          "mom_delta": -17
         }
       ],
-      "elapsed_ms": 2.824,
+      "elapsed_ms": 2.998,
       "result_csv": "data/hadoop_ecosystem/hive/results/mom_volume_change.csv"
     },
     {
@@ -530,186 +530,186 @@
       "sample_rows": [
         {
           "topic_label": "AI Infrastructure & Compute",
+          "publication": "TechCrunch",
+          "avg_sent": 0.5878,
+          "rnk": 1
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "publication": "Associated Press",
+          "avg_sent": 0.5831,
+          "rnk": 2
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "publication": "Reuters",
+          "avg_sent": 0.5718,
+          "rnk": 3
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "publication": "Financial Times",
+          "avg_sent": 0.5709,
+          "rnk": 4
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "publication": "The Wall Street Journal",
+          "avg_sent": 0.569,
+          "rnk": 5
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "publication": "The New York Times",
+          "avg_sent": 0.5667,
+          "rnk": 6
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "publication": "Bloomberg",
+          "avg_sent": 0.5484,
+          "rnk": 7
+        },
+        {
+          "topic_label": "AI Infrastructure & Compute",
+          "publication": "BBC News",
+          "avg_sent": 0.5429,
+          "rnk": 8
+        },
+        {
+          "topic_label": "Clinical Medicine & Genomics",
           "publication": "The New York Times",
           "avg_sent": 0.5745,
           "rnk": 1
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "publication": "Financial Times",
           "avg_sent": 0.569,
           "rnk": 2
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "publication": "TechCrunch",
           "avg_sent": 0.568,
           "rnk": 3
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "publication": "Associated Press",
           "avg_sent": 0.5609,
           "rnk": 4
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "publication": "Bloomberg",
           "avg_sent": 0.5608,
           "rnk": 5
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "publication": "BBC News",
           "avg_sent": 0.5582,
           "rnk": 6
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "publication": "Reuters",
           "avg_sent": 0.5501,
           "rnk": 7
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "publication": "The Wall Street Journal",
           "avg_sent": 0.523,
           "rnk": 8
         },
         {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "publication": "The Wall Street Journal",
-          "avg_sent": 0.0172,
-          "rnk": 1
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "publication": "Associated Press",
-          "avg_sent": 0.0009,
-          "rnk": 2
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "publication": "TechCrunch",
-          "avg_sent": 0.0008,
-          "rnk": 3
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "publication": "Bloomberg",
-          "avg_sent": -0.0132,
-          "rnk": 4
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "publication": "BBC News",
-          "avg_sent": -0.0409,
-          "rnk": 5
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "publication": "Reuters",
-          "avg_sent": -0.051,
-          "rnk": 6
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "publication": "Financial Times",
-          "avg_sent": -0.0534,
-          "rnk": 7
-        },
-        {
-          "topic_label": "Antitrust & Regulatory Policy",
-          "publication": "The New York Times",
-          "avg_sent": -0.0723,
-          "rnk": 8
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "publication": "Financial Times",
-          "avg_sent": 0.3751,
-          "rnk": 1
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "publication": "Associated Press",
-          "avg_sent": 0.3666,
-          "rnk": 2
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "publication": "TechCrunch",
-          "avg_sent": 0.3534,
-          "rnk": 3
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "publication": "Bloomberg",
-          "avg_sent": 0.3382,
-          "rnk": 4
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "publication": "Reuters",
-          "avg_sent": 0.3261,
-          "rnk": 5
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "publication": "BBC News",
-          "avg_sent": 0.3162,
-          "rnk": 6
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "publication": "The New York Times",
-          "avg_sent": 0.312,
-          "rnk": 7
-        },
-        {
-          "topic_label": "Clinical Medicine & Genomics",
-          "publication": "The Wall Street Journal",
-          "avg_sent": 0.3089,
-          "rnk": 8
-        },
-        {
-          "topic_label": "Monetary Policy & Markets",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "publication": "TechCrunch",
           "avg_sent": 0.802,
           "rnk": 1
         },
         {
-          "topic_label": "Monetary Policy & Markets",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "publication": "Reuters",
           "avg_sent": 0.7971,
           "rnk": 2
         },
         {
-          "topic_label": "Monetary Policy & Markets",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "publication": "Associated Press",
           "avg_sent": 0.7908,
           "rnk": 3
         },
         {
-          "topic_label": "Monetary Policy & Markets",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "publication": "The New York Times",
           "avg_sent": 0.7906,
           "rnk": 4
         },
         {
-          "topic_label": "Monetary Policy & Markets",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "publication": "Bloomberg",
           "avg_sent": 0.7887,
           "rnk": 5
         },
         {
-          "topic_label": "Monetary Policy & Markets",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "publication": "Financial Times",
           "avg_sent": 0.7803,
           "rnk": 6
+        },
+        {
+          "topic_label": "Grid Decarbonization & Clean Energy",
+          "publication": "BBC News",
+          "avg_sent": 0.7767,
+          "rnk": 7
+        },
+        {
+          "topic_label": "Grid Decarbonization & Clean Energy",
+          "publication": "The Wall Street Journal",
+          "avg_sent": 0.7676,
+          "rnk": 8
+        },
+        {
+          "topic_label": "Markets, Politics & Regulation",
+          "publication": "Financial Times",
+          "avg_sent": 0.3751,
+          "rnk": 1
+        },
+        {
+          "topic_label": "Markets, Politics & Regulation",
+          "publication": "Associated Press",
+          "avg_sent": 0.3666,
+          "rnk": 2
+        },
+        {
+          "topic_label": "Markets, Politics & Regulation",
+          "publication": "TechCrunch",
+          "avg_sent": 0.3534,
+          "rnk": 3
+        },
+        {
+          "topic_label": "Markets, Politics & Regulation",
+          "publication": "Bloomberg",
+          "avg_sent": 0.3382,
+          "rnk": 4
+        },
+        {
+          "topic_label": "Markets, Politics & Regulation",
+          "publication": "Reuters",
+          "avg_sent": 0.3261,
+          "rnk": 5
+        },
+        {
+          "topic_label": "Markets, Politics & Regulation",
+          "publication": "BBC News",
+          "avg_sent": 0.3162,
+          "rnk": 6
         }
       ],
-      "elapsed_ms": 3.756,
+      "elapsed_ms": 3.584,
       "result_csv": "data/hadoop_ecosystem/hive/results/sentiment_ranking.csv"
     },
     {
@@ -731,32 +731,32 @@
           "total_keyword_freq": 37871
         },
         {
-          "topic_label": "Clinical Medicine & Genomics",
+          "topic_label": "Markets, Politics & Regulation",
           "matched_terms": 12,
           "total_keyword_freq": 36616
         },
         {
-          "topic_label": "Quantum Physics & Advanced Materials",
+          "topic_label": "AI Infrastructure & Compute",
           "matched_terms": 12,
           "total_keyword_freq": 23233
         },
         {
-          "topic_label": "AI Infrastructure & Compute",
+          "topic_label": "Clinical Medicine & Genomics",
           "matched_terms": 12,
           "total_keyword_freq": 19003
         },
         {
-          "topic_label": "Monetary Policy & Markets",
+          "topic_label": "Grid Decarbonization & Clean Energy",
           "matched_terms": 12,
           "total_keyword_freq": 17405
         },
         {
-          "topic_label": "Antitrust & Regulatory Policy",
+          "topic_label": "Quantum Physics & Advanced Materials",
           "matched_terms": 12,
           "total_keyword_freq": 10027
         }
       ],
-      "elapsed_ms": 1.021,
+      "elapsed_ms": 1.189,
       "result_csv": "data/hadoop_ecosystem/hive/results/topic_term_join.csv"
     },
     {
@@ -776,7 +776,7 @@
           "mean_sentiment": 0.4689
         }
       ],
-      "elapsed_ms": 0.554,
+      "elapsed_ms": 0.56,
       "result_csv": "data/hadoop_ecosystem/hive/results/partition_pruned_month.csv"
     }
   ]

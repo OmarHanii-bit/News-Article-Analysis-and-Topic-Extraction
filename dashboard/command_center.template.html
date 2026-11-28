@@ -1030,7 +1030,7 @@
     const terms = topic.terms.slice(0,6).map(x => esc(x)).join(" · ");
     tip.innerHTML =
       '<div class="tt-title">' + esc(topic.label) + '</div>' +
-      '<div class="tt-sub">' + esc(topic.corpus === "reuters" ? "Reuters wire · auto-derived: " + topic.raw_label : "Synthetic benchmark · curated label") + '</div>' +
+      '<div class="tt-sub">' + esc(topic.corpus === "reuters" ? "Reuters wire · auto-derived: " + topic.raw_label : "Synthetic benchmark · majority-category label") + '</div>' +
       '<div class="tt-row"><span>Volume</span><b>' + fmt(topic.volume) + '</b></div>' +
       '<div class="tt-row"><span>Share of corpus</span><b>' + topic.share.toFixed(1) + '%</b></div>' +
       '<div class="tt-row"><span>Mean sentiment</span><b style="color:' + SENT_COLOR[topic.bucket] + '">' + (topic.sentiment>=0?"+":"") + topic.sentiment.toFixed(3) + '</b></div>' +

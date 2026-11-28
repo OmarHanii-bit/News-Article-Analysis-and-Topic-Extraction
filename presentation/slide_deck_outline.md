@@ -71,7 +71,7 @@
   - **Oozie:** Workflow + coordinator DAG (`sqoop` $\rightarrow$ `pig` $\rightarrow$ `hive` $\rightarrow$ `spark` $\rightarrow$ `shell`); final status SUCCEEDED, 5/5 actions.
   - **ZooKeeper:** 11 znodes (6 ephemeral) for leader election, distributed config and locks; 3 watches fired.
   - **Cluster Computing (YARN):** CapacityScheduler queues sized from measured on-disk volume; `core-site`/`hdfs-site`/`yarn-site`/`mapred-site` XML emitted.
-- **Verification:** the 9-module Hadoop ecosystem stack, 0 failures in the verified 7.21 s run (the notebook records a separate 11.13 s run); 80 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/`.
+- **Verification:** the 9-module Hadoop ecosystem stack, 0 failures in the verified 4.28 s run; 77 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/`.
 
 ### Slide 6: Distributed In-Memory Processing: Apache Spark Engine
 - **Speaker:** Yasmine Mohamed (PySpark Engineer)
@@ -84,7 +84,7 @@
 ### Slide 7: Lakehouse Parquet Storage & Partitioning Strategy
 - **Speaker:** Yasmine Mohamed (PySpark Engineer)
 - **Core Headings:**
-  - Columnar compression: Snappy-compressed Parquet yielding ~92% storage reduction over raw CSV (92.5% in the artifacts).
+  - Columnar compression: Snappy-compressed Parquet yielding ~92.6% storage reduction over raw CSV (92.58% in the artifacts).
   - Two-level partitioning scheme: `partitionBy("year", "month")` enabling partition pruning during analytical time-slice scans.
   - Cross-platform fault-tolerant writing: native Hadoop FileSystem with PyArrow fallback for Windows environments.
 
@@ -102,15 +102,15 @@
 - **Core Headings:**
   - Unsupervised Bayesian topic modeling via PySpark MLlib `LDA`.
   - Online Variational Bayes optimizer for distributed batch scalability.
-  - Discovered Latent Topics ($k=6$):
-    - Topic 0: Clinical Medicine & Targeted Oncology
-    - Topic 1: Clean Energy & Grid Decarbonization
-    - Topic 2: Quantum Computing & Advanced Materials
-    - Topic 3: Global Monetary Policy & Capital Markets
-    - Topic 4: Enterprise Throughput & Benchmark Analytics
-    - Topic 5: AI Infrastructure & Large Model Clusters
+  - Discovered Latent Topics ($k=6$; five dominant clusters + one unused component):
+    - Topic 0: Clinical Medicine & Genomics — 951 articles (15.8%)
+    - Topic 1: Grid Decarbonization & Clean Energy — 723 articles (12.1%)
+    - Topic 2: Quantum Physics & Advanced Materials — 470 articles (7.8%)
+    - Topic 3: Markets, Politics & Regulation — 2,386 articles (39.8%; Business + Politics merge)
+    - Topic 4: Unused — no dominant assignments
+    - Topic 5: AI Infrastructure & Compute — 1,470 articles (24.5%)
   - Document Dominant Topic Assignment with Dirichlet posterior probability confidence scores.
-  - **Corpus-Agnostic Labelling:** curated labels for the graded synthetic benchmark, auto-derived labels (top learned terms) for real corpora.
+  - **Semantic Labelling:** LDA topic indices are not stable across runs, so each cluster is named **post-hoc from its majority `category`** (`metadata.label_diagnostics` records the majority and share). The clustering itself remains fully unsupervised; real corpora without a category column use auto-derived labels from each topic's top terms.
   - **Selection Evidence Figure:** the generator embeds `visualizations/lda_k_sweep.png` here when available. Speaker caption: "k sweep (438 terms): statistical knee selected k=3; production retains k=6 for interpretability/cross-corpus comparability." See `src/lda_topic_selection.py` and `data/lda_k_sweep.json`.
 
 ### Slide 10: Real-World Corpus Validation (Reuters-21578 Wire Archive)
@@ -139,19 +139,19 @@
   - Full-Text Search Index: `{"title": "text", "topic_label": "text"}` for sub-millisecond keyword discovery.
   - MongoDB Aggregation Pipeline demonstration: multi-stage `$match` $\rightarrow$ `$group` $\rightarrow$ `$sort` execution.
 
-### Slide 13: Visual Analytics: Topic Distribution & Publisher Biases
+### Slide 13: Visual Analytics: Topic Distribution & Publisher Coverage
 - **Speaker:** Mohamed Magdi (Visualization Lead)
 - **Core Headings:**
-  - Cross-tabulation heatmap: Publisher Editorial Focus across Topics (Reuters, Bloomberg, WSJ, NYT, TechCrunch, BBC).
-  - Editorial findings: TechCrunch concentrates 41.7% of its sampled coverage in AI Infrastructure & Compute and Quantum Physics (113 + 199 of 748); Bloomberg devotes 11.9% (88/741) and the Financial Times 13.9% (106/765) to Monetary Policy & Markets — computed from data/pipeline_analytics_summary.json publisher_distribution.
+  - Cross-tabulation heatmap: Publisher coverage mix across topics (Reuters, Bloomberg, WSJ, NYT, TechCrunch, BBC).
+  - Honest null result: publishers broadly track the corpus base rates. Every publisher allocates **38.3–41.6%** to Markets, Politics & Regulation and **21.0–26.8%** to AI Infrastructure & Compute; Clinical is 14.5–17.1%, Clean Energy 10.7–13.9% and Quantum 6.8–9.4%. WSJ has the highest AI share (26.8%), Reuters the highest Markets share (41.6%), the FT the highest Clean Energy share (13.9%) and the NYT the highest Quantum share (9.4%). The synthetic generator assigns topic/category independently of publisher, so this is a **null validation check**, not evidence of editorial bias — computed from `data/pipeline_analytics_summary.json` → `publisher_distribution`.
 - **Key Visual:** Side-by-side display of `publisher_topic_heatmap.png` and `topic_volume_distribution.png`.
 
 ### Slide 14: Sentiment Dynamics & Temporal Trajectories
 - **Speaker:** Mohamed Magdi (Visualization Lead)
 - **Core Headings:**
   - Sentiment polarity distribution across topics (VADER compound score).
-  - Regulatory & Antitrust articles exhibit negative mean polarity ($-0.028$), while AI Infrastructure & Cloud Compute trend strongly positive ($+0.558$).
-  - Multi-year temporal trajectories identifying seasonal event surges and regulatory hearing spikes.
+  - **Quantum Physics & Advanced Materials** is the only cluster with negative mean polarity ($-0.028$). **Grid Decarbonization & Clean Energy** is the most positive ($+0.787$), followed by AI Infrastructure ($+0.568$), Clinical Medicine ($+0.558$) and Markets/Politics/Regulation ($+0.337$). This is descriptive separation; no inferential test was run.
+  - Multi-year temporal trajectories are stable by construction (~250 articles/month), so no synthetic event-spike claim is made; the drift monitor validates threshold logic rather than synthetic volatility.
   - Held-out 2024→2025 forecast: naive persistence beat the linear trend (macro MAE 10.03 vs 10.72) — an honest negative result on 24 monthly points; chart `temporal_forecast_evaluation.png`, metrics `data/temporal_forecast_evaluation.json`.
 - **Key Visual:** Display of `temporal_topic_trends.png` and `topic_sentiment_distribution.png`.
 
@@ -159,10 +159,10 @@
 - **Speaker:** Mazen Salem (Benchmarking Lead)
 - **Core Headings:**
   - Comparative execution profiling:
-    - Hadoop ecosystem stack (9 modules): 7.21 s in the verified run (the notebook records a separate 11.13 s run)
-    - MapReduce Tokenization: 3.8 seconds
-    - PySpark Pipeline (6,000 documents, LDA 20 iterations, TF-IDF): ~50 seconds
-    - PySpark Pipeline (10,712 real Reuters documents): ~72 seconds
+    - Hadoop ecosystem stack (9 modules): 4.28 s in the verified run
+    - MapReduce Tokenization: 2,255 terms in ~2.5 s locally
+    - PySpark Pipeline (6,000 documents, LDA 20 iterations, CountVectorizer term counts): 52.08 s
+    - PySpark Pipeline (10,712 real Reuters documents): 68.4 s
     - Parquet Columnar Querying vs. CSV: indicative columnar-scan advantage (not a controlled benchmark)
   - Horizontal scalability projections: projected scale-out model (not measured; pipeline runs `local[*]` on one host).
   - Measured scale benchmark: 50,000 articles at 10,108 rows/s (45 MiB CSV → 7.3 MiB Parquet); labelled linear projection (NOT measured) ~14 s for 143k and ~4.45 min for 2.7M articles. Details in `docs/SCALABILITY_AND_KAGGLE.md`.
@@ -189,7 +189,7 @@
 
 ### Step 0: Hadoop Ecosystem Stack Execution (1 min) - Member 2 (Mohammed Hossam)
 - Command: `python src/hadoop/run_hadoop_ecosystem.py`
-- Highlight: Watch the 9-module Hadoop ecosystem stack run in order (HDFS format & corpus landing, YARN capacity plan, ZooKeeper election, Sqoop import/export, Flume streaming, HBase load, Hive HiveQL rollups, Pig Latin ETL, Oozie DAG). Point to the 80 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/hadoop_cli_commands.md`.
+- Highlight: Watch the 9-module Hadoop ecosystem stack run in order (HDFS format & corpus landing, YARN capacity plan, ZooKeeper election, Sqoop import/export, Flume streaming, HBase load, Hive HiveQL rollups, Pig Latin ETL, Oozie DAG). Point to the 77 production-equivalent `hdfs dfs` commands emitted by the local simulation in `data/hadoop_ecosystem/hadoop_cli_commands.md`.
 
 ### Step 1: Terminal MapReduce Execution (1 min) - Member 2 (Mohammed Hossam)
 - Command: `python src/mapreduce/run_mapreduce_local.py`
@@ -210,7 +210,7 @@
 
 ---
 
-## 🛡️ Technical Q&A Defense Cheat Sheet (12 Comprehensive Answers)
+## 🛡️ Technical Q&A Defense Cheat Sheet (16 Comprehensive Answers)
 
 ### Q1: Why use Hadoop MapReduce when Apache Spark is significantly faster?
 **Answer (Member 2 - Mohammed Hossam):**  
@@ -218,7 +218,7 @@
 
 ### Q2: How did you select $k=6$ as the number of topics for Latent Dirichlet Allocation?
 **Answer (Member 4 - Shehab Osama):**  
-"`src/lda_topic_selection.py` swept $k \in [3,12]$ over the same 438-term feature space, recording log perplexity, UMass-style document co-occurrence coherence and topic distinctness (`data/lda_k_sweep.json`). Perplexity was non-monotonic, so it was reported but not decisive; a statistical knee rule (marginal coherence gain <5% of the coherence span) selected $k=3$. Mean UMass coherence was actually best at $k=5$ ($-0.3270$) and $k=10$ ($-0.3588$) versus $k=6$ ($-0.3668$). Production retains $k=6$ because the curated six-domain synthetic benchmark and cross-corpus comparability require a fixed $k$, and the topic labels are interpretable at $k=6$. This is an engineering/interpretability choice, not a proven optimum; a 5,000-term rerun is future work. No alternative coherence variant was computed."
+"`src/lda_topic_selection.py` swept $k \in [3,12]$ over the same 438-term feature space, recording log perplexity, UMass-style document co-occurrence coherence and topic distinctness (`data/lda_k_sweep.json`). Perplexity was non-monotonic, so it was reported but not decisive; a statistical knee rule (marginal coherence gain <5% of the coherence span) selected $k=3$. Mean UMass coherence was actually best at $k=5$ ($-0.3270$) and $k=10$ ($-0.3588$) versus $k=6$ ($-0.3668$). Production retains $k=6$ because the six-domain synthetic benchmark and cross-corpus comparability require a fixed $k$, and the topic labels are interpretable at $k=6$. This is an engineering/interpretability choice, not a proven optimum; a 5,000-term rerun is future work. No alternative coherence variant was computed."
 
 ### Q3: What is the mathematical foundation of Latent Dirichlet Allocation?
 **Answer (Member 4 - Shehab Osama):**  
@@ -261,7 +261,7 @@ In Spark MLlib, this is solved via the Online Variational Bayes algorithm (Hoffm
 
 ### Q11: How do you prove the pipeline is not over-fit to the synthetic demo data?
 **Answer (Member 1 - Omar Hani):**  
-"We ran the exact same PySpark pipeline, unchanged, against a genuine third-party corpus — the NLTK Reuters-21578 news wire archive — ingesting 10,712 real full-text articles. Because the synthetic benchmark maintains its curated topic labels for grading stability, the real run uses `--auto-labels`, deriving each topic label from the model's own top-weighted terms (e.g., 'Trade / Japan / Market'). The real lakehouse is written to `data/real_news/` and cross-validated by our automated tests, which assert internal consistency between the Parquet row count and the JSON metadata."
+"We ran the exact same PySpark pipeline, unchanged, against a genuine third-party corpus — the NLTK Reuters-21578 news wire archive — ingesting 10,712 real full-text articles. The synthetic benchmark names each cluster from its majority `category` (post-hoc naming only; the clustering itself remains unsupervised), while the real run uses `--auto-labels`, deriving each topic label from the model's own top-weighted terms (e.g., 'Trade / Japan / Market'). The real lakehouse is written to `data/real_news/` and cross-validated by our automated tests, which assert internal consistency between the Parquet row count and the JSON metadata."
 
 ### Q12: What is the primary business value of this Big Data architecture to an enterprise?
 **Answer (Member 1 - Omar Hani):**  
@@ -273,7 +273,7 @@ In Spark MLlib, this is solved via the Online Variational Bayes algorithm (Hoffm
 
 ### Q14: How does the system detect Concept Drift when news cycles evolve over time?
 **Answer (Member 4 - Shehab Osama):**  
-"We implemented an automated MLOps monitoring layer (`src/topic_drift_monitor.py`) tracking quarterly Jensen-Shannon Divergence (JSD) and Population Stability Index (PSI). Across all 8 quarters (2024-Q1 through 2025-Q4), JSD remained $\le 0.038$ and PSI $\le 0.011$ against global baseline. If JSD exceeds $0.15$ or PSI exceeds $0.25$, an automated alert fires recommending model retraining."
+"We implemented an automated MLOps monitoring layer (`src/topic_drift_monitor.py`) tracking quarterly Jensen-Shannon Divergence (JSD) and Population Stability Index (PSI). Across all 8 quarters (2024-Q1 through 2025-Q4), JSD remained $\le 0.0375$ and PSI $\le 0.0113$ against global baseline. If JSD exceeds $0.15$ or PSI exceeds $0.25$, an automated alert fires recommending model retraining."
 
 ### Q15: How does this architecture handle high-velocity streaming data versus batch runs?
 **Answer (Member 3 - Yasmine Mohamed):**  

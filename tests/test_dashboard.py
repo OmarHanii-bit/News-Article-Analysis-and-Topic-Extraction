@@ -50,7 +50,7 @@ class TestOfflineDashboardBuilder(unittest.TestCase):
         frame, summary, figures = build_figures(
             CORPORA["synthetic"]["parquet"], CORPORA["synthetic"]["summary"])
         self.assertEqual(len(figures), 7)
-        self.assertEqual(summary["metadata"]["label_mode"], "curated")
+        self.assertEqual(summary["metadata"]["label_mode"], "majority-category")
         self.assertIn("topic_label", frame.columns)
         self.assertIn("sentiment_polarity", frame.columns)
 

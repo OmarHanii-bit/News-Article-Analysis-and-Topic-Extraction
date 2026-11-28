@@ -1,7 +1,7 @@
 {
   "component": "Hadoop Ecosystem \u2014 full stack execution",
-  "executed_at": "2026-11-25T10:22:22",
-  "elapsed_seconds": 5.14,
+  "executed_at": "2026-11-27T10:11:23",
+  "elapsed_seconds": 4.28,
   "services_executed": [
     "hdfs",
     "cluster",
@@ -32,128 +32,128 @@
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=1/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17549,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=1/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17558,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=10/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17411,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=10/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17422,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=11/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17708,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=11/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17723,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=12/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17417,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=12/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17428,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=2/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 16870,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=2/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 16881,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=3/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 18137,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=3/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 18153,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=4/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17804,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=4/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17817,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=5/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17478,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=5/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17491,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=6/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17282,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=6/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17294,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=7/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17577,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=7/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17587,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=8/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17412,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=8/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17422,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2024/month=9/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17396,
+          "hdfs_path": "/user/news/lakehouse/year=2024/month=9/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17413,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=1/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17560,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=1/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17576,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=10/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17810,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=10/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17821,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=11/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17519,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=11/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17527,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=12/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17956,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=12/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17965,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=2/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17257,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=2/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17268,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=3/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 18559,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=3/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 18570,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=4/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 18199,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=4/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 18210,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=5/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 18190,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=5/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 18200,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=6/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17874,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=6/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17892,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=7/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17355,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=7/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17363,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=8/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 18118,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=8/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 18129,
           "blocks": 1
         },
         {
-          "hdfs_path": "/user/news/lakehouse/year=2025/month=9/74511caf2b844ba99a2f9d445a8a3959-0.parquet",
-          "bytes": 17924,
+          "hdfs_path": "/user/news/lakehouse/year=2025/month=9/2aafed3c5f1b4ed8bcf4720b8b0675f7-0.parquet",
+          "bytes": 17934,
           "blocks": 1
         },
         {
           "hdfs_path": "/user/news/raw/pipeline_analytics_summary.json",
-          "bytes": 37301,
+          "bytes": 38672,
           "blocks": 1
         }
       ],
@@ -165,8 +165,8 @@
         "total_files": 27,
         "total_directories": 33,
         "total_blocks": 32,
-        "logical_bytes": 6234548,
-        "physical_bytes_with_replication": 18703644,
+        "logical_bytes": 6236201,
+        "physical_bytes_with_replication": 18708603,
         "under_replicated_blocks": 0,
         "missing_blocks": 0,
         "datanodes": [
@@ -174,7 +174,7 @@
             "datanode": "datanode_1",
             "role": "DataNode",
             "capacity_bytes": 524288000,
-            "used_bytes": 6234548,
+            "used_bytes": 6236201,
             "blocks_stored": 32,
             "status": "LIVE"
           },
@@ -182,7 +182,7 @@
             "datanode": "datanode_2",
             "role": "DataNode",
             "capacity_bytes": 524288000,
-            "used_bytes": 6234548,
+            "used_bytes": 6236201,
             "blocks_stored": 32,
             "status": "LIVE"
           },
@@ -190,7 +190,7 @@
             "datanode": "datanode_3",
             "role": "DataNode",
             "capacity_bytes": 524288000,
-            "used_bytes": 6234548,
+            "used_bytes": 6236201,
             "blocks_stored": 32,
             "status": "LIVE"
           }
@@ -243,18 +243,18 @@
         }
       },
       "capacity_plan": {
-        "measured_at": "2026-11-25T10:22:18",
+        "measured_at": "2026-11-27T10:11:19",
         "raw_csv_bytes": 5721333,
         "mapreduce_tsv_bytes": 51552,
-        "parquet_bytes": 424362,
+        "parquet_bytes": 424644,
         "parquet_files": 24,
-        "logical_bytes": 6197247,
+        "logical_bytes": 6197529,
         "logical_mb": 5.91,
         "block_size_mb": 128,
         "total_blocks": 1,
         "replication_factor": 3,
-        "replicated_bytes": 18591741,
-        "recommended_hdfs_capacity_bytes": 24169263,
+        "replicated_bytes": 18592587,
+        "recommended_hdfs_capacity_bytes": 24170363,
         "recommended_hdfs_capacity_gb": 0.02,
         "worker_memory_gb": 96,
         "yarn_available_memory_gb": 76,
@@ -291,7 +291,7 @@
       "rdbms": {
         "engine": "sqlite3 (emulating MySQL news @ jdbc:mysql://rdbms-host:3306/news)",
         "db_path": "data/hadoop_ecosystem/sqoop/news_staging.db",
-        "size_bytes": 2002944
+        "size_bytes": 2007040
       },
       "tables": [
         "publishers",
@@ -315,13 +315,13 @@
       "events_ingested": 500,
       "bytes_ingested": 103790,
       "hdfs_stream_paths": [
-        "/user/news/stream/20261125/FlumeData.20261125.00000.json",
-        "/user/news/stream/20261125/FlumeData.20261125.00001.json",
-        "/user/news/stream/20261125/FlumeData.20261125.00002.json",
-        "/user/news/stream/20261125/FlumeData.20261125.00003.json",
-        "/user/news/stream/20261125/FlumeData.20261125.00004.json"
+        "/user/news/stream/20261127/FlumeData.20261127.00000.json",
+        "/user/news/stream/20261127/FlumeData.20261127.00001.json",
+        "/user/news/stream/20261127/FlumeData.20261127.00002.json",
+        "/user/news/stream/20261127/FlumeData.20261127.00003.json",
+        "/user/news/stream/20261127/FlumeData.20261127.00004.json"
       ],
-      "events_per_second": 2539.77,
+      "events_per_second": 2637.42,
       "channel_capacity": 1000,
       "out_dir": "data/hadoop_ecosystem/flume"
     },
@@ -355,23 +355,23 @@
         {
           "row_key": "00_ART_100192",
           "title": "TechCrunch Analysis: Legislative Reform and Bipartisan Coalition in Focus",
-          "topic_label": "Clinical Medicine & Genomics",
+          "topic_label": "Markets, Politics & Regulation",
           "sentiment_polarity": 0.4018999934196472
         },
         {
           "row_key": "00_ART_100219",
           "title": "Special Report: Emerging Trends in Sovereign Debt and Market Dynamics",
-          "topic_label": "Clinical Medicine & Genomics",
+          "topic_label": "Markets, Politics & Regulation",
           "sentiment_polarity": 0.025800000876188278
         },
         {
           "row_key": "00_ART_100276",
           "title": "Breakthrough Developments in Equity Markets Stir Industry Debate",
-          "topic_label": "Clinical Medicine & Genomics",
+          "topic_label": "Markets, Politics & Regulation",
           "sentiment_polarity": -0.3181999921798706
         }
       ],
-      "most_common_topic": "Clinical Medicine & Genomics",
+      "most_common_topic": "Markets, Politics & Regulation",
       "single_row": {
         "cf_meta": {
           "title": "Special Report: Emerging Trends in Quantum Computing and Market Dynamics",
@@ -383,7 +383,7 @@
         },
         "cf_nlp": {
           "dominant_topic": 2,
-          "topic_label": "Antitrust & Regulatory Policy",
+          "topic_label": "Quantum Physics & Advanced Materials",
           "topic_confidence": 0.9892488121986389,
           "sentiment_polarity": 0.07720000296831131,
           "clean_word_count": 70
@@ -402,7 +402,7 @@
             "cf_raw"
           ],
           "num_families": 3,
-          "created": "2026-11-25T10:22:19",
+          "created": "2026-11-27T10:11:20",
           "row_count": 2000,
           "families": [
             {
@@ -495,7 +495,7 @@
         "term_counts": 2255,
         "topics": 72
       },
-      "top_topic_by_volume": "Clinical Medicine & Genomics",
+      "top_topic_by_volume": "Markets, Politics & Regulation",
       "hive_ddl": "data/hadoop_ecosystem/hive/news_analytics.hql",
       "topic_term_ddl": "data/hadoop_ecosystem/hive/topic_term_hive.hql",
       "real_cluster_commands": "data/hadoop_ecosystem/hive/real_cluster_commands.md",

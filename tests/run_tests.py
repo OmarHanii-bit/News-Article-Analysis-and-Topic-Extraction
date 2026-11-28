@@ -48,7 +48,7 @@ def run_all_tests():
               f"artifacts are absent). Run `python run_all.py` to materialize them.")
 
     # Guard against discovery regressions AND against mass-skipping: require the
-    # historical baseline (53) of tests to actually EXECUTE, not merely be found.
+    # historical baseline (118) of tests to actually EXECUTE, not merely be found.
     if executed < MIN_EXPECTED_TESTS:
         print(f"[FAIL] Only {executed} tests executed (discovered {result.testsRun}, "
               f"skipped {len(result.skipped)}); expected at least {MIN_EXPECTED_TESTS} "

@@ -118,12 +118,14 @@ class NewsMongoManager:
 
         # 1. Prepare Topic Definitions
         topic_docs = []
+        topic_labels = summary_data.get("metadata", {}).get("topic_labels", {})
         for topic_name, topic_info in summary_data.get("topics", {}).items():
             doc = {
                 "topic_key": topic_name,
                 "topic_id": topic_info["topic_id"],
                 "terms": topic_info["terms"],
                 "weights": topic_info["weights"],
+                "label": topic_labels.get(str(topic_info["topic_id"]), topic_info["label_summary"]),
                 "label_summary": topic_info["label_summary"],
                 "created_at": datetime.now(timezone.utc)
             }

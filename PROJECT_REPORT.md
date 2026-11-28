@@ -32,7 +32,7 @@
 | **4. Data Processing Pipeline** | 2 Pts | Practical implementation of text cleaning, schema enforcement, filtering, distributed PySpark pipelines, MapReduce streaming, the 9-module Hadoop ecosystem stack, inline-commented and reproducible | **2.0 / 2.0** |
 | **5. Analytical Depth & Evaluation** | 2 Pts | Unsupervised ML (LDA Bayesian topic models), CountVectorizer/TF-IDF features, VADER sentiment scoring, publisher editorial cross-tabs, temporal trajectories, held-out 2024→2025 forecast evaluation, k-sweep diagnostics | **2.0 / 2.0** |
 | **6. Visualization & Actionable Insights** | 1 Pt | 17 high-resolution charts (incl. k-sweep, forecast, supervised and drift diagnostics), 10-view interactive Streamlit dashboard with "Insights & What Next", dual self-contained HTML dashboards with decision panels, 3 concrete operational/managerial recommendations | **1.0 / 1.0** |
-| **7. Presentation & Teamwork** | 1 Pt | balanced 7-member speaking coverage (lead presents opening/closing), 17 structured slides, live demo runbook, 12 technical Q&A defense questions with model answers | **1.0 / 1.0** |
+| **7. Presentation & Teamwork** | 1 Pt | balanced 7-member speaking coverage (lead presents opening/closing), 17 structured slides, live demo runbook, 16 technical Q&A defense questions with model answers (12 reproduced in §7.4) | **1.0 / 1.0** |
 | **TOTAL SCORE** | **10 Pts** | **Comprehensive Full-Fulfillment Across All Rubric Dimensions** | **10.0 / 10.0 (self-assessment target; pending instructor evaluation)** |
 
 ---
@@ -47,7 +47,7 @@ Manual human synthesis is physically impossible at this velocity. Organizations 
 ### 1.2 Scale Dimensions: The 5Vs of Big News Data
 The news text domain embodies all five canonical dimensions of Big Data:
 
-1. **Volume:** Modern digital news repositories span hundreds of gigabytes to terabytes of raw unstructured prose. While tabular financial summaries are lightweight, full-text journalism with multi-paragraph reporting rapidly accumulates millions of documents. Our project processes a curated corpus of 6,000 full-text articles (yielding over 500,000 tokens) with architectural scalability designed to ingest the complete 2.7-million-article Kaggle "All the News 2.0" corpus.
+1. **Volume:** Modern digital news repositories span hundreds of gigabytes to terabytes of raw unstructured prose. While tabular financial summaries are lightweight, full-text journalism with multi-paragraph reporting rapidly accumulates millions of documents. Our project processes a synthetic benchmark corpus of 6,000 full-text articles (yielding over 500,000 tokens) with architectural scalability designed to ingest the complete 2.7-million-article Kaggle "All the News 2.0" corpus.
 2. **Velocity:** News wires publish continuously at high frequency. Breaking market bulletins, geopolitical escalations, and earnings releases arrive with second-level timestamps. A processing architecture must support both high-throughput distributed batch analysis and sub-minute streaming alerting.
 3. **Variety:** News corpora are inherently heterogeneous. They combine unstructured free-text prose, semi-structured author bylines and publication metadata, deeply nested HTML tags, URL fragments, escaping entities, and categorical taxonomy labels.
 4. **Veracity:** Web-scraped and wire-transmitted news data is riddled with noise: missing authors, broken unicode characters, advertisement disclaimers, editorial correction notices, and subjective reporting bias. The ingestion engine must enforce schema contracts and execute robust distributed data cleansing.
@@ -81,7 +81,7 @@ The following design targets frame the architecture (they are targets for the pr
 | Stakeholder | Primary Artifact | Decision Supported |
 | :--- | :--- | :--- |
 | Quantitative Portfolio Managers & Hedge Funds | Topic-velocity and sentiment dashboards (`src/dashboard.py`, KPI cards + temporal trajectories) | Macro exposure and hedging decisions |
-| Regulatory Compliance Officers | Antitrust/regulatory topic trajectories and alerts (`visualizations/temporal_topic_trends.png`, MongoDB publisher analytics) | Early warning on litigation and policy shifts |
+| Regulatory Compliance Officers | Markets, Politics & Regulation topic trajectories and alerts (`visualizations/temporal_topic_trends.png`, MongoDB publisher analytics) | Early warning on litigation and policy shifts |
 | Chief Editorial Officers & Newsroom Directors | Publisher × topic heatmap and editorial-share bars (`visualizations/publisher_topic_heatmap.png`) | Competitive coverage-gap detection and reporting allocation |
 | Enterprise Risk Officers | Per-topic sentiment boxplots and article explorer (`visualizations/topic_sentiment_distribution.png`, Streamlit Article Explorer) | Reputation, supply-chain and ESG risk monitoring |
 
@@ -106,7 +106,7 @@ The dataset enforces a strict 12-attribute relational and document contract:
 ├─────────────────┼────────────────────┼──────────┼────────────────────────────────────────────────────────┤
 │ article_id      │ StringType         │ No       │ Unique alphanumeric identifier (e.g., 'ART_100042')    │
 │ title           │ StringType         │ No       │ Full journalistic headline                             │
-│ author          │ StringType         │ Yes      │ Journalist byline (contains ~1.5% intentional nulls)   │
+│ author          │ StringType         │ Yes      │ Journalist byline (~1.4% nulls; 1.5% injection rate)   │
 │ date            │ StringType         │ No       │ ISO publication date ('YYYY-MM-DD')                    │
 │ year            │ IntegerType        │ No       │ Extracted temporal partition key (2024, 2025)          │
 │ month           │ IntegerType        │ No       │ Extracted temporal partition key (1 through 12)        │
@@ -121,12 +121,12 @@ The dataset enforces a strict 12-attribute relational and document contract:
 
 ### 2.3 Volume, Records & Attribute Profiling Metrics
 - **Total Validated Records:** 6,000 full-text journalistic documents
-- **Raw CSV Disk Footprint:** 5.67 MB
-- **Average Word Count per Article:** 83.9 tokens (cleaned content: ~80.5 to 105.3 tokens depending on domain)
+- **Raw CSV Disk Footprint:** 5.72 MB
+- **Average Word Count per Article:** 83.9 tokens (cleaned content: 77.1 to 105.3 tokens depending on topic)
 - **Temporal Horizon:** January 1, 2024 through December 31, 2025 (730 continuous days)
-- **Publisher Agency Distribution:** Reuters (12.8%), Associated Press (12.6%), Bloomberg (12.5%), Wall Street Journal (12.5%), The New York Times (12.4%), TechCrunch (12.4%), Financial Times (12.4%), BBC News (12.4%)
+- **Publisher Agency Distribution:** Reuters (13.6%), Financial Times (12.8%), Associated Press (12.5%), TechCrunch (12.5%), BBC News (12.5%), Bloomberg (12.3%), The Wall Street Journal (12.1%), The New York Times (11.8%)
 - **Domain Breakdown:** Technology (24.5%), Business (22.4%), Politics (17.4%), Healthcare (15.8%), Climate & Energy (12.1%), Science (7.8%)
-- **Data Quality Artifacts Injected:** 40% of articles contain synthetic web-scraping noise including HTML tags (`<p>`, `<br/>`), XML entities (`&amp;`, `&quot;`, `&copy;`), tracking URLs (`http://...`), and newsletter subscription disclaimers. 1.5% of records have null author bylines to test schema imputation resilience.
+- **Data Quality Artifacts Injected:** 40% of articles contain synthetic web-scraping noise including HTML tags (`<p>`, `<br/>`), XML entities (`&amp;`, `&quot;`, `&copy;`), tracking URLs (`http://...`), and newsletter subscription disclaimers. 1.4% of records have null author bylines (1.5% injection rate) to test schema imputation resilience.
 
 ### 2.4 Real-World Wire Corpus (Secondary Dataset)
 
@@ -136,8 +136,8 @@ To validate that the architecture generalizes beyond synthetic data, an authenti
 - **Volume:** 10,712 genuine full-text Reuters documents (10.67 MB CSV), a **1.8× larger** corpus than the synthetic benchmark.
 - **Provenance Contract:** The ingester emits `data/real_news/provenance.json`, recording the source, acquisition timestamp, record count, and a `date_derived: true` flag (real wire text has no reliable per-article timestamps, so temporal partitions are derived deterministically).
 - **Schema Parity:** The real corpus is emitted with the **exact same 12-column header** as the synthetic benchmark, so no schema translation is required — the identical `StructType` contract and PySpark pipeline apply unchanged.
-- **Label Handling:** The graded synthetic benchmark uses curated, human-verified topic labels; the real corpus enables `--auto-labels`, which derives human-readable topic names from each LDA topic's learned top terms (stopword-filtered) — demonstrating the model discovers topics without prior knowledge.
-- **Empirical Result:** PySpark processed all **10,712 articles in 71.66 s**, building a 5,000-term vocabulary and a k=6 LDA model with auto-derived labels (e.g., `Mln / Tonnes / Pct`, `Pct / Bank / Rate`, `Company / Shares / Stock`).
+- **Label Handling:** The graded synthetic benchmark names each cluster **post-hoc from its majority `category`** (clustering remains unsupervised; `metadata.label_diagnostics` records the majority and share). The real corpus enables `--auto-labels`, which derives human-readable topic names from each LDA topic's learned top terms (stopword-filtered) — demonstrating the model discovers topics without prior knowledge.
+- **Empirical Result:** PySpark processed all **10,712 articles in 68.4 s** in the latest artifact refresh, building a 5,000-term vocabulary and a k=6 LDA model with auto-derived labels (e.g., `Mln / Tonnes / Pct`, `Pct / Bank / Rate`, `Company / Shares / Stock`).
 - **Profiling Caveats:** Reuters-21578 carries **derived dates** (no authentic per-article timestamps), a **single publisher** (`Reuters`), a **single placeholder author** (`Reuters Staff`) and **constructed placeholder URLs**; therefore all publisher-, author- and time-based conclusions on that corpus are **illustrative only** and are not used for the editorial-bias findings, which come from the synthetic benchmark.
 - **Label & Licence Note:** `data/real_news/provenance.json` records only a 25-value **sample** of the Reuters category vocabulary under `sample_of_category_labels` (the archive defines 90 categories), under the licence "NLTK data distribution, see https://www.nltk.org/nltk_data/ and Reuters-21578 terms of use".
 
@@ -268,8 +268,8 @@ The MapReduce component demonstrates classic distributed token counting and bigr
 #### 4.1.3 MapReduce Verification Results
 - **Execution:** Processed 6,000 raw news articles through the local streaming simulation in under 4 seconds.
 - **Extracted Vocabulary:** 2,255 unique, cleaned terms and bigrams.
-- **Top Unigram Frequencies:** `across` (3,791), `market` (1,972), `data` (1,845), `benchmark` (1,768), `report` (1,621), `clinical` (1,540), `cluster` (1,480).
-- **Top Bigram Frequencies:** `BI_across_competing` (2,990), `BI_accelerators_data` (1,205), `BI_access_witnesses` (873).
+- **Top Unigram Frequencies:** `across` (5,185), `trade` (4,859), `industry` (4,266), `throughput` (4,211), `benchmark` (4,153), `capital` (3,921), `empirical` (3,856).
+- **Top Bigram Frequencies:** `BI_trade_offs` (3,584), `BI_benchmark_metrics` (3,032), `BI_fiscal_quarters` (3,032).
 
 ---
 
@@ -317,7 +317,7 @@ Every stage of `src/spark_pipeline.py` is documented with inline comments:
 - Memory parameters: `spark.driver.memory = "4g"`, `spark.executor.memory = "4g"`, `spark.sql.shuffle.partitions = "8"`.
 - Explicit schema declaration avoids expensive schema inference passes over raw CSV files.
 - Regex cleaning executes via Spark SQL native functions directly in JVM bytecode, avoiding expensive Python-to-JVM serialization (Py4J) overhead.
-- Total pipeline execution completed in **49.99 seconds** across the full 6,000 article corpus.
+- Total pipeline execution completed in **52.08 seconds** across the full 6,000 article corpus in the latest artifact refresh; the re-executed notebook reports the same 52.08 s runtime.
 
 ---
 
@@ -352,17 +352,17 @@ The MongoDB integration layer maps processed Spark records into document collect
 
 ### 4.4 Hadoop Ecosystem Stack Implementation (`src/hadoop/`)
 
-To demonstrate breadth across the Hadoop ecosystem rather than a single framework, the orchestrator (`src/hadoop/run_hadoop_ecosystem.py`) executes **9 orchestrated ecosystem modules covering 10 named technologies** end-to-end, emitting a machine-readable summary (`data/hadoop_ecosystem/hadoop_ecosystem_summary.json`). In the verified run, **9/9 modules executed with zero failures** in `7.21 s` (the notebook records a separate 11.13 s run) while recording `80` production-equivalent `hdfs dfs` commands emitted by the local simulation:
+To demonstrate breadth across the Hadoop ecosystem rather than a single framework, the orchestrator (`src/hadoop/run_hadoop_ecosystem.py`) executes **9 orchestrated ecosystem modules covering 10 named technologies** end-to-end, emitting a machine-readable summary (`data/hadoop_ecosystem/hadoop_ecosystem_summary.json`). In the verified run, **9/9 modules executed with zero failures** in `4.28 s` while recording `77` production-equivalent `hdfs dfs` commands emitted by the local simulation:
 
 | Service | Implementation | Verified Outcome |
 | :--- | :--- | :--- |
-| **HDFS** | `hdfs_client.py` — NameNode/DataNode model, 128 MB block splitting, 3× replication | 27 objects landed; `logical_bytes 6,186,580 × 3 = physical_bytes 18,559,740`; **3 live DataNodes, 0 missing blocks** |
+| **HDFS** | `hdfs_client.py` — NameNode/DataNode model, 128 MB block splitting, 3× replication | 27 objects landed; `logical_bytes 6,236,201 × 3 = physical_bytes 18,708,603`; **3 live DataNodes, 0 missing blocks** |
 | **Cluster (YARN)** | `cluster_config.py` — ResourceManager/NodeManager XML configs, CapacityScheduler | 8 XML/conf files generated; capacity planned from measured on-disk volume |
 | **ZooKeeper** | `zookeeper_sim.py` — znode namespace, ephemeral nodes, watches, leader election | Coordination topology + elected leader produced |
 | **Sqoop** | `sqoop_jobs.py` — SQLite ↔ HDFS/MongoDB/Hive import/export | Bulk transfer executed with row-count reconciliation |
 | **Flume** | `flume_ingest.py` — spooling-dir source → memory channel → HDFS sink | Feed durably landed into HDFS |
 | **HBase** | `hbase_loader.py` — column families `cf_meta`/`cf_nlp`/`cf_raw`, salted row keys | Table `news_articles`: **2,000 rows, 3 column families, 16 pre-split regions** |
-| **Hive** | `hive_analytics.py` — external Parquet tables, HiveQL | `newsdw` DB, 3 tables, **6 queries**, **26,581 rows scanned** with partition pruning; 6 result CSVs |
+| **Hive** | `hive_analytics.py` — external Parquet tables, HiveQL | `newsdw` DB, 3 tables, **6 queries**, **26,594 rows scanned** with partition pruning; 6 result CSVs |
 | **Pig** | `pig_transform.py` — Pig Latin ETL | **3 scripts executed**, 24 relations created, 3 output files over 6,000 staged rows |
 | **Oozie** | `oozie_runner.py` — workflow/coordinator DAG | 5-action workflow (`sqoop → pig → hive → spark → verify`), **0 skipped**, `final_status = SUCCEEDED` |
 
@@ -388,33 +388,34 @@ In our PySpark implementation, we configured the **Online Variational Bayes** op
 
 ### 5.2 Discovered Latent Topics & Dirichlet Keyword Distributions
 
-The distributed LDA model was trained with $k=6$ over CountVectorizer term counts from a 5,000-term vocabulary (IDF weighting is computed only for downstream TF-IDF analytics, not as an LDA input). The dominant-topic cluster assigned to each of the 6,000 documents (the pipeline's `topic_summary` rollup) is distributed across the five editorial themes below; per-topic Dirichlet term weights are visualized in `lda_topic_top_terms.png`.
+The distributed LDA model was trained with $k=6$ over CountVectorizer term counts from a 5,000-term vocabulary (IDF weighting is computed only for downstream TF-IDF analytics, not as an LDA input). The dominant-topic rollup distributes all 6,000 documents across **five** clusters; one LDA component attracted no dominant assignments. Because LDA topic indices are not stable across runs, labels are now assigned **post-hoc from each cluster's majority `category`** — the clustering itself remains fully unsupervised. At $k=6$ the model merges Business and Politics into a single **Markets, Politics & Regulation** cluster (39.8%, matching the 22.4% Business + 17.4% Politics corpus base rates); the other four clusters map one-to-one onto Technology, Healthcare, Climate and Science. Per-topic Dirichlet term weights are visualized in `lda_topic_top_terms.png`.
 
 | Editorial Theme (dominant-topic cluster) | Top Discriminative Terms | Articles | Share | Mean VADER Sentiment | Mean Confidence |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **Clinical Medicine & Genomics** | breakthrough, across, healthcare, clinical, iii | 2,386 | 39.8% | +0.337 | 99.1% |
-| **Quantum Physics & Advanced Materials** | quantum, coherence, qubit, spectroscopic, models | 1,470 | 24.5% | +0.568 | 99.3% |
-| **AI Infrastructure & Compute** | data, throughput, cluster, latency, inference | 951 | 15.8% | +0.558 | 99.1% |
-| **Monetary Policy & Markets** | capital, trade, benchmark, empirical, inflation | 723 | 12.1% | +0.787 | 99.1% |
-| **Antitrust & Regulatory Policy** | antitrust, litigation, hearings, compliance, statutory | 470 | 7.8% | −0.028 | 99.1% |
+| **Markets, Politics & Regulation** | capital, across, trade, benchmark, empirical | 2,386 | 39.8% | +0.337 | 99.1% |
+| **AI Infrastructure & Compute** | data, throughput, cluster, latency, inference | 1,470 | 24.5% | +0.568 | 99.3% |
+| **Clinical Medicine & Genomics** | breakthrough, across, healthcare, clinical, iii | 951 | 15.8% | +0.558 | 99.1% |
+| **Grid Decarbonization & Clean Energy** | trade, offs, climate, battery, grid | 723 | 12.1% | +0.787 | 99.1% |
+| **Quantum Physics & Advanced Materials** | quantum, coherence, qubit, high, spectroscopic | 470 | 7.8% | −0.028 | 99.1% |
 | **Total** | — | **6,000** | **100.0%** | — | — |
 
-*(Note: document volumes, shares, mean sentiment and mean confidence are read directly from the PySpark run's `topic_summary` output in `data/pipeline_analytics_summary.json`, guaranteeing the report and the generated charts share one source of truth.)*
+*(Note: document volumes, shares, mean sentiment and mean confidence are read directly from the PySpark run's `topic_summary` output in `data/pipeline_analytics_summary.json`, guaranteeing the report and the generated charts share one source of truth. `metadata.label_diagnostics` records each cluster's majority category and share, so the naming is auditable.)*
 
 ### 5.3 Non-Trivial Correlations & Statistical Discoveries
 
-1. **The Regulatory Sentiment Anomaly:**
-   - While the overall news corpus exhibits an average positive sentiment (+0.432), **Antitrust & Regulatory Policy** is the only topic displaying a negative mean polarity score ($-0.028$).
-   - *Descriptive Separation:* The sampled data show a large, consistent separation in mean sentiment between regulatory reporting and the other topics; no inferential test was run.
-2. **Publisher Editorial Specialization Biases:**
-   - Cross-tabulation between news publishers and extracted topics reveals distinct organizational biases:
-     - **TechCrunch:** 41.7% of reporting is concentrated in *AI Infrastructure & Compute* (113 articles) and *Quantum Physics & Advanced Materials* (199 articles) — 312/748 in the sampled corpus.
-     - **Bloomberg:** 11.9% (88/741) of coverage focuses on *Monetary Policy & Markets*; **Financial Times:** 13.9% (106/765).
-     - **Reuters & Associated Press:** Exhibit the most balanced, uniform topic distribution across all 6 categories, serving as generalist wire services. Estimated rates are computed from data/pipeline_analytics_summary.json publisher_distribution.
+1. **The Science Sentiment Anomaly:**
+   - While the overall news corpus exhibits an average positive sentiment (+0.454), **Quantum Physics & Advanced Materials** is the only cluster displaying a negative mean polarity score ($-0.028$).
+   - **Grid Decarbonization & Clean Energy** is the most positive cluster (+0.787), followed by AI Infrastructure (+0.568), Clinical Medicine (+0.558) and Markets/Politics/Regulation (+0.337).
+   - *Descriptive Separation:* The sampled data show a consistent separation in mean sentiment between science reporting and the other clusters; no inferential test was run. The earlier draft attributed this anomaly to Antitrust because LDA labels were index-mapped; the corrected thematic mapping moves it to Quantum.
+2. **Publisher Mix Tracks Corpus Base Rates (Null Result):**
+   - Cross-tabulation shows **no strong publisher specialization**. Every publisher allocates 38.3–41.6% of coverage to *Markets, Politics & Regulation* and 21.0–26.8% to *AI Infrastructure & Compute*; the remaining shares are 14.5–17.1% Clinical, 10.7–13.9% Clean Energy and 6.8–9.4% Quantum.
+   - The widest deviations are modest: The Wall Street Journal has the highest AI share (26.8%), Reuters the highest Markets share (41.6%), the Financial Times the highest Clean Energy share (13.9%), and The New York Times the highest Quantum share (9.4%).
+   - This is expected: the synthetic generator assigns topic/category independently of publisher. The cross-tab therefore serves as a **null validation check**, not evidence of editorial bias. Estimated rates are computed from `data/pipeline_analytics_summary.json` → `publisher_distribution`.
 3. **High Model Confidence Stability:**
-   - Across all 6,000 documents, the average posterior probability confidence of the dominant topic assignment was **99.1%** ($\sigma = 0.012$). This demonstrates high-confidence dominant-topic assignments at the configured $k=6$; it is not evidence that $k=6$ is an optimal topic count.
-4. **Temporal Stability vs. Event Spikes:**
-   - Time-series tracking across 2024–2025 demonstrates consistent baseline reporting volume (~250 articles/month) with sharp topical volume surges in Technology (Q2 2024, Q1 2025) and Monetary Policy (Q3 2024, Q3 2025) aligning with fiscal quarterly earnings and regulatory calendar cycles.
+   - Across all 6,000 documents, the average posterior probability confidence of the dominant topic assignment was **99.15%** ($\sigma = 0.0016$). This demonstrates high-confidence dominant-topic assignments at the configured $k=6$; it is not evidence that $k=6$ is an optimal topic count.
+4. **Temporal Stability (No Synthetic Event Spikes):**
+   - Total volume is stable at ~250 articles/month. At topic level, AI ranges 42–79 articles/month (peaks April–May 2025), Markets/Politics 83–121 (peak March 2025), Clinical 26–50, Clean Energy 20–40 and Quantum 12–30.
+   - No quarterly drift alarm fired. Baseline drift peaked at JSD **0.0375** and PSI **0.0113**; the largest quarter-over-quarter JSD was **0.0650**. All values remain far below the 0.15/0.25 thresholds. The synthetic process is stationary by design, so the earlier claim of sharp event-driven surges is **not supported** by the corrected artifact; the value of the monitor is demonstrated on the statistical threshold logic, not on synthetic volatility.
 
 ### 5.4 Held-Out Temporal Forecast Evaluation (`src/temporal_forecast_eval.py`)
 
@@ -483,7 +484,7 @@ In addition to the server-based Streamlit application, the pipeline emits **two 
 
 > [!TIP]
 > **Action 1 — Financial Trading Alpha (Macro Risk Hedging):**  
-> Quantitative trading desks should connect the PySpark topic extraction pipeline directly to streaming financial feeds. By monitoring when the ratio of *Antitrust & Regulatory* volume exceeds 2 standard deviations above its 30-day moving average, funds can initiate automated hedging against large-cap tech equities 48 to 72 hours before formal congressional subpoenas are published.
+> Quantitative trading desks should connect the PySpark topic extraction pipeline directly to streaming financial feeds. By monitoring when *Markets, Politics & Regulation* volume (which carries the antitrust/regulatory signal) exceeds 2 standard deviations above its 30-day moving average, funds can initiate automated hedging against large-cap tech equities 48 to 72 hours before formal congressional subpoenas are published.
 
 > [!TIP]
 > **Action 2 — Real-Time Streaming Architecture Upgrade:**  
@@ -523,7 +524,7 @@ Detailed in `presentation/slide_deck_outline.md`:
 - **Slide 10:** Real-World Corpus Validation: Reuters-21578 Wire Archive (Omar Hani)
 - **Slide 11:** Serving Layer: MongoDB NoSQL Document Modeling & BSON (Mohamed Ibrahim)
 - **Slide 12:** MongoDB Query Optimization: Compound & Full-Text Indexing (Mohamed Ibrahim)
-- **Slide 13:** Visual Analytics: Topic Volume & Publisher Editorial Biases (Mohamed Magdi)
+- **Slide 13:** Visual Analytics: Topic Volume & Publisher Coverage (Mohamed Magdi)
 - **Slide 14:** Sentiment Analytics: Topic Sentiment Boxplots & Trajectories (Mohamed Magdi)
 - **Slide 15:** Performance Benchmarks & Horizontal Cluster Scalability (Mazen Salem)
 - **Slide 16:** Actionable Insights: Managerial "What Next?" Decisions (Mazen Salem)
@@ -540,10 +541,12 @@ Detailed in `presentation/slide_deck_outline.md`:
 
 ### 7.4 Technical Q&A Defense Cheat Sheet (Sample Questions)
 
+The full 16-answer bank lives in `presentation/slide_deck_outline.md`; the 12 highest-risk questions are reproduced below.
+
 - **Q1: Why utilize Hadoop MapReduce when PySpark is significantly faster?**  
   *Defense (Mohammed Hossam):* MapReduce and Spark serve complementary roles in enterprise architectures. MapReduce provides bulletproof, low-memory disk streaming for raw, unindexed terabyte-scale log ingestion. It never crashes due to RAM exhaustion. Once initial tokenization and filtering are complete, PySpark takes over for in-memory iterative linear algebra (LDA) where Spark's DAG engine achieves 10x to 100x speedups.
 - **Q2: How did you select $k=6$ topics for LDA?**  
-  *Defense (Shehab Osama):* `src/lda_topic_selection.py` ran a sweep over $k \in [3,12]$ on the same 438-term feature space used by the synthetic benchmark, recording log perplexity, UMass-style document co-occurrence coherence and topic distinctness (`data/lda_k_sweep.json`). Perplexity was non-monotonic, so it was reported but not decisive; a statistical knee rule (marginal coherence gain below 5% of the coherence span) selected $k=3$, and the best mean UMass coherence values were at $k=5$ ($-0.3270$) and $k=10$ ($-0.3588$), not $k=6$ ($-0.3668$). Production retains $k=6$ because the curated six-domain synthetic benchmark and cross-corpus comparability require a fixed $k$, and topic labels are interpretable at $k=6$. This is an engineering/interpretability choice, not a proven optimum; a 5,000-term rerun of the sweep is future work. No alternative coherence variant was computed.
+  *Defense (Shehab Osama):* `src/lda_topic_selection.py` ran a sweep over $k \in [3,12]$ on the same 438-term feature space used by the synthetic benchmark, recording log perplexity, UMass-style document co-occurrence coherence and topic distinctness (`data/lda_k_sweep.json`). Perplexity was non-monotonic, so it was reported but not decisive; a statistical knee rule (marginal coherence gain below 5% of the coherence span) selected $k=3$, and the best mean UMass coherence values were at $k=5$ ($-0.3270$) and $k=10$ ($-0.3588$), not $k=6$ ($-0.3668$). Production retains $k=6$ because the six-domain synthetic benchmark and cross-corpus comparability require a fixed $k$, and topic labels are interpretable at $k=6$. This is an engineering/interpretability choice, not a proven optimum; a 5,000-term rerun of the sweep is future work. No alternative coherence variant was computed.
 - **Q3: What is the mathematical foundation of Latent Dirichlet Allocation?**  
   *Defense (Shehab Osama):* LDA is a hierarchical Bayesian generative model: each document is a finite mixture over $K$ latent topics drawn from $\theta_d \sim \text{Dir}(\alpha)$, and each topic is a multinomial over the vocabulary drawn from $\beta_k \sim \text{Dir}(\eta)$. PySpark MLlib solves it with Online Variational Bayes, updating variational parameters on mini-batches for scale. (YARN queue-level CPU/memory guarantees via the `CapacityScheduler` remain the design-level answer for cross-framework contention.)
 - **Q4: Why include Hive, HBase, Pig, Sqoop, Flume, Oozie and ZooKeeper rather than plain MapReduce alone?**  
@@ -640,7 +643,7 @@ python src/ingest_live_rss.py
 - [x] **Interactive Dashboard:** Full Streamlit web application (`src/dashboard.py`) plus self-contained offline Plotly dashboards for both corpora (`dashboard/interactive_dashboard.html`, `dashboard/interactive_dashboard_real.html`)
 - [x] **Word Report Export:** `PROJECT_REPORT.docx` with an embedded visualization gallery, generated from the Markdown source without altering it (`src/export_report_docx.py`)
 - [x] **Documented Jupyter Notebook:** 29 cells (16 executed code cells), fully executed with embedded charts and appendices (`notebooks/News_Article_Analysis_Pipeline.ipynb`)
-- [x] **Presentation Deck & Defense:** 17-slide deck, speaking roles, 12 Q&A answers (`presentation/slide_deck_outline.md`)
+- [x] **Presentation Deck & Defense:** 17-slide deck, speaking roles, 16 Q&A answers (`presentation/slide_deck_outline.md`)
 - [x] **Automated Test Suite:** 119 tests across 14 modules, 0 failures (`tests/run_tests.py`)
 - [x] **Supervised Ground Truth:** 92.57% test accuracy / 0.8423 macro-F1 on 9,549 Reuters articles across 17 categories (`src/supervised_classifier.py`)
 - [x] **Live Multi-Publisher RSS:** 289 articles from NYT, BBC, CBS and NPR with authentic timestamps (`src/ingest_live_rss.py`)
@@ -677,7 +680,7 @@ To elevate this capstone into an enterprise-ready reference platform, the team e
 3. **Real-Time PySpark Structured Streaming Pipeline (`src/streaming_news_pipeline.py`):**
    - *Resolution to Limitation #5:* Developed a streaming engine that ingests incoming wire events from a drop directory (`data/streaming_input/`), applies schema validation, executes sub-second VADER sentiment scoring, triggers high-severity alerts on negative breaking anomalies ($\text{sentiment} \le -0.35$), and commits to a checkpointed streaming Parquet lakehouse (`data/streaming_parquet/`).
 4. **Automated MLOps Topic Drift & Statistical Governance (`src/topic_drift_monitor.py`):**
-   - *Resolution to Limitation #6:* Quantified temporal topic distribution shifts across 8 quarterly windows (2024-Q1 through 2025-Q4) using **Jensen-Shannon Divergence (JSD)** and **Population Stability Index (PSI)**. All quarters remained within stable bounds ($\text{JSD} \le 0.038$, $\text{PSI} \le 0.011$), proving model stability. Evidence rendered in `visualizations/topic_drift_monitoring.png`.
+   - *Resolution to Limitation #6:* Quantified temporal topic distribution shifts across 8 quarterly windows (2024-Q1 through 2025-Q4) using **Jensen-Shannon Divergence (JSD)** and **Population Stability Index (PSI)**. All quarters remained within stable bounds (baseline $\text{JSD} \le 0.0375$, quarter-over-quarter $\text{JSD} \le 0.0650$, $\text{PSI} \le 0.0113$), proving model stability. Evidence rendered in `visualizations/topic_drift_monitoring.png`.
 5. **Physical Multi-Node Cluster Orchestration Blueprint (`docker-compose-cluster.yml`):**
    - *Resolution to Limitation #1:* Provided a complete Infrastructure-as-Code (IaC) deployment orchestrating 10 distributed containers: 1 HDFS NameNode, 3 DataNodes ($3\times$ replication), 1 YARN ResourceManager, 2 NodeManagers, 1 Spark Master, 2 Spark Workers, and MongoDB.
 

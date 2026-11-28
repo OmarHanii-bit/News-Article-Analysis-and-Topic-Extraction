@@ -1,31 +1,31 @@
 topic_label,publication,avg_sent,rnk
-AI Infrastructure & Compute,The New York Times,0.5745,1
-AI Infrastructure & Compute,Financial Times,0.569,2
-AI Infrastructure & Compute,TechCrunch,0.568,3
-AI Infrastructure & Compute,Associated Press,0.5609,4
-AI Infrastructure & Compute,Bloomberg,0.5608,5
-AI Infrastructure & Compute,BBC News,0.5582,6
-AI Infrastructure & Compute,Reuters,0.5501,7
-AI Infrastructure & Compute,The Wall Street Journal,0.523,8
-Antitrust & Regulatory Policy,The Wall Street Journal,0.0172,1
-Antitrust & Regulatory Policy,Associated Press,0.0009,2
-Antitrust & Regulatory Policy,TechCrunch,0.0008,3
-Antitrust & Regulatory Policy,Bloomberg,-0.0132,4
-Antitrust & Regulatory Policy,BBC News,-0.0409,5
-Antitrust & Regulatory Policy,Reuters,-0.051,6
-Antitrust & Regulatory Policy,Financial Times,-0.0534,7
-Antitrust & Regulatory Policy,The New York Times,-0.0723,8
-Clinical Medicine & Genomics,Financial Times,0.3751,1
-Clinical Medicine & Genomics,Associated Press,0.3666,2
-Clinical Medicine & Genomics,TechCrunch,0.3534,3
-Clinical Medicine & Genomics,Bloomberg,0.3382,4
-Clinical Medicine & Genomics,Reuters,0.3261,5
-Clinical Medicine & Genomics,BBC News,0.3162,6
-Clinical Medicine & Genomics,The New York Times,0.312,7
-Clinical Medicine & Genomics,The Wall Street Journal,0.3089,8
-Monetary Policy & Markets,TechCrunch,0.802,1
-Monetary Policy & Markets,Reuters,0.7971,2
-Monetary Policy & Markets,Associated Press,0.7908,3
-Monetary Policy & Markets,The New York Times,0.7906,4
-Monetary Policy & Markets,Bloomberg,0.7887,5
-Monetary Policy & Markets,Financial Times,0.7803,6
+AI Infrastructure & Compute,TechCrunch,0.5878,1
+AI Infrastructure & Compute,Associated Press,0.5831,2
+AI Infrastructure & Compute,Reuters,0.5718,3
+AI Infrastructure & Compute,Financial Times,0.5709,4
+AI Infrastructure & Compute,The Wall Street Journal,0.569,5
+AI Infrastructure & Compute,The New York Times,0.5667,6
+AI Infrastructure & Compute,Bloomberg,0.5484,7
+AI Infrastructure & Compute,BBC News,0.5429,8
+Clinical Medicine & Genomics,The New York Times,0.5745,1
+Clinical Medicine & Genomics,Financial Times,0.569,2
+Clinical Medicine & Genomics,TechCrunch,0.568,3
+Clinical Medicine & Genomics,Associated Press,0.5609,4
+Clinical Medicine & Genomics,Bloomberg,0.5608,5
+Clinical Medicine & Genomics,BBC News,0.5582,6
+Clinical Medicine & Genomics,Reuters,0.5501,7
+Clinical Medicine & Genomics,The Wall Street Journal,0.523,8
+Grid Decarbonization & Clean Energy,TechCrunch,0.802,1
+Grid Decarbonization & Clean Energy,Reuters,0.7971,2
+Grid Decarbonization & Clean Energy,Associated Press,0.7908,3
+Grid Decarbonization & Clean Energy,The New York Times,0.7906,4
+Grid Decarbonization & Clean Energy,Bloomberg,0.7887,5
+Grid Decarbonization & Clean Energy,Financial Times,0.7803,6
+Grid Decarbonization & Clean Energy,BBC News,0.7767,7
+Grid Decarbonization & Clean Energy,The Wall Street Journal,0.7676,8
+"Markets, Politics & Regulation",Financial Times,0.3751,1
+"Markets, Politics & Regulation",Associated Press,0.3666,2
+"Markets, Politics & Regulation",TechCrunch,0.3534,3
+"Markets, Politics & Regulation",Bloomberg,0.3382,4
+"Markets, Politics & Regulation",Reuters,0.3261,5
+"Markets, Politics & Regulation",BBC News,0.3162,6

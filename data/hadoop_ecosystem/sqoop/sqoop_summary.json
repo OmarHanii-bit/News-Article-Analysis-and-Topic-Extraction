@@ -2,7 +2,7 @@
   "rdbms": {
     "engine": "sqlite3 (emulating MySQL news @ jdbc:mysql://rdbms-host:3306/news)",
     "db_path": "data/hadoop_ecosystem/sqoop/news_staging.db",
-    "size_bytes": 2002944
+    "size_bytes": 2007040
   },
   "tables": [
     "publishers",

@@ -25,7 +25,7 @@ The three static dashboards are published from `dashboard/` by the
 | Dashboard | Public link | What it shows |
 |---|---|---|
 | **Intelligence Command Center** | [command_center.html](https://omarhanii-bit.github.io/News-Article-Analysis-and-Topic-Extraction/command_center.html) | Dark-mode topic clusters, brushable velocity timeline, entity sentiment, cross-filtered feed and slide-over article inspector |
-| **Synthetic benchmark** | [interactive_dashboard.html](https://omarhanii-bit.github.io/News-Article-Analysis-and-Topic-Extraction/interactive_dashboard.html) | Seven offline Plotly figures for the 6,000-article curated corpus |
+| **Synthetic benchmark** | [interactive_dashboard.html](https://omarhanii-bit.github.io/News-Article-Analysis-and-Topic-Extraction/interactive_dashboard.html) | Seven offline Plotly figures for the 6,000-article synthetic benchmark corpus |
 | **Reuters wire** | [interactive_dashboard_real.html](https://omarhanii-bit.github.io/News-Article-Analysis-and-Topic-Extraction/interactive_dashboard_real.html) | The same seven figures for the 10,712-article real corpus |
 
 Landing page: **https://omarhanii-bit.github.io/News-Article-Analysis-and-Topic-Extraction/**
@@ -99,7 +99,7 @@ c:\News Article Analysis and Topic Extraction\
 │   │   ├── hive/                      # HiveQL DDL + 6 analytical result CSVs
 │   │   ├── pig/                       # 3 Pig Latin scripts + output part-files
 │   │   ├── oozie/                     # workflow.xml, coordinator.xml, execution journal
-│   │   ├── hadoop_cli_commands.md     # 80 production-equivalent `hdfs dfs` commands emitted by the local simulation (evidence)
+│   │   ├── hadoop_cli_commands.md     # 77 production-equivalent `hdfs dfs` commands emitted by the local simulation (evidence)
 │   │   └── hadoop_ecosystem_summary.json # Aggregated summary for the 9-module Hadoop ecosystem stack
 │   ├── mongodb_offline_collections/   # Offline BSON JSON collections (3 collections)
 │   │   ├── articles_sample.json       # 500 enriched sample article documents
@@ -210,7 +210,7 @@ c:\News Article Analysis and Topic Extraction\
     ├── architecture.png               # 300-DPI rendering of report §3.1 architecture blueprint
     ├── dashboard_screenshot.png       # 1600x1050 capture of the Streamlit executive dashboard
     ├── dashboard_screenshot.md        # Provenance & regeneration steps for the screenshot
-    └── slide_deck_outline.md          # 17-slide speaking notes, demo runbook & 12 Q&A defense answers
+    └── slide_deck_outline.md          # 17-slide speaking notes, demo runbook & 16 Q&A defense answers
 ```
 
 > **Simulation vs. Production:** The `data/hadoop_ecosystem/**/real_cluster_commands.md` files and `hadoop_cli_commands.md` are **production-equivalent command templates**; the workload in this repository was executed locally via the Python simulation in `src/hadoop/`. No real Hadoop/Spark cluster was provisioned for validation. The commands document operating procedures that would apply on a real cluster, and the recorded `hdfs dfs` lines are emitted by the local simulation.
@@ -256,7 +256,7 @@ Report §9.1 discloses the project's initial boundaries; §9.2 shows how five of
 - **Supervised ground truth (`src/supervised_classifier.py`):** 9,549 Reuters-21578 articles across 17 editorial categories → **92.57% test accuracy**, **0.8423 macro-F1**, **0.8515 5-fold CV macro-F1** (Linear SVM/SGD). Evidence: `data/supervised_classification_metrics.json`, `visualizations/supervised_model_comparison.png`, `visualizations/supervised_confusion_matrix.png`.
 - **Live multi-publisher RSS (`src/ingest_live_rss.py`):** 289 genuine articles from NYT, BBC, CBS and NPR with real RFC-822 timestamps and URLs. Evidence: `data/real_news/live_rss_articles.csv`, `data/real_news/live_rss_provenance.json`.
 - **Structured Streaming (`src/streaming_news_pipeline.py`):** drop-folder micro-batches, schema validation, VADER scoring, breaking-news alerts at sentiment ≤ −0.35 and a checkpointed Parquet sink (`data/streaming_parquet/`).
-- **Topic-drift monitoring (`src/topic_drift_monitor.py`):** quarterly Jensen-Shannon divergence and PSI over eight windows (max JSD 0.038, max PSI 0.011). Evidence: `data/topic_drift_analysis.json`, `visualizations/topic_drift_monitoring.png`.
+- **Topic-drift monitoring (`src/topic_drift_monitor.py`):** quarterly Jensen-Shannon divergence and PSI over eight windows (max baseline JSD 0.0375, max quarter-over-quarter JSD 0.0650, max PSI 0.0113). Evidence: `data/topic_drift_analysis.json`, `visualizations/topic_drift_monitoring.png`.
 - **Cluster IaC (`docker-compose-cluster.yml`):** 10 containers — NameNode, 3 DataNodes, YARN ResourceManager, 2 NodeManagers, Spark master, 2 workers and MongoDB.
 
 Reproduce them with `python src/supervised_classifier.py`, `python src/ingest_live_rss.py`, `python src/streaming_news_pipeline.py` and `python src/topic_drift_monitor.py`.
@@ -274,7 +274,7 @@ Reproduce them with `python src/supervised_classifier.py`, `python src/ingest_li
   ```
   For byte-for-byte reproducibility, install the pinned lock file instead: `pip install -r requirements.lock.txt`. Optional environment overrides (Mongo URI, Spark master/memory, Kaggle credentials) are documented in `.env.example`; every variable has a safe default.
 
-> **Fresh clone note:** the canonical raw datasets (`data/raw_news_articles.csv`, `data/real_news/raw_news_articles_real.csv`), the Word report and all three offline HTML dashboards (including the Command Center) are **committed**, so the project is inspectable immediately. Large *regenerable* intermediates - the Parquet lakehouses, MongoDB offline collections, simulated HDFS block files, and Hadoop staging/spool files - are intentionally git-ignored; materialize them with `python run_all.py` (or the individual stages below) before running the full test suite. Tests that depend on absent artifacts report as **skipped**, and the runner fails if fewer than the 53-test historical floor actually *execute* (the suite currently contains 119 tests).
+> **Fresh clone note:** the canonical raw datasets (`data/raw_news_articles.csv`, `data/real_news/raw_news_articles_real.csv`), the Word report and all three offline HTML dashboards (including the Command Center) are **committed**, so the project is inspectable immediately. Large *regenerable* intermediates - the Parquet lakehouses, MongoDB offline collections, simulated HDFS block files, and Hadoop staging/spool files - are intentionally git-ignored; materialize them with `python run_all.py` (or the individual stages below) before running the full test suite. Tests that depend on absent artifacts report as **skipped**, and the runner fails if fewer than the 118-test floor actually *execute* (the suite currently contains 119 tests).
 
 ---
 
@@ -347,7 +347,7 @@ embeds its JSON payload so the page works offline:
 python src/build_command_center.py
 ```
 
-- **Output**: `dashboard/command_center.html` (≈2 MB, 11 topics, 3,069 article rows, 16 entities).
+- **Output**: `dashboard/command_center.html` (≈2 MB, 11 topics, 3,058 article rows, 16 entities).
 - **Layout**: sticky command bar (search, date range, source multi-select), four KPI cards with sparklines, a zoomable topic cluster map (60%), a brushable topic-velocity timeline with a sentiment ribbon (40%), top-entity sentiment bars, and a live article feed with a slide-over inspector.
 - **Interaction**: every filter cross-filters the KPI cards, map, entity list and feed; clicking a bubble or an entity sets a filter chip; dragging the timeline brushes the date range; the article drawer highlights gazetteer entities inline and shows topic confidence and keywords.
 - **Provenance**: topic volume, sentiment, confidence and monthly series are measured LDA outputs. Reuters article-to-topic assignment and the named-entity gazetteer are documented display heuristics (see the footer and `src/build_command_center.py`).
@@ -405,7 +405,7 @@ python tests/run_tests.py
 
 > **Windows note:** if the test runner prints an encoding error, run with `PYTHONIOENCODING=utf-8` (already fixed in `run_all.bat`).
 
-The test runner validates 53 assertions across 7 specialized test modules:
+The test runner validates 119 tests across 14 specialized test modules:
 - `test_mapreduce.py`: Verifies HTML tag stripping, URL removal, entity decoding (`&amp;`), stopword purging, and bigram generation.
 - `test_spark_schema.py`: Verifies PySpark `StructType` schema enforcement, null handling, VADER sentiment bounds $[-1.0, +1.0]$, and dominant topic indexing.
 - `test_mongo_schema.py`: Verifies BSON document schema validity, field completeness, and index specifications.
@@ -413,6 +413,13 @@ The test runner validates 53 assertions across 7 specialized test modules:
 - `test_hadoop_ecosystem.py`: Verifies all 9 ecosystem services executed without failure, HDFS block integrity ($\text{logical} \times 3 = \text{physical}$, $3\times$ replication, 3 live DataNodes, 0 missing blocks), cluster config files, ZooKeeper coordination, the Sqoop transfer, Flume ingestion, the HBase column-family store ($\ge 3$ families), Hive queries + result CSVs, Pig Latin ETL, and the Oozie workflow terminating `SUCCEEDED`.
 - `test_dashboard.py`: Regression-tests the interactive layer — the dual-corpus registry, the seven-figure Plotly builder for both corpora, the HDFS-invariant ecosystem panel, the self-contained and corpus-specific HTML artifacts (the real dashboard must not fall back to synthetic data), and a headless `AppTest` smoke run of the Streamlit application.
 - `test_ingest_kaggle.py`: Exercises the external-dataset adapter (`src/ingest_kaggle_real.py`) — polymorphic column mapping onto the canonical 12-attribute schema, temporal decomposition, id namespacing and fallback, the mandatory full-text column contract, the $\ge 15$-word hygiene filter, chunked streaming across multiple chunks (index re-basing), the `--max-rows` cap, and the documented CLI flags end to end.
+- `test_lda_topic_selection.py`: Held-out split determinism and k-selection/validation logic (Spark-free).
+- `test_scale_benchmark.py`: Projection math, byte formatting, and JSON schema (offline).
+- `test_temporal_forecast_eval.py`: Series construction, MAE/RMSE/MAPE, and time-split tests (offline).
+- `test_supervised_classifier.py`: Reuters ground-truth split, metric bounds, and artifact contract.
+- `test_live_rss_and_streaming.py`: RSS parsing, provenance, and streaming alert/schema tests.
+- `test_topic_drift_monitor.py`: JSD/PSI maths, quarterly windows, and alert thresholds.
+- `test_command_center.py`: Command Center payload contract, topic/entity counts, and HTML build.
 
 ---
 
